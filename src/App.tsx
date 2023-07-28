@@ -1,16 +1,26 @@
-import React, { Component } from 'react';
-import { createRoot } from 'react-dom/client';
-import AppBar from './components/appbar/AppBar';
+//import { useState, useEffect } from 'react';
+import Nav from './components/navbar'
+import Sidebar from './components/sidebar'
+import Main from './components/main'
+import Footer from "./components/footer";
 
 
-class App extends Component {
-    render() {
-        return (
-            <div>
-                <AppBar />
-            </div>
-        );
-    }
+function App() {
+
+  return (
+    <section className='container h-screen max-w-[1124px] min-w-[625px]'>
+      <Nav />
+      <Sidebar />
+      <Main />
+      <Footer />
+    </section>
+  )
 }
 
-export default App;
+
+
+
+
+
+
+export default App
