@@ -1,6 +1,15 @@
 import React, { ReactNode } from 'react'
-import axios from 'axios'
-import credentials from '../utilities/apiKeys'
+import asyncHelper from '../utilities/asyncHelper';
+
+const defaultData = [
+    'fav',
+    'daiy mix',
+    'discover weekly',
+    'malayalm',
+    'dance/electronic mix',
+    'edm/popular'
+], fallback = defaultData.map((item) => (<li>{item}</li>
+));
 
 export default class Sidebar extends React.Component<{ open?: boolean }> {
     navRef: React.RefObject<HTMLElement>;
@@ -40,15 +49,7 @@ export default class Sidebar extends React.Component<{ open?: boolean }> {
                         </div>
                         your episodes</li>
                 </ul>
-                <FeaturedPlaylist/>
-                {/*<ul>
-                    <li>fav</li>
-                    <li>daily mix 1</li>
-                    <li>discover weekly</li>
-                    <li>Malayalam</li>
-                    <li>dance/electronic mix</li>
-                    <li>edm/popular</li>
-                </ul>*/}
+                <FeaturedPlaylist />
                 <button className='capitalize'>
                     <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="m11 12.2l-.9-.9q-.275-.275-.7-.275t-.7.275q-.275.275-.275.7t.275.7l2.6 2.6q.3.3.7.3t.7-.3l2.6-2.6q.275-.275.275-.7t-.275-.7q-.275-.275-.7-.275t-.7.275l-.9.9V9q0-.425-.288-.713T12 8q-.425 0-.713.288T11 9v3.2Zm1 9.8q-2.075 0-3.9-.788t-3.175-2.137q-1.35-1.35-2.137-3.175T2 12q0-2.075.788-3.9t2.137-3.175q1.35-1.35 3.175-2.137T12 2q2.075 0 3.9.788t3.175 2.137q1.35 1.35 2.138 3.175T22 12q0 2.075-.788 3.9t-2.137 3.175q-1.35 1.35-3.175 2.138T12 22Zm0-2q3.35 0 5.675-2.325T20 12q0-3.35-2.325-5.675T12 4Q8.65 4 6.325 6.325T4 12q0 3.35 2.325 5.675T12 20Zm0-8Z" /></svg>
                     install app
@@ -59,26 +60,25 @@ export default class Sidebar extends React.Component<{ open?: boolean }> {
 }
 
 const FeaturedPlaylist = () => {
-   const { clientID, clientSecret } = JSON.parse(credentials),
-   client = async () => await Client.create({ token: { clientID, clientSecret } });
-   
-   console.log(client());
-   return null
-}
-/*const 
-    const [playlists, setPlaylists] = React.useState(null),
-        baseURL = 'https://api.spotify.com/v1/browse/featured-playlists';
+    const [featuredPlaylist, setfeaturedPlaylist] = React.useState({ fallback: fallback });
+
     React.useEffect(() => {
-        axios.get(baseURL).then(res => {
-            setPlaylists(res.data);
-        })
-    }, [])
+        const countryCode = new Intl.DisplayNames(['en'], { type: 'region' });
 
-    if (!playlists) return null;
+        asyncHelper(
+            `browse/featured-playlists?country=${countryCode}&locale=en_IN&limit=5`, setfeaturedPlaylist);
 
-    return (
-        <div>
-            <h1>{playlists.title}</h1>
-            <p>{playlists.body}</p>
-        </div>
-    ); */
+    });
+    setfeaturedPlaylist(curr => {
+        if (curr?.error) console.log(curr.error);
+        return curr;
+    });
+
+    return <ul>
+        {
+            featuredPlaylist?.success?.items?.map((item) => <li>{item.name}</li>) 
+            || 
+            featuredPlaylist.fallback}
+    </ul>;
+
+}
