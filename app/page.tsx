@@ -1,5 +1,16 @@
 import Image from 'next/image'
 
+/*
+
+<section className='container h-screen max-w-[1124px] min-w-[625px]'>
+      <Nav />
+      <Sidebar />
+      <Main />
+      <Footer />
+    </section>
+
+*/
+
 export default function Home() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
