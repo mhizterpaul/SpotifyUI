@@ -1,18 +1,15 @@
 import axios, { AxiosResponse } from "axios"
-import credentials from '../utilities/apiKeys'
-import {useState, useEffect} from 'react'
+import {useState} from 'react'
 
 
 
-const data = async (subroute: string, accessToken? : string | AxiosResponse) =>  await axios.get(`https://api.spotify.com/v1/${subroute}`, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`
-      }
-    }), 
-     useAsync =  (subroute: string) => {
-  const [state, setState] = useState({}),
-   getAccessToken = async () => {
-    const { client_id, client_secret } = JSON.parse(credentials),
+  const useAsync =  (subroute: string) => {
+
+    const [state, setState] = useState({}),
+   fetchData = async () => {
+
+    const client_id = process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_ID, 
+    client_secret = process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_SECRET,
     options = {
       url: 'https://accounts.spotify.com/api/token',
       method: 'POST',
@@ -25,21 +22,25 @@ const data = async (subroute: string, accessToken? : string | AxiosResponse) => 
       json: true
     };
     
-    return await axios(options);
+ 
+    try{
 
-  }, handleErr =  err => setState({data: null, error: err});
+      const accessToken =  await axios(options),
+      res = await axios.get(`https://api.spotify.com/v1/${subroute}`, {
+            headers: {
+              Authorization: `Bearer ${accessToken}`
+            }
+          });
 
-  useEffect(
-    () => {
-    getAccessToken().then(
-      (res) => data(subroute, res.access_token).then(
-        res => setState({data: res, error: null})
-      ).catch(
-       handleErr
-      )
-    ).catch(
-      handleErr
-    )}, [])
+      setState({data: res, error: null});
+
+    }catch{
+      (err:ErrorEvent) => setState({data: null, error: err});
+    }
+
+  }
+
+  fetchData();
 
   return state;
 }
