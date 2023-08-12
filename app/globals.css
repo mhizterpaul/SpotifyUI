@@ -1,3 +1,7 @@
+/* refactor component classes
+ into component
+  based css modules*/
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -41,15 +45,17 @@
   grid-area: s;
 }
 
-.nav {
-  grid-area: n;
-}
-
-.sidebar svg, .sidebar img{
+.sidebar img, .sidebar svg{
   width: 2rem;
   height: 2rem;
   display: inline-block;
 }
+
+.nav {
+  grid-area: n;
+}
+
+
 
 .footer svg {
   width: 1.4rem;
@@ -94,15 +100,6 @@ button{
   transition: border-color 0.25s;
 }
 
-.avatar {
-  aspect-ratio: 1.5;
-  clip-path: circle(35%);
-}
-
-li {
-  text-transform: capitalize;
-}
-
 button:hover{
   border-color: #646cff;
 }
@@ -112,8 +109,8 @@ button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
-.transition {
-  transition: all 0.5s ease-in-out;
+li {
+  text-transform: capitalize;
 }
 
 

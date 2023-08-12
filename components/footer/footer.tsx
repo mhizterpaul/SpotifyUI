@@ -1,15 +1,16 @@
 
+import Image from "next/image"
 import ControlInfo from "./controlInfo"
 import Player from "./player"
 import Volume from "./volume"
-import react from '@/public/next.svg'
+import react from '@/public/vercel.svg'
 
 
 const Footer = () => {
     return (<footer className='footer bg-[#181818]'>
         <section className='w-full flex items-center justify-between'>
             <div className='flex flex-row items-center'>
-                <img src={react} alt="album art" />
+                <Image src={react} alt="album art" />
                 <span className='inline-block mx-2 leading-4'>
                     track <br />
                     <span>
