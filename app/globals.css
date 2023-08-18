@@ -113,6 +113,9 @@ li {
   text-transform: capitalize;
 }
 
+.transitional {
+  transition: all 0.3s ease-in-out;
+}
 
 @keyframes translateOut {
   from {

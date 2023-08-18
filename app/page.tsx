@@ -1,13 +1,15 @@
-import Footer from '@/components/footer/footer'
-import Nav from '@/components/nav/navbar'
-import Main from '@/components/main/main'
+import BrowseAll from '@/components/main/browseAll'
+import Recommendation from '@/components/main/recommendation'
+import TopGenres from '@/components/main/topGenres'
+import Playlist from '@/components/main/playlist'
 
 export default function Home() {
   return (
-    <section className='container relative h-screen max-w-[1124px] min-w-[625px]'>
-      <Nav />
-      <Main />
-      <Footer />
-    </section>
+    <main className='main m-0'>
+      <Playlist />
+      <Recommendation />
+      <TopGenres />
+      <BrowseAll />
+    </main>
   )
 }
