@@ -14,7 +14,7 @@ const playlistReducer = (state: Payload = initialState, action: Payload) => {
     switch(action.type){
         case 'getFeaturedPlaylists': 
             state.loading = true;
-            getFeaturedPlaylists(action.payload).then((res) => {
+            getFeaturedPlaylists(action.payload.access_token, action.payload.country).then((res) => {
                 state.loading = false;
                 state.playlists = res.playlists;
             }).catch(err);

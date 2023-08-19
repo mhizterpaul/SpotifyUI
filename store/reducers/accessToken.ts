@@ -12,8 +12,8 @@ export default function accessTokenReducer(state: Payload = {}, action: {type: s
             state.loading = true;
             getAccessToken().then(res => {
                 state.isloading = false;
-                state.access_token = res.access_token;
-                state.refresh_token = res.refresh_token;
+                //state.access_token = res.access_token;
+                //state.refresh_token = res.refresh_token;
             }).catch(err);
             return state;
 
