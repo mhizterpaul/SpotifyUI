@@ -1,16 +1,6 @@
 import { useState, useEffect } from 'react';
 
 
-const defaultData = [
-    'fav',
-    'daiy mix',
-    'discover weekly',
-    'malayalm',
-    'dance/electronic mix',
-    'edm/popular'
-], fallback = defaultData.map((item, id) => (<li key={id + 1}> {item} </li>
-));
-
 const Sidebar = (params: { isOpen?: boolean }) => {
 
     //if isOpen is true then show sidebar else hide it
@@ -21,7 +11,7 @@ const Sidebar = (params: { isOpen?: boolean }) => {
     className = Object.keys(params).length ? 'absolute ' + (params.isOpen ? 'translateOut' : 'translateIn') : '';
 
     return (<nav className={/*my-auto */ `bg-black sidebar
-        flex flex-col h-[91vh] min-h-[584px] items-center max-h-[696px] justify-between
+        flex flex-col h-[91vh] min-h-[584px] items-center max-h-[696px] justify-around
          text-lg pl-6 font-medium w-[14rem]` + className}>
         <h2 className='text-3xl mt-6 -mb-9'>
             <svg xmlns="http://www.w3.org/2000/svg" className='inline-block mb-2 mr-1' width="32" height="32" viewBox="0 0 32 32"><path fill="currentColor" d="M16 0C7.197 0 0 7.197 0 16s7.197 16 16 16s16-7.197 16-16S24.88 0 16 0zm7.36 23.12c-.319.479-.881.64-1.36.317c-3.76-2.317-8.479-2.797-14.083-1.52c-.557.165-1.037-.235-1.199-.72c-.156-.557.24-1.036.719-1.197c6.084-1.36 11.365-.803 15.521 1.76c.563.24.64.88.401 1.36zm1.921-4.401c-.401.563-1.12.803-1.683.401c-4.317-2.641-10.88-3.437-15.916-1.839c-.641.156-1.365-.161-1.521-.803c-.161-.64.156-1.359.797-1.52c5.844-1.761 13.041-.876 18 2.161c.484.24.724 1.041.323 1.599zm.162-4.479c-5.125-3.043-13.683-3.36-18.563-1.839c-.801.239-1.599-.24-1.839-.964c-.239-.797.24-1.599.959-1.839c5.683-1.681 15.041-1.359 20.964 2.161c.719.401.957 1.36.557 2.079c-.401.563-1.36.801-2.079.401z" /></svg>
@@ -45,10 +35,7 @@ const Sidebar = (params: { isOpen?: boolean }) => {
                 </div>
                 your episodes</li>
         </ul>
-        <ul>
-            {fallback}
-        </ul>
-        <button className='capitalize'>
+        <button className='capitalize justiy-self-end'>
             <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="m11 12.2l-.9-.9q-.275-.275-.7-.275t-.7.275q-.275.275-.275.7t.275.7l2.6 2.6q.3.3.7.3t.7-.3l2.6-2.6q.275-.275.275-.7t-.275-.7q-.275-.275-.7-.275t-.7.275l-.9.9V9q0-.425-.288-.713T12 8q-.425 0-.713.288T11 9v3.2Zm1 9.8q-2.075 0-3.9-.788t-3.175-2.137q-1.35-1.35-2.137-3.175T2 12q0-2.075.788-3.9t2.137-3.175q1.35-1.35 3.175-2.137T12 2q2.075 0 3.9.788t3.175 2.137q1.35 1.35 2.138 3.175T22 12q0 2.075-.788 3.9t-2.137 3.175q-1.35 1.35-3.175 2.138T12 22Zm0-2q3.35 0 5.675-2.325T20 12q0-3.35-2.325-5.675T12 4Q8.65 4 6.325 6.325T4 12q0 3.35 2.325 5.675T12 20Zm0-8Z" /></svg>
             install app
         </button>

@@ -1,12 +1,13 @@
 import React from 'react'
+import {useSelector, useDispatch} from 'react-redux'
 
-
-
-type Props = {}
-
-const Playlist = (props: Props) => {
+const Playlist = () => {
   return (
-    <div className='test'>Playlist</div>
+    <section className='flex flex-row'>
+      <div>
+        contains some image and some text
+      </div>
+    </section>
   )
 }
 
