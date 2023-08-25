@@ -1,11 +1,7 @@
 
 export const getAccessToken = () => {
-    const payload = {};
-
-
     return {
-        type: "AccessToken",
-        ...payload
+        type: "AccessToken"
     }
 }
 
@@ -16,9 +12,8 @@ export const getRefreshToken = (data: string) => {
     }
 }
 
-export const updateFootballerData = (updatedData: any) => {
+export const getPlaylist = () => {
     return {
-        type: "updatePlayer",
-        payload: updatedData
+        type: "getFeaturedPlaylist"
     }
 }

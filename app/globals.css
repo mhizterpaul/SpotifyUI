@@ -121,14 +121,14 @@ li {
   from {
     transform: translateX(calc(-100% - 20px));
   }
-  to {
-    transform: translateX(calc(0%));
+  95% {
+    transform: translateX(0%);
   }
 }
 
 @keyframes translateIn {
   from {
-    transform: translateX(calc(0%));
+    transform: translateX(0%);
   }
   to {
     transform: translateX(calc(-100% - 20px));
@@ -137,11 +137,13 @@ li {
 
 .translateIn {
   animation: 300ms ease-in-out 0s 1 normal forwards running translateIn;
+  display: none;
 }
 
-.translateOut{
-  animation: 300ms ease-in-out 0s 1 normal forwards running translateOut;
 
+.translateOut{
+  display: flex;
+  animation: 300ms ease-in-out 0s 1 normal forwards running translateOut;
 }
 
 @media (min-width: 1124px), (min-height: 65rem ) {

@@ -10,3 +10,5 @@ export const store = createStore(
     {},
     applyMiddleware(thunk)
     );
+
+    store.subscribe(() => console.log('state', store.getState()));

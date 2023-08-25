@@ -4,10 +4,10 @@ import {Payload} from './types/data.d'
 
 export async function getAccessToken(){
         const payload = await axios.get('http://localhost:3000/api/authenticate');
-        return payload.data.access_token ? 
-        {access_token: payload.data.access_token,
-             refresh_token: payload.data.refresh_token}  : 
-        payload;
+        return { access_token: payload.data?.access_token || null,
+             refresh_token: payload.data?.refresh_token || null,
+             error: payload.data ? null : payload
+            }
     
 }
 

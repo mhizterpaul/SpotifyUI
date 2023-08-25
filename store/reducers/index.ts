@@ -1,12 +1,12 @@
 import { combineReducers } from "redux";
 
 // Import all reducers
-import accessToken from "./accessToken";
-import mobileReducer from "./mobile";
+import ACCESS_TOKEN from "./access_token";
+import SET_MAIN from "./set_main";
 
 const reducers = combineReducers({
-    accessToken,
-    mobileReducer
+    ACCESS_TOKEN,
+    SET_MAIN
 })
 
 export default reducers;

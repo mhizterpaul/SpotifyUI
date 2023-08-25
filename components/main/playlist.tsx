@@ -1,11 +1,15 @@
 import React from 'react'
-import {useSelector, useDispatch} from 'react-redux'
+
 
 const Playlist = () => {
+  const country = new Intl.DisplayNames(['en'], { type: 'region' }); 
+
+  
   return (
     <section className='flex flex-row'>
       <div>
         contains some image and some text
+        hello why isnt this reflected
       </div>
     </section>
   )
