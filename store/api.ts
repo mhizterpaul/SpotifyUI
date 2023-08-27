@@ -1,6 +1,7 @@
 import axios from 'axios'
-import {Payload} from './reducers/access_token'
-
+type Payload = {
+    [key:string] : any
+}
 
 export async function getAccessToken(){
     try{
