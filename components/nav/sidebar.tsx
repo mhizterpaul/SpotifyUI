@@ -4,9 +4,8 @@ import { useDispatch } from 'react-redux';
 const Sidebar = (params: { isOpen?: boolean }) => {
     const dispatch = useDispatch();
     //if isOpen is true then show sidebar else hide it
-    let className = params.isOpen ? ' absolute ' + (params.isOpen ? 'translateOut' : 'translateIn') : '';
-
-    if (Object.keys(params).length === 0) className = '';
+    const paramsLength = Object.keys(params).length !== 0;
+    let className = paramsLength ? ' absolute ' + (params.isOpen ? 'translateOut' : 'translateIn') : '';
 
     return (<nav className={/*my-auto */ `bg-black sidebar hidden sm:flex flex-col h-[91vh] min-h-[584px] items-center max-h-[696px] justify-around
          text-lg pl-6 font-medium w-[14rem]` + className}>
