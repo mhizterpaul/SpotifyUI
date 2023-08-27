@@ -1,8 +1,8 @@
 import { getAccessToken, RefreshAccessToken } from "../api";
-import { RootState } from "..";
-
 import {createSlice,
 PayloadAction, createAsyncThunk, Slice } from '@reduxjs/toolkit';
+
+
 
 type ApiStatus = 'IDLE'|'PENDING'|'SUCCESS'|'ERROR';
 
@@ -24,14 +24,13 @@ export const fetchAccessToken = createAsyncThunk('access_token/getAccessToken', 
 
 export const refreshAccessToken = createAsyncThunk('access_token/refreshAccessToken', RefreshAccessToken);
 
-export const accessTokenSlice: Slice = createSlice({
+export const accessTokenSlice = createSlice({
     name: 'access_token',
     initialState,
     reducers: {
     setAccessToken: (state, action: PayloadAction<{access_token: string, refresh_token: string}>) => {
-            state = {
-                ...action.payload
-            }
+            state.access_token = action.payload.access_token;
+            state.refresh_token = action.payload.refresh_token;
         },
     setRefreshToken: (state, action: PayloadAction<{access_token: string}>) => {
         state.access_token = action.payload.access_token;
