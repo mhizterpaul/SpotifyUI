@@ -1,36 +1,21 @@
+import { AxiosError } from 'axios';
 import {getAccessToken, refreshAccessToken} from '../api'
 
 
-type Payload  = {
-    [key: string]: any
+export type Data  = {
+    access_token?: string,
+    refresh_token?: string,
+    error?: AxiosError
 }
 
-export default function ACCESS_TOKEN_REDUCER (state: Payload = {}, action: {type: string, payload?: any}) {
+export default function ACCESS_TOKEN (state: Data = {}, action: {type: string, payload?: Data}) {
     
-    const err = (error: any) => {
-        state.error = error;
-    };
-    switch (action.type){
-        case 'getAccessToken': 
-            const data: Payload = {}
-            getAccessToken().then(res => {
-                data.access_token = res.access_token;
-                data.refresh_token = res.refresh_token;
-            }).catch(err);
-            return {
-                ...state,
-                ...data
-            };
 
-        case 'refreshAccessToken':
-            let access_token;
-            refreshAccessToken(action.payload).then(res => {
-                access_token = res.access_token;
-            }).catch(err);
+    switch (action.type){
+        case 'SET_ACCESS_TOKEN': 
             return {
-                ...state,
-                access_token
-            };
+                ...action.payload
+            }
 
         default: return state;
 
