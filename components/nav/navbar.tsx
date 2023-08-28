@@ -4,7 +4,7 @@ import Sidebar from './sidebar';
 import Profile from './profile';
 import Search from './search';
 import { usePathname, useRouter } from 'next/navigation';
-import { useDispatch, useSelector } from 'react-redux';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import withProvider from '@/store/with_provider';
 
 
@@ -16,9 +16,9 @@ const Nav = () => {
     } = {
     };
     const [state, setState] = useState(initState);
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
     const pathname = usePathname();
-    const selector = useSelector((state: any) => state.SET_MAIN);
+    const selector = useAppSelector((state: any) => state.main);
 
     //ternary statement alters state
     //once after the break point is crossed

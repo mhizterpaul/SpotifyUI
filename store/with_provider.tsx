@@ -1,6 +1,6 @@
 
 import { Provider } from 'react-redux'
-import { store } from '@/store/store'
+import { store } from '@/store'
 
 const withProvider = (Component : React.FC) => {
     return function EnhancedComponent(){
