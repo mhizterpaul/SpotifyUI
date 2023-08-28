@@ -1,9 +1,13 @@
-import React from 'react'
+import { Home } from "../page"
 
-const page = () => {
+const Playlist = () => {
   return (
-    <div>page</div>
+    <Home>
+      <div>
+        playlist
+      </div>
+    </Home>
   )
 }
 
-export default page
+export default Playlist

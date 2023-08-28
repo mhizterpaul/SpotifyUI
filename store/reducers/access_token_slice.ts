@@ -4,7 +4,7 @@ PayloadAction, createAsyncThunk, Slice } from '@reduxjs/toolkit';
 
 
 
-type ApiStatus = 'IDLE'|'PENDING'|'SUCCESS'|'ERROR';
+export type ApiStatus = 'IDLE'|'PENDING'|'SUCCESS'|'ERROR';
 
 export type Data = {
     access_token: string| null,
@@ -42,7 +42,8 @@ export const accessTokenSlice = createSlice({
             })
             builder.addCase(fetchAccessToken.fulfilled, (state, action) => {
                 state.fetchAccessTokenStatus = 'SUCCESS'
-                state = action.payload
+                state.access_token = action.payload.access_token;
+                state.refresh_token = action.payload.refresh_token;
             })
             builder.addCase(fetchAccessToken.rejected, (state, action) => {
                 state.fetchAccessTokenStatus = 'ERROR'
