@@ -7,7 +7,7 @@ import useData from '../data_hook'
 
 const FeaturedPlaylists = () => {
   //get country info
-  const selector = useAppSelector(state => state.access_token) 
+  const selector = useAppSelector(state => state.main) 
   const state = useData({
     callBack: () => getFeaturedPlaylists(selector.access_token||'', 'US')
   });
@@ -23,10 +23,7 @@ const FeaturedPlaylists = () => {
       })
       }
       {
-        (state.status !== 'IDLE') && < Loader status = {state.status}/>
-      }
-      {
-        (selector.fetchAccessTokenStatus === 'ERROR') && <Loader status={selector.fetchAccessTokenStatus} meta = 'Access Token' /> 
+        (state.status !== 'IDLE') && < Loader status = {state.status} meta='fetching Featured Playlist data'/>
       }
     </section>
   )

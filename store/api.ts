@@ -1,19 +1,17 @@
 import axios from 'axios'
+import Error from 'next/error';
+import qs from 'query-string';
+
 type Payload = {
     [key:string] : any
 }
 
-
-export function RefreshAccessToken(refresh_token: string){
-    const config = {
-        headers: {
-
-        }
-    }
-     return axios.get(`http://localhost:3000/api/authenticate?refresh_token=${refresh_token}`)
-     .then(({data}) => data);
-   
+export function getAccessToken(){
+    return axios.get('http://localhost:3000/api/auth').then(
+        res => res.data
+    );
 }
+
 
 export function getFeaturedPlaylists(access_token: string, country: string){
    

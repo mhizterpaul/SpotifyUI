@@ -3,10 +3,10 @@
 import FeaturedPlaylists from '@/components/main/featured_playlists';
 import Recommendation from '@/components/main/recommendation';
 import { lazy, useEffect, useState } from 'react';
-import { useAppSelector } from '@/store/hooks';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import withProvider from '@/store/with_provider';
 import Loader from '@/components/network_request';
-import { usePathname, useRouter } from 'next/navigation';
+import { fetchAccessToken } from '@/store/reducers/main_slice';
 
 
 
@@ -25,23 +25,18 @@ const BrowseAll = lazy(() => import('../components/main/browse_all'));
 export function Home(props: {
   children: React.ReactNode
 }) {
-  const accessToken = useAppSelector(state => state.access_token);
-  const href = useAppSelector(state => state.main.href);
-  const pathname = usePathname();
+  const accessToken = useAppSelector(state => state.main);
+  const dispatch = useAppDispatch();
   const [status, setStatus] = useState('IDLE');
-  const router = useRouter();
 
   useEffect (() => {
-    if(accessToken.access_token == null){
-      setStatus('PENDING');
-      router.push('/api/authenticate');
+
+    if(accessToken.fetchAccessTokenStatus === 'IDLE'){
+      dispatch(fetchAccessToken());
     }
+    setStatus(accessToken.fetchAccessTokenStatus);
 
-    if(accessToken.access_token) setStatus('SUCCESS');
-
-    if(href !== pathname) router.push(href);
-    
-  }, [router, accessToken.access_token, href, pathname])
+  }, [dispatch, accessToken.fetchAccessTokenStatus, accessToken.access_token])
    
   
 
@@ -53,12 +48,6 @@ export function Home(props: {
       </main>
     )
   }
-
-  return (
-    <main className='main m-0'>
-      {accessToken.access_token}
-    </main>
-  )
 
   return (
     <main className='main m-0'>
