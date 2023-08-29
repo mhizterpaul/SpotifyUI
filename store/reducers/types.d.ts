@@ -4,4 +4,5 @@ export type FeaturedPlaylist = {
     id: string,
     image: string,
     href: string 
+    
 }
