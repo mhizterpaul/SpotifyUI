@@ -19,14 +19,12 @@ export function getFeaturedPlaylists(access_token: string, country: string){
             headers: {
                 'Authorization': 'Bearer ' + access_token
             }
-        }).then(({data}) => data.items.map((item: Payload) => ({
-
-            name: item.name,
-            id: item.id,
-            image: item.images[0].url,
-            href: item.href 
-        }))
-             )
+        }).then(({data}) => data.playlists.items.map((el)=> ({
+            id: el.id,
+            image: el.images[0].url,
+            name: el.name,
+            href: el.tracks.href
+        })));
  
 }
 

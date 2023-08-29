@@ -13,14 +13,13 @@ function useData(params: { callBack : () => any }) {
 
     const fetchData: any= async()=> {
 
-      if(data) return;
+      if(data.status === 'PENDING' || data.data) return;
 
       setData((prev) => ({...prev, status: 'PENDING'}));
 
       try {
         const data = await params.callBack();
         setData((prev) => ({...prev, data, status: 'SUCCESS'}));
-
       }catch(e: any){
 
         if(e.message.error.includes('expired')){
