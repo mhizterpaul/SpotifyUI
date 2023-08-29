@@ -43,15 +43,13 @@ const Nav = () => {
     const goBack = () => {
         if (selector.history.length) {
             dispatch({ type: 'goBack' })
-            return router.push(selector.history[selector.curr]);
         }
         if (pathname === '/') return;
         router.back();
     }
     const goForward = () => {
         if (selector.history.length) {
-            dispatch({ type: 'goForward' })
-            return router.push(selector.history[selector.curr]);
+            dispatch({ type: 'goForward' });
         }
         if (!history.length) return;
         router.forward();

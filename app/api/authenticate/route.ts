@@ -1,3 +1,5 @@
+import { store } from '@/store';
+import { setAccessToken } from '@/store/reducers/access_token_slice';
 import {NextResponse} from 'next/server';
 import qs from 'query-string';
 
@@ -7,7 +9,7 @@ export async function GET(req: Request) {
 
     if (params.get('code') == null && params.get('error') == null) {
         
-        return NextResponse.redirect(`https://accounts.spotify.com/authorize?response_type=code&client_id=${process.env.SPOTIFY_CLIENT_ID}&redirect_uri=${uri}`);
+        return NextResponse.redirect(`https://accounts.spotify.com/authorize?response_type=code&client_id=${process.env.SPOTIFY_CLIENT_ID}&redirect_uri=${uri}&show_dialog=false`);
     }
     
 
@@ -61,8 +63,8 @@ export async function GET(req: Request) {
           const response = await res.json();
           
           if(res.ok) {
-            NextResponse.redirect('http://localhost:3000');
-            return NextResponse.json({access_token: response.access_token, refresh_token: response.refresh_token});
+            store.dispatch(setAccessToken({access_token: response.access_token, refresh_token: response.refresh_token}));
+            return NextResponse.json('access token dispatched');
           }
 
           return NextResponse.json({error: response}, {status: 502});

@@ -1,4 +1,7 @@
+'use client'
+
 import { Home } from "../page"
+import withProvider from "@/store/with_provider"
 
 const Playlist = () => {
   return (
@@ -10,4 +13,4 @@ const Playlist = () => {
   )
 }
 
-export default Playlist
+export default withProvider(Playlist)

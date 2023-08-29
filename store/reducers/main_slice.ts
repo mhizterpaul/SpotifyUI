@@ -17,47 +17,33 @@ export const MainSlice = createSlice({
     initialState,
     reducers: {
         goBack: (state) => {
-            if(!state.curr) return;
-
-            state.curr == null ?
-            {
-                href: state.history[state.history.length-1],
-                curr: state.history.length - 1,
-                ...state.history
-            } : {
+            if(state.curr && state.curr !== 0) return {
+                ...state,
                 href: state.history[state.curr-1],
                 curr: state.curr-1,
-                ...state.history
             }
         },
         goForward: (state) => {
-            if(state.curr === state.history.length) return;
-
-            state.curr == null ?
-            {
-                href: state.history[state.history.length-1],
-                curr: state.history.length +1,
-                ...state.history
-            } : {
-                href: state.history[state.curr-1],
+            if(state.curr && state.curr !== state.history.length) return {
+                ...state,
+                href: state.history[state.curr+1],
                 curr: state.curr+1,
-                ...state.history
             }
         }, 
-        pushRef: (state, action) => {
-            if(action.type.startsWith('/')){
-                if(state.curr !== 0 && state.curr !== (state.history.length - 1)){
+        pushRef: (state, action: PayloadAction<string>) => {
+            if(action.payload.startsWith('/') && state.history[state.curr || 0] !== action.payload){
+                if(state.curr !== 0 && state.curr !== (state.history.length)){
                     const history = state.history.slice(state.curr || state.history.length);
                     return state =  {
-                        href: action.type,
-                        history: [...history, action.type],
-                        curr: state.curr
+                        href: action.payload,
+                        history: [...history, action.payload],
+                        curr: (state.curr || 0) + 1
                     }
                 }
                   state =  {
-                    href: action.type,
-                    history: [...state.history, action.type],
-                    curr: state.curr
+                    href: action.payload,
+                    history: [...state.history, action.payload],
+                    curr: (state.curr || 0) + 1
                 }
             }
 

@@ -2,7 +2,7 @@ import React from 'react'
 import './styles.css'
 import { ApiStatus } from '@/store/reducers/access_token_slice'
 
-function Loader({ status, meta }: { status: ApiStatus, meta: string }) {
+function Loader({ status, meta }: { status: ApiStatus | string, meta: string }) {
     
     return (
         status === 'PENDING' ? <div className='spinner'></div>

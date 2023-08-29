@@ -3,14 +3,13 @@ type Payload = {
     [key:string] : any
 }
 
-export function getAccessToken(){
-     return axios.get('http://localhost:3000/api/authenticate').
-     then(({data}) => data);
-    
-}
 
 export function RefreshAccessToken(refresh_token: string){
+    const config = {
+        headers: {
 
+        }
+    }
      return axios.get(`http://localhost:3000/api/authenticate?refresh_token=${refresh_token}`)
      .then(({data}) => data);
    
