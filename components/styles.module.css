@@ -5,6 +5,7 @@
     height: 36px;
     border-radius: 50%;
     border-left-color: #09f;
+    border: 0, 0, auto, auto;
     animation: spin 1s ease infinite;
 }
 

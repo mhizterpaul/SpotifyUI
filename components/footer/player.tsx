@@ -1,3 +1,65 @@
+import { useState, useRef } from "react";
+import { FaPlay, FaPause, FaBackward, FaForward } from "react-icons/fa";
+
+interface PlayerProps {
+    src: string;
+}
+
+const Player: React.FC<PlayerProps> = ({ src }) => {
+    const [isPlaying, setIsPlaying] = useState(false);
+    const [currentTime, setCurrentTime] = useState(0);
+
+    const audioRef = useRef<HTMLAudioElement>(null);
+
+    const togglePlay = () => {
+        if (isPlaying) {
+            audioRef.current?.pause();
+        } else {
+            audioRef.current?.play();
+        }
+        setIsPlaying(!isPlaying);
+    };
+
+    const handleRewind = () => {
+       if(audioRef.current) audioRef.current.currentTime -= 10;
+    };
+
+    const handleForward = () => {
+       if(audioRef.current) audioRef.current.currentTime += 10;
+    };
+
+    const handleTimeUpdate = () => {
+        setCurrentTime(audioRef.current?.currentTime || 0);
+    };
+
+    return (
+        <div>
+            <audio
+                ref={audioRef}
+                src={src}
+                onTimeUpdate={handleTimeUpdate}
+                onEnded={() => setIsPlaying(false)}
+            />
+            <div>
+                <button onClick={handleRewind}>
+                    <FaBackward />
+                </button>
+                <button onClick={togglePlay}>
+                    {isPlaying ? <FaPause /> : <FaPlay />}
+                </button>
+                <button onClick={handleForward}>
+                    <FaForward />
+                </button>
+            </div>
+            <div>{currentTime}</div>
+        </div>
+    );
+};
+
+export default Player;
+
+
+/*
 const Player = () => {
     return (
         <div>
@@ -17,5 +79,4 @@ const Player = () => {
         </div>
     )
 }
-
-export default Player
+*/

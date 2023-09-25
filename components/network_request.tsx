@@ -1,11 +1,17 @@
 import React from 'react'
-import './styles.css'
-import { ApiStatus } from '@/store/reducers/access_token_slice'
+import styles from './styles.module.css'
+import { ApiStatus } from '@/store/reducers/main_slice'
 
-function Loader({ status, meta }: { status: ApiStatus | string, meta: string }) {
+
+type NetworkParam = {
+    status: ApiStatus | string,
+    meta: string
+}
+
+function Loader({ status, meta}: NetworkParam) {
     
     return (
-        status === 'PENDING' ? <div className='spinner'></div>
+        status === 'PENDING' || 'IDLE' ? <div className={styles.spinner }></div>
             : <div> {status + " " + meta}</div>
     )
 }

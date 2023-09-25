@@ -1,7 +1,7 @@
 'use client';
 
 import FeaturedPlaylists from '@/components/main/featured_playlists';
-import Recommendation from '@/components/main/recommendation';
+import Recommendations from '@/containers/recommendations';
 import { lazy, useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import withProvider from '@/store/with_provider';
@@ -63,7 +63,7 @@ function Mainpage() {
     <Home>
       {selector === '/' && <>
       <FeaturedPlaylists />
-      <Recommendation />
+      <Recommendations />
       </>}
       {
         selector === '/search' &&  <>

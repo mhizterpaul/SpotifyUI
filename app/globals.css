@@ -1,6 +1,4 @@
-/* refactor component classes
- into component
-  based css modules*/
+/* now you can try using nested selectors*/
 
 @tailwind base;
 @tailwind components;

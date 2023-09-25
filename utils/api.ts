@@ -1,6 +1,5 @@
 import axios from 'axios'
-import Error from 'next/error';
-import qs from 'query-string';
+import {Recommendation, FeaturedPlaylist} from '@/store/types'
 
 type Payload = {
     [key:string] : any
@@ -19,7 +18,7 @@ export function getFeaturedPlaylists(access_token: string, country: string){
             headers: {
                 'Authorization': 'Bearer ' + access_token
             }
-        }).then(({data}) => data.playlists.items.map((el)=> ({
+        }).then(({data}) : FeaturedPlaylist[] => data.playlists.items.map((el : Payload)=> ({
             id: el.id,
             image: el.images[0].url,
             name: el.name,
@@ -52,28 +51,33 @@ export function getPlaylist(access_token:string, id: string){
 
 export function getSeveralShows(access_token: string){
 
-    return axios.get(`https://api.spotify.com/v1/browse/categories/show`, {
-            headers: {
-                'Authorization': 'Bearer ' + access_token
-            }
-        }).then(({data}) => {
-            return {
-                href: data.href,
-                image: data.icons[0].url
-            }
+    return axios.get(`https://api.spotify.com/v1/search?q=a%20e%20&type=show&market=US&limit=30`, {
+        headers: {
+            'Authorization': 'Bearer ' + access_token
+        }}).then(({data}) : Recommendation[] => {
+
+            return data.shows.items.map((el: Payload) => ({
+                src: el.images[0].url,
+                title: el.name,
+                author: el.publisher,
+                url: el.external_urls.spotify,
+                description: el.description,
+            }));
         })
+
 }
 
-export function getCategories(access_token:string,category:string, country: string){
+export function getSeveralCategories(access_token:string, categories: string[]){
     
-    return axios.get(`https://api.spotify.com/v1/browse/categories/${category}?country=${country}`, {
+    return axios.get(`https://api.spotify.com/v1/browse/shows/ids=${categories}?country=${country}`, {
             headers: {
                 'Authorization': 'Bearer ' + access_token
             }
         }).then(({data}) => {
             return {
             href: data.href,
-            image: data.icons[0].url
+            image: data.icons[0].url,
+            name: data.name
         }})
 }
 

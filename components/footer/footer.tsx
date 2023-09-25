@@ -1,4 +1,4 @@
-
+'use client'
 import Image from "next/image"
 import ControlInfo from "./controlInfo"
 import Player from "./player"

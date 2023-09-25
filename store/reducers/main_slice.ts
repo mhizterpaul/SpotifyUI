@@ -1,5 +1,5 @@
 import {createAsyncThunk, createSlice, PayloadAction} from '@reduxjs/toolkit'
-import { getAccessToken } from '../api';
+import { getAccessToken } from '../../utils/api';
 
 
 export type ApiStatus = 'IDLE'|'PENDING'|'SUCCESS'|'ERROR';
