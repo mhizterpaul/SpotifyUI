@@ -69,7 +69,7 @@ export function getSeveralShows(access_token: string){
 
 export function getSeveralCategories(access_token:string, categories: string[]){
     
-    return axios.get(`https://api.spotify.com/v1/browse/shows/ids=${categories}?country=${country}`, {
+    return axios.get(`https://api.spotify.com/v1/browse/shows/ids=${categories}?country=US`, {
             headers: {
                 'Authorization': 'Bearer ' + access_token
             }

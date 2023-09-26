@@ -135,12 +135,12 @@ li {
 
 .translateIn {
   animation: 300ms ease-in-out 0s 1 normal forwards running translateIn;
-  display: none !important;
+  display: none;
 }
 
 
 .translateOut{
-  display: flex !important;
+  display: flex;
   animation: 300ms ease-in-out 0s 1 normal forwards running translateOut;
 }
 

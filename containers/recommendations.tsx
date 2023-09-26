@@ -19,4 +19,5 @@ const mapStateToProps = (state: RootState) => ({
   access_token: state.main.access_token,
 });
 
+
 export default connect(mapStateToProps)(RecommendationsContainer)
