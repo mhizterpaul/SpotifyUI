@@ -26,9 +26,10 @@ export function Home(props: {
     if (accessToken.fetchAccessTokenStatus === 'IDLE') {
       dispatch(fetchAccessToken());
     }
+    
     setStatus(accessToken.fetchAccessTokenStatus);
 
-  }, [dispatch, accessToken.fetchAccessTokenStatus, accessToken.access_token])
+  }, [dispatch, accessToken.fetchAccessTokenStatus])
 
 
 
@@ -63,6 +64,7 @@ function Mainpage() {
         />
 
         <Route path='/library?list=:id' element={<Library />} />
+        
         <Route path='/' element={
           <>
             <FeaturedPlaylists />

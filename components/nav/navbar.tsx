@@ -8,33 +8,25 @@ import { useState } from 'react';
 type Props = {
     search: boolean, 
     isMobile: boolean, 
-    route: (arg : 'previous'|'next') => boolean
+    route: (arg : 'previous'|'next') => any,
+    next: boolean,
+    prev: boolean
 }
 
-const Nav = ({search, isMobile, route} : Props) => {
+const Nav = ({search, isMobile, route, next, prev} : Props) => {
     
     const btn = `bg-[url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxZW0iIGhlaWdodD0iMWVtIiB2aWV3Qm94PSIwIDAgMjQgMjQiPjxwYXRoIGZpbGw9IiNmZmZmZmYiIGQ9Im0xMy4zIDE3LjNsLTQuNi00LjZxLS4xNS0uMTUtLjIxMi0uMzI1VDguNDI1IDEycTAtLjIuMDYzLS4zNzVUOC43IDExLjNsNC42LTQuNnEuMjc1LS4yNzUuNy0uMjc1dC43LjI3NXEuMjc1LjI3NS4yNzUuN3QtLjI3NS43TDEwLjggMTJsMy45IDMuOXEuMjc1LjI3NS4yNzUuN3QtLjI3NS43cS0uMjc1LjI3NS0uNy4yNzV0LS43LS4yNzVaIi8+PC9zdmc+")]
      bg-no-repeat bg-center bg-[length:70%] align-middle bg-[#181818] rounded-full h-8 w-8`
 
      const [isOpen, setIsOpen] = useState(false);
-     const [isPreviousDisabled, setIsPreviousDisabled] = useState(true);
-     const [isNextDisabled, setIsNextDisabled] = useState(false);
 
-
-     console.log(search);
     return (
         <>
             <nav className='flex w-full flex-row nav items-center justify-between  py-2'>
                 <div className=''>
-                    <button className={`${btn} mr-4 ml-8`} onClick={() => {
-                        const disabled = route('previous')
-                        if(isPreviousDisabled !== disabled) setIsPreviousDisabled(disabled);
-                        }} disabled={isPreviousDisabled}>
+                    <button className={`${btn} mr-4 ml-8`} onClick={() => route('previous')} disabled={prev}>
                     </button>
-                    <button className={`${btn} rotate-180`} onClick={() => {
-                        const disabled = route('next')
-                        if(isNextDisabled !== disabled) setIsNextDisabled(disabled);
-                        }} disabled={isNextDisabled}>
+                    <button className={`${btn} rotate-180`} onClick={() => route('next')} disabled={next}>
                     </button>
                 </div>
                 {search && <Search />}

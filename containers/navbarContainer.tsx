@@ -1,43 +1,59 @@
+'use client'
 import Nav from "@/components/nav/navbar";
 import { RootState } from "@/store";
 import { connect } from "react-redux";
 import { useEffect, useState } from "react";
 import withProvider from "@/store/with_provider";
 import { Dispatch } from "@reduxjs/toolkit";
-import { goBack, goForward } from "@/store/reducers/main_slice";
-import {useNavigate} from 'react-router-dom'
+import { goBack, goForward, pushRef } from "@/store/reducers/main_slice";
+import {useNavigate, useLocation} from 'react-router-dom'
 
 type Props = {href: string,
    curr: number | null,
-   end: boolean | undefined
-   dispatch: Dispatch
+   end: boolean | undefined,
+   dispatch: Dispatch,
   }
 
 function NavbarContainer({href, end, curr, dispatch} : Props) {
   //useRouter
   //check store for any routes
   const [isMobile, setIsMobile] = useState( window.innerWidth <= 555),
-  pathname = '/' + location.href.split('/')[3],
+  [nav, setNav] = useState({prev: true, next: false}),
+  location = useLocation(),
+  pathname = location.pathname,
   navigate = useNavigate(),
   route = (option: 'previous'|'next') => {
 
-    if(option === 'previous'){
-      if(curr === 0){
-        if(href !== '/') navigate('/');
-        return true;
-      };
-      dispatch(goBack());
+    if(curr == null){
+      if(option === 'next') {
 
-      return curr === 1 ? true : false;
+        setNav({prev: false, next: true})
+        dispatch(pushRef('next'));
+        return
+      }
+      
+      setNav({prev: true, next: false})
+      dispatch(pushRef('previous'));
+      return
     }
-    if((end !== undefined && end) || curr == null){
+
+    if(option === 'previous'){
+
+      if(end && pathname === '/search') return navigate(href);
+
+      dispatch(goBack());
+      return curr === 1 ? setNav(prv => ({...prv, prev: true}))
+        : setNav(prv => ({...prv, prev: false}));
+    }
+
+    if((end !== undefined && end)){
       navigate('/search');
-      return true;
+      return setNav(prv => ({...prv, next: true}))
     }
 
     dispatch(goForward());
 
-    return false;
+    return setNav(prv => ({...prv, prev: false}));
 
   }
   
@@ -47,13 +63,14 @@ function NavbarContainer({href, end, curr, dispatch} : Props) {
          : isMobile && setIsMobile(false);
     }
     window.addEventListener('resize', setMobile);
+  
+    if(href !== pathname) navigate(href);
+  
     return () => removeEventListener('resize', setMobile);
-  }, [])
-
-  if(href !== pathname) navigate(pathname);
+  }, [href])
 
   return (
-    <Nav route = {route} isMobile = {isMobile} search = {pathname === '/search'}/>
+    <Nav next = {nav.next} prev = {nav.prev} route = {route} isMobile = {isMobile} search = {pathname === '/search'}/>
   )
 }
 

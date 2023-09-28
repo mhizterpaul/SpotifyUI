@@ -11,7 +11,7 @@ type NetworkParam = {
 function Loader({ status, meta}: NetworkParam) {
     
     return (
-        status === 'PENDING' || 'IDLE' ? <div className={styles.spinner }></div>
+        status === ('PENDING' || 'IDLE') ? <div className={styles.spinner }></div>
             : <div> {status + " " + meta}</div>
     )
 }

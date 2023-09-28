@@ -56,6 +56,11 @@ export const MainSlice = createSlice({
             
         }, 
         pushRef: (state, action: PayloadAction<string>) => {
+            if(action.payload === ('next' || 'previous')) return {
+                ...state,
+                href: action.payload === 'next' ? '/search' : '/'
+            }
+
             if(action.payload.startsWith('/') && state.history[state.curr || 0] !== action.payload){
                 if(state.curr !== 0 && state.curr !== (state.history.length)){
                     const history = state.history.slice(state.curr || state.history.length);
