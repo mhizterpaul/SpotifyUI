@@ -61,10 +61,13 @@ function NavbarContainer({href, end, curr, dispatch} : Props) {
     const setMobile = () => {
         window.innerWidth <= 555 ? !isMobile && setIsMobile(true)
          : isMobile && setIsMobile(false);
-    }
+    },
+    currUrl = window.location.href.split('3000/')[1];
+
     window.addEventListener('resize', setMobile);
   
     if(href !== pathname) navigate(href);
+    if(currUrl.startsWith('?')) navigate(`/${currUrl.slice(1)}`);
   
     return () => removeEventListener('resize', setMobile);
   }, [href])

@@ -14,3 +14,14 @@ export type Recommendation = {
     url: string,
     description: string,
 };
+
+export type GenericPayload = {
+    [key:string] : any
+}
+
+export type Category = {
+    href: string,
+    image: string,
+    id: string,
+    name: string
+}

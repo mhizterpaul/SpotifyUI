@@ -1,5 +1,5 @@
 import Card from "./card"
-import { Recommendation } from "@/store/types"
+import { Recommendation } from "@/utils/types"
 //render as server component
 
 type Props = {
@@ -8,7 +8,7 @@ type Props = {
 
 const Recommendations = ({ recommendations }: Props) => {
     return (
-        <section className = 'flex-col justify-center'>
+        <section className='flex-col justify-center'>
             <p className='flex flex-row justify-between'>
                 Shows you might like
                 <span className='capitalize inline-block' >see all</span>

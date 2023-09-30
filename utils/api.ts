@@ -1,9 +1,7 @@
 import axios from 'axios'
-import {Recommendation, FeaturedPlaylist} from '@/store/types'
-
-type Payload = {
-    [key:string] : any
-}
+import {Recommendation, FeaturedPlaylist} from '@/utils/types'
+import { Category } from '@/utils/types';
+import { GenericPayload } from '@/utils/types';
 
 export function getAccessToken(){
     return axios.get('http://localhost:3000/api/auth').then(
@@ -18,7 +16,7 @@ export function getFeaturedPlaylists(access_token: string, country: string){
             headers: {
                 'Authorization': 'Bearer ' + access_token
             }
-        }).then(({data}) : FeaturedPlaylist[] => data.playlists.items.map((el : Payload)=> ({
+        }).then(({data}) : FeaturedPlaylist[] => data.playlists.items.map((el : GenericPayload)=> ({
             id: el.id,
             image: el.images[0].url,
             name: el.name,
@@ -33,13 +31,13 @@ export function getPlaylist(access_token:string, id: string){
             headers: {
                 'Authorization': 'Bearer ' + access_token
             }
-        }).then (({data}) => data.tracks.items.map((item: Payload) => ({
+        }).then (({data}) => data.tracks.items.map((item: GenericPayload) => ({
             added_at: item.added_at,
             href: item.href,
             images: item.images[0].url,
             name: item.track.name,
             popularity: item.popularity,
-            artists: item.artists.map((artist: Payload) => artist.name),
+            artists: item.artists.map((artist: GenericPayload) => artist.name),
             duration_ms: item.duration_ms,
             description: item.description,
             album: item.album.name,
@@ -56,7 +54,7 @@ export function getSeveralShows(access_token: string){
             'Authorization': 'Bearer ' + access_token
         }}).then(({data}) : Recommendation[] => {
 
-            return data.shows.items.map((el: Payload) => ({
+            return data.shows.items.map((el: GenericPayload) => ({
                 src: el.images[0].url,
                 title: el.name,
                 author: el.publisher,
@@ -67,18 +65,19 @@ export function getSeveralShows(access_token: string){
 
 }
 
-export function getSeveralCategories(access_token:string, categories: string[]){
+export function getSeveralCategories(access_token:string){
     
-    return axios.get(`https://api.spotify.com/v1/browse/shows/ids=${categories}?country=US`, {
+    return axios.get(`https://api.spotify.com/v1/browse/categories?country=US&limit=40`, {
             headers: {
                 'Authorization': 'Bearer ' + access_token
             }
-        }).then(({data}) => {
-            return {
-            href: data.href,
-            image: data.icons[0].url,
-            name: data.name
-        }})
+        }).then(({data}) : Category[] => {
+            
+            return data.categories.items.map((category : GenericPayload) => ({
+                ...category,
+                image: category.icons[0].url,
+            }))
+        })
 }
 
 export function getTopGenres(access_token: string){
@@ -88,7 +87,19 @@ export function getTopGenres(access_token: string){
                 'Authorization': 'Bearer ' + access_token
             }
         }).then(
-            ({data}) => data.genres
+            ({data}) => Promise.allSettled(
+                data.genres.map((id: string) => {
+
+                    return axios.get(`https://api.spotify.com/v1/browse/categories/${id}`, {
+                        headers: {
+                            'Authorization': 'Bearer ' + access_token
+                        }
+                    }).then(({data}) => ({
+                        ...data,
+                        image: data.icons[0].url
+                    }))
+                })
+            ).then((values) => values.filter((value) => value.status === 'fulfilled').map(({value}) => value))
         )
 
 }

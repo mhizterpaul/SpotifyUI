@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-      domains: ["i.scdn.co", "encrypted-tbn0.gstatic.com"],
+      domains: ["i.scdn.co", 't.scdn.co'],
     }
 }
 

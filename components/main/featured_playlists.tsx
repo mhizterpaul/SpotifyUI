@@ -4,7 +4,7 @@ import Loader from '../network_request'
 import { useAppSelector } from '@/store/hooks'
 import { getFeaturedPlaylists } from '@/utils/api'
 import useData from '../data_hook'
-import { FeaturedPlaylist } from '@/store/types'
+import { FeaturedPlaylist } from '@/utils/types'
 
 
 const FeaturedPlaylists = () => {

@@ -8,15 +8,15 @@ import { Route, Routes } from 'react-router-dom';
 import Loader from '@/components/network_request';
 import { useAppSelector, useAppDispatch } from '@/store/hooks';
 import { fetchAccessToken } from '@/store/reducers/main_slice';
+import Playlist from '@/components/main/playlist';
 
 
 const Library = lazy(() => import('../components/main/library'));
 const TopGenres = lazy(() => import('../components/main/top_genres'));
 const BrowseAll = lazy(() => import('../components/main/browse_all'));
 
-export function Home(props: {
-  children: React.ReactNode
-}) {
+function Home() {
+
   const accessToken = useAppSelector(state => state.main);
   const dispatch = useAppDispatch();
   const [status, setStatus] = useState('IDLE');
@@ -26,57 +26,41 @@ export function Home(props: {
     if (accessToken.fetchAccessTokenStatus === 'IDLE') {
       dispatch(fetchAccessToken());
     }
-    
+
     setStatus(accessToken.fetchAccessTokenStatus);
 
   }, [dispatch, accessToken.fetchAccessTokenStatus])
 
 
 
-  if (accessToken.access_token == null) {
-
-    return (
-      <main className='main m-0'>
-        <Loader status={status} meta='Access Token' />
-      </main>
-    )
-  }
-
   return (
     <main className='main m-0'>
-      {props.children}
+      {accessToken.access_token == null ? <Loader status={status} meta='Access Token' /> :
+
+        (<Routes>
+          <Route path='/search' element={
+            <>
+              <TopGenres />
+              <BrowseAll />
+            </>}
+          />
+          <Route path='/playlist?new=:slug' element={<Playlist />} />
+          <Route path='/library?list=:id' element={<Library />} />
+
+          <Route path='/' element={
+            <>
+              <FeaturedPlaylists />
+              <Recommendations />
+            </>}
+          />
+        </Routes>)
+      }
     </main>
   )
 }
 
-function Mainpage() {
-
-
-  return (
-
-    <Home>
-      <Routes>
-        <Route path='/search' element={
-          <>
-            <TopGenres />
-            <BrowseAll />
-          </>}
-        />
-
-        <Route path='/library?list=:id' element={<Library />} />
-        
-        <Route path='/' element={
-          <>
-            <FeaturedPlaylists />
-            <Recommendations />
-          </>}
-        />
-      </Routes>
-    </Home>
-
-  )
-}
 
 
 
-export default withProvider(Mainpage);
+
+export default withProvider(Home);

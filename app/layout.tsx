@@ -7,7 +7,7 @@ import { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'Spotify Clone',
-  description: 'spotify clone',
+  description: 'spotify clone',<nav></nav>
 }
 
 const inter = Inter({ subsets: ['latin'] });
