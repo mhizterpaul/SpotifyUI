@@ -1,6 +1,6 @@
 import Card from "./card"
 import { Recommendation } from "@/utils/types"
-//render as server component
+
 
 type Props = {
     recommendations: Recommendation[]

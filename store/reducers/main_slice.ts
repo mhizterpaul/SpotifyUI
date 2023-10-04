@@ -28,56 +28,103 @@ export const MainSlice = createSlice({
     initialState,
     reducers: {
         goBack: (state) => {
-            if(state.curr && state.curr !== 0) return {
+            const {curr, history,href, end} = state;
+            if((curr != null) && (curr === history.length -1 ) && (history.length >= 2) && (href !== history[history.length - 1])) return {
                 ...state,
-                href: state.history[state.curr-1],
-                curr: state.curr-1,
+                href: history[history.length -1]
             }
-            if(state.curr && state.curr < state.history.length) return {
+            
+            if((curr != null) && (curr > 0) && (history.length >= 2)) return {
                 ...state,
+                href: history[curr-1],
+                curr: curr-1,
                 end: false
             }
+ 
+
+            return state;
         },
         goForward: (state) => {
+            const {curr, href, history } = state;
 
-            if(state.curr && state.curr === state.history.length - 1)return {
+            if((curr !== null) && (curr === 0) && (href !== history[0])) return {
                 ...state,
-                href: state.history[state.curr+1],
-                curr: state.curr+1,
+                href: history[0]
+            }
+
+            if((curr !== null) && (curr === history.length - 2))return {
+                ...state,
+                href: history[curr+1],
+                curr: curr+1,
                 end: true
             }
 
-            if(state.curr && state.curr !== state.history.length) return {
+            if((curr !== null) && (curr < history.length-2)) return {
                 ...state,
-                href: state.history[state.curr+1],
-                curr: state.curr+1,
+                href: history[curr+1],
+                curr: curr + 1,
                 end: false
             }
-            
+
+            return state;
         }, 
+        setHref: (state, action: PayloadAction<string>) => {
+            if(action.payload.startsWith('/')) return {...state, href: action.payload}
+            return state
+        },
         pushRef: (state, action: PayloadAction<string>) => {
-            if(action.payload === ('next' || 'previous')) return {
+            const {curr, history, end, href} = state;
+
+            if((action.payload === 'next') || (action.payload === 'previous')) return {
                 ...state,
                 href: action.payload === 'next' ? '/search' : '/'
-            }
+            } 
 
-            if(action.payload.startsWith('/') && state.history[state.curr || 0] !== action.payload){
-                if(state.curr !== 0 && state.curr !== (state.history.length)){
-                    const history = state.history.slice(state.curr || state.history.length);
-                    return  {
+            if(action.payload.startsWith('/')){
+                if((curr == null) && (action.payload !== href)) return {
+                    ...state,
+                    history: [action.payload],
+                    curr: 0,
+                    end: true,
+                    href: action.payload
+                }
+                if((curr !== null) && history.includes(action.payload)){
+                    if((end === false) && (curr !==  history.length-1)){
+                        return {
+                            ...state,
+                            history: [...history].splice( curr, 0, action.payload),
+                            curr: curr + 1,
+                            href: action.payload
+                        }
+                    }
+                    return{
                         ...state,
-                        href: action.payload,
-                        history: [...history, action.payload],
-                        end: false
+                        curr: history.lastIndexOf(action.payload),
+                        href: action.payload
                     }
                 }
-                  return {
+                if((end === true) && (curr !== (history.length-1))) return {
                     ...state,
-                    href: action.payload,
-                    history: [...state.history, action.payload],
-                    end: false
+                    history: [...history, action.payload],
+                    curr: history.length-1,
+                    href: action.payload
+                }
+                if((curr != null) && (curr === (history.length-1))) return {
+                    ...state,
+                    history: [...history, action.payload],
+                    curr: curr + 1,
+                    href: action.payload
+                }
+
+                if((curr != null) && (curr > 0) && (curr < (history.length -1))) return {
+                    ...state,
+                    history: [...history].splice( curr, 0, action.payload),
+                    curr: curr + 1,
+                    href: action.payload
                 }
             }
+
+            return state;
 
         }
     }, 
@@ -99,7 +146,7 @@ export const MainSlice = createSlice({
 
 })
 
-export const {goBack, goForward, pushRef} = MainSlice.actions;
+export const {goBack, goForward, pushRef, setHref} = MainSlice.actions;
 
 export default MainSlice.reducer
 

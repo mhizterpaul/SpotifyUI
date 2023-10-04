@@ -1,5 +1,5 @@
 import useData from "@/components/data_hook"
-import { getSeveralShows } from "@/utils/api"
+import { getSeveralShows, test } from "@/utils/api"
 import Recommendations from "@/components/main/recommendation"
 import { useEffect } from "react"
 import { connect } from "react-redux"
@@ -11,7 +11,7 @@ const RecommendationsContainer = ({ access_token }: {access_token: string | null
   const data = useData({callBack: () => getSeveralShows(access_token || '')})
   useEffect(()=>{}, [data]);
   
-  return data.data === null ? null :  (
+  return data.data === null ? <Recommendations recommendations = { test }/> :  (
     <Recommendations recommendations = { data.data }/>
   );
 }

@@ -103,3 +103,16 @@ export function getTopGenres(access_token: string){
         )
 
 }
+
+
+ export const test : (Category & Recommendation & FeaturedPlaylist)[] = [...new Array(20)].map(el => ({
+    id: 'test',
+    name: 'test',
+    image: 'http://localhost:3000/static/images/test.jpeg',
+    src: 'http://localhost:3000/static/images/test.jpeg',
+    href: 'google.com',
+    title: 'test',
+    author: 'test',
+    description: 'test',
+    url: 'google.com',
+}));

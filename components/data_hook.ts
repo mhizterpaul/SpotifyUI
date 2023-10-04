@@ -2,10 +2,17 @@
 import { useState, useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { getAccessToken } from "@/utils/api";
+import { ApiStatus } from "@/store/reducers/main_slice";
+
+const res : {data: any, status: ApiStatus} = {
+  data: null,
+  status: 'IDLE'
+} 
 
 function useData(params: { callBack : () => any }) {
 
-  const [data, setData] = useState({data: null, status: 'IDLE'});
+  const [data, setData] = useState(res);
+  
   const selector = useAppSelector(state => state.main);
   const dispatch = useAppDispatch();
 

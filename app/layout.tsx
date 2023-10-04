@@ -4,10 +4,13 @@ import RootRouterProvider from './rootRouterProvider';
 import Nav from '@/containers/navbarContainer';
 import Footer from '@/components/footer/footer';
 import { Metadata } from 'next';
+import PageNotFound from './404/page';
+import { headers } from "next/headers";
+
 
 export const metadata: Metadata = {
   title: 'Spotify Clone',
-  description: 'spotify clone',<nav></nav>
+  description: 'spotify clone',
 }
 
 const inter = Inter({ subsets: ['latin'] });
@@ -19,7 +22,11 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
+  
+  const headersList = headers();
+  const pathname = headersList.get("x-invoke-path") || "";
 
+  if (pathname === '/404') return < PageNotFound />
   return (
     <html lang="en">
       <body className={inter.className}>
