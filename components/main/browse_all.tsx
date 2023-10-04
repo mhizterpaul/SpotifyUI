@@ -7,7 +7,7 @@ import { Component } from "react";
 import Image from "next/image";
 import { Category } from "@/utils/types";
 import image from '@/static/images/test.jpeg'
-
+import random from '@/utils/random'
 
 
 type Props = {
@@ -21,7 +21,8 @@ const style = {
   width: '14.4375rem',
   height: '14.4375rem',
   flexShrink: '0',
-  borderRadius: '0.625rem'
+  borderRadius: '0.625rem',
+  background: random(backgroundColors)
 }
 
 const imgStyle: React.CSSProperties = {
