@@ -4,7 +4,7 @@ type Props = {};
 
 const Search = (props: Props) => {
   return (
-    <input type="text" className='rounded-2xl' placeholder='&#xF002; Artists, songs or podcasts'></input>
+    <input type="text" className='rounded-2xl search' placeholder='Artists, songs or podcasts'></input>
   )
 }
 

@@ -7,7 +7,7 @@ import { Component } from "react";
 import Image from "next/image";
 import { Category } from "@/utils/types";
 import image from '@/static/images/test.jpeg'
-import random from '@/utils/random'
+import {random} from '@/utils'
 
 
 type Props = {
@@ -15,23 +15,26 @@ type Props = {
   status: ApiStatus
 }
 
-const backgroundColors = ['#27856A', '#8D67AB', '#1E3264', '#E8115B']
+const bgColors = ['#27856A', '#8D67AB', '#1E3264', '#E8115B']
 
-const style = {
-  width: '14.4375rem',
-  height: '14.4375rem',
+const style: React.CSSProperties = {
+  width: 14.4375/1.5 + 'rem',
+  height: 14.4375/1.5 + 'rem',
   flexShrink: '0',
   borderRadius: '0.625rem',
-  background: random(backgroundColors)
+  position: 'relative'
 }
 
 const imgStyle: React.CSSProperties = {
-  width: '7rem',
-  height: '7rem',
+  width: 7/1.5 +'rem',
+  height: 7/1.5 +'rem',
   flexShrink: '0',
   borderRadius: '0.6875rem 0rem 0.625rem 0rem',
   background: 'lightgray 50% / cover no-repeat',
-  mixBlendMode: 'luminosity'
+  mixBlendMode: 'luminosity',
+  position:  'absolute',
+  bottom: '0',
+  right: '0'
 }
 
 class BrowseAll extends Component<Props, { categories: any }>{
@@ -43,7 +46,9 @@ class BrowseAll extends Component<Props, { categories: any }>{
   }
 
   componentDidMount(): void {
-    if (this.props.access_token == null) return this.setState(state => ({ ...state, categories: test }));
+    //if (this.props.access_token == null) 
+    return this.setState(state => ({ ...state, categories: test }));
+
     getSeveralCategories(this.props.access_token).then(
       data => this.setState(state => ({ ...state, categories: data }))
     )
@@ -52,11 +57,15 @@ class BrowseAll extends Component<Props, { categories: any }>{
 
   render() {
     return this.state.categories ? (
-      <section>
+      <section className='flex flex-col justify-center mt-8'>
         <h3>Browse all</h3>
-        <div className={'flex flex-row'}>
-          {this.state.categories.map((cateogry: Category) => (<figure key={cateogry.id} style={style}><Image src={image || cateogry.image} width={100} height={100} fill={false} alt={cateogry.name} style={imgStyle} />
-            <figcaption>{cateogry.name}</figcaption></figure>))}
+        <div className={'flex flex-row flex-wrap items-center justify-between gap-4 mt-4'}>
+          {this.state.categories.map((cateogry: Category) => {
+            const myStyle = {...style, background: random(bgColors)};
+
+            return (<figure key={cateogry.id} style={myStyle}><Image src={image || cateogry.image} width={100} height={100} fill={false} alt={cateogry.name} style={imgStyle} />
+            <figcaption className = 'top-4 left-4 absolute text-lg font-black'>{cateogry.name}</figcaption></figure>)
+          })}
         </div>
       </section>
 

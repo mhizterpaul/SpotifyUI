@@ -89,6 +89,21 @@ h1 {
   line-height: 1.1;
 }
 
+h3 {
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.range {
+  --track-fill: 70%;
+}
+
+.search {
+  background: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxZW0iIGhlaWdodD0iMWVtIiB2aWV3Qm94PSIwIDAgMjQgMjQiPjxwYXRoIGZpbGw9ImN1cnJlbnRDb2xvciIgZD0iTTkuNSAzQTYuNSA2LjUgMCAwIDEgMTYgOS41YzAgMS42MS0uNTkgMy4wOS0xLjU2IDQuMjNsLjI3LjI3aC43OWw1IDVsLTEuNSAxLjVsLTUtNXYtLjc5bC0uMjctLjI3QTYuNTE2IDYuNTE2IDAgMCAxIDkuNSAxNkE2LjUgNi41IDAgMCAxIDMgOS41QTYuNSA2LjUgMCAwIDEgOS41IDNtMCAyQzcgNSA1IDcgNSA5LjVTNyAxNCA5LjUgMTRTMTQgMTIgMTQgOS41UzEyIDUgOS41IDVaIi8+PC9zdmc+)
+  no-repeat 
+  left center;
+}
+
 button{
 
   font-size: 1em;
@@ -102,10 +117,6 @@ button:hover{
   border-color: #646cff;
 }
 
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
-}
 
 li {
   text-transform: capitalize;

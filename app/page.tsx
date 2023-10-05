@@ -34,7 +34,7 @@ function Home() {
 
 
   return (
-    <main className='main m-0'>
+    <main className='main overflow-x-hidden overflow-y-scroll h-[50vh] min-h-[444px] max-h-[520px] ml-8'>
        {/*accessToken.access_token == null ? <Loader status={status} meta='Access Token' /> :*/}
 
         <Routes>

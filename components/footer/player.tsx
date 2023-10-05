@@ -1,5 +1,9 @@
 import { useState, useRef } from "react";
-import { FaPlay, FaPause, FaBackward, FaForward } from "react-icons/fa";
+import { FaBackward, FaForward } from "react-icons/fa";
+import { BsPlayCircle, BsPauseCircle } from 'react-icons/bs'
+import { IoPlaySkipForwardOutline } from 'react-icons/io5'
+import { RxShuffle } from 'react-icons/rx'
+import { BiRepeat } from 'react-icons/bi'
 
 interface PlayerProps {
     src: string;
@@ -21,11 +25,11 @@ const Player: React.FC<PlayerProps> = ({ src }) => {
     };
 
     const handleRewind = () => {
-       if(audioRef.current) audioRef.current.currentTime -= 10;
+        if (audioRef.current) audioRef.current.currentTime -= 10;
     };
 
     const handleForward = () => {
-       if(audioRef.current) audioRef.current.currentTime += 10;
+        if (audioRef.current) audioRef.current.currentTime += 10;
     };
 
     const handleTimeUpdate = () => {
@@ -41,17 +45,21 @@ const Player: React.FC<PlayerProps> = ({ src }) => {
                 onEnded={() => setIsPlaying(false)}
             />
             <div>
+                <RxShuffle />
                 <button onClick={handleRewind}>
                     <FaBackward />
                 </button>
                 <button onClick={togglePlay}>
-                    {isPlaying ? <FaPause /> : <FaPlay />}
+                    {isPlaying ? <BsPauseCircle /> : <BsPlayCircle />}
                 </button>
                 <button onClick={handleForward}>
                     <FaForward />
                 </button>
+                <BiRepeat />
             </div>
-            <div>{currentTime}</div>
+            <div><span id="current-time" className="time">{currentTime}</span>
+                <input type="range" id="seek-slider" max="100" value="0"/>
+                    <span id="duration" className="time">0:00</span></div>
         </div>
     );
 };

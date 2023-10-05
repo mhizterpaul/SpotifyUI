@@ -8,12 +8,12 @@ type Props = {
 
 const Recommendations = ({ recommendations }: Props) => {
     return (
-        <section className='flex-col justify-center'>
-            <p className='flex flex-row justify-between'>
+        <section className='flex flex-col justify-center gap-y-4 mt-4'>
+            <h3 className='flex flex-row justify-between items-center'>
                 Shows you might like
-                <span className='capitalize inline-block' >see all</span>
-            </p>
-            <div className='flex flex-row justify-between'>
+                <span className='uppercase inline-block text-xs' >see all</span>
+            </h3>
+            <div className='flex flex-row justify-between flex-wrap align-center gap-y-4'>
                 {recommendations.map((el, id) => (
                     <Card {...el} type='recommendations' key={id} />
                 ))}

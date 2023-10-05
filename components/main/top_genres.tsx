@@ -7,7 +7,8 @@ import { Component } from "react";
 import Image from "next/image";
 import { Category } from "@/utils/types";
 import image from '@/static/images/test.jpeg'
-import random from '@/utils/random'
+import {random} from '@/utils'
+import classnames from 'classnames'
 
 type Props = {
     access_token: string | null,
@@ -22,21 +23,24 @@ const color = [
 
 
 
-const imgStyle : React.CSSProperties = {
-    width: '19.75rem',
-    height: '10.625rem',
+const imgStyle: React.CSSProperties = {
+    width: 19.75/1.5 + 'rem',
+    height: 10.625/1.5 + 'rem',
     flexShrink: '0',
     borderRadius: '5.8125rem 0rem 0.625rem 0rem',
     background: 'lightgray 50% / cover no-repeat',
-    mixBlendMode: 'luminosity'
+    mixBlendMode: 'luminosity',
+    position: 'absolute',
+    bottom: '0',
+    right: '0',
 }
 
-const style = {
-    width: '30.8125rem',
-    height: '17.1875rem',
+const style: React.CSSProperties = {
+    width: 30.8125/2 +'rem',
+    height: 17.1875/1.5 +'rem',
     flexShrink: '0',
     borderRadius: '0.625rem',
-    backgroud: random(color),
+    position: 'relative'
 }
 
 class TopGenres extends Component<Props, { genres: any }>{
@@ -48,7 +52,8 @@ class TopGenres extends Component<Props, { genres: any }>{
     }
 
     componentDidMount(): void {
-        if (this.props.access_token == null) return this.setState(state => ({ ...state, genres: test }));
+        //if (this.props.access_token == null) 
+        return this.setState(state => ({ ...state, genres: test }));
 
         getTopGenres(this.props.access_token).then(
             data => this.setState(state => ({ ...state, genres: data }))
@@ -62,10 +67,13 @@ class TopGenres extends Component<Props, { genres: any }>{
 
     render() {
         return this.state.genres ? (
-            <section>
+            <section className='mt-4'>
                 <h3>Your top genres</h3>
-                <div className={'flex flex-row'}>
-                    {this.state.genres.map((genre: Category) => (<figure key={genre.id} style={style}><Image src={image || genre.image} width={100} height={100} alt={genre.name} style={imgStyle} /><figcaption>{genre.name}</figcaption></figure>))}
+                <div className={'flex flex-row mt-4 gap-x-8'}>
+                    {this.state.genres.map((genre: Category) => {
+                        const myStyle = {...style, background: random(color)}
+                        return (<figure key={genre.id} style={myStyle} ><Image src={image || genre.image} width={100} height={100} alt={genre.name} style={imgStyle} /><figcaption className='top-4 left-4 absolute text-xl font-black'>{genre.name}</figcaption></figure>);
+                    })}
                 </div>
             </section>
 
