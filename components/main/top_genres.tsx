@@ -8,7 +8,6 @@ import Image from "next/image";
 import { Category } from "@/utils/types";
 import image from '@/static/images/test.jpeg'
 import {random} from '@/utils'
-import classnames from 'classnames'
 
 type Props = {
     access_token: string | null,
@@ -67,7 +66,7 @@ class TopGenres extends Component<Props, { genres: any }>{
 
     render() {
         return this.state.genres ? (
-            <section className='mt-4'>
+            <section className='mt-8 sm:mt-4 w-full'>
                 <h3>Your top genres</h3>
                 <div className={'flex flex-row mt-4 gap-x-8'}>
                     {this.state.genres.map((genre: Category) => {

@@ -10,7 +10,7 @@ const Profile = () => {
         }));
     return (
         <>
-            <button className={'w-36 h-10 relative flex flex-row items-center justify-between bg-black rounded-2xl'}
+            <button className={'w-36 h-10 relative flex flex-row items-center justify-between bg-black rounded-2xl sm:mr-0 mr-16'}
                 onClick={handleClick}>
                 <Image src='/avatar.jpg' width ={65} height={65} alt="profile picture" style={
                     {

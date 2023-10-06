@@ -20,7 +20,7 @@ function NavbarContainer({ href, end, curr, dispatch }: Props) {
   //useRouter
   //check store for any routes
   const routes = ['playlist', 'library', 'search']
-  const [isMobile, setIsMobile] = useState(window.innerWidth <= 555),
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 666),
     [nav, setNav] = useState({ prev: true, next: false }),
     currUrl = window.location.href.split('3000/')[1],
     location = useLocation(),
@@ -66,25 +66,38 @@ function NavbarContainer({ href, end, curr, dispatch }: Props) {
 
     if (currUrl.startsWith('?')) {
       if (!routes.includes(currUrl.split('?')[1])) return window.location.href = 'http://localhost:3000/404';
-      navigate(`/${currUrl.slice(1)}`);
-      dispatch(setHref(`/${currUrl.slice(1)}`))
-      return
+      dispatch(setHref(`/${currUrl.slice(1)}`));
     }
 
+    if (href !== pathname) return navigate(href);
 
+  }, [href])
+
+  useEffect(() => {
+    
     const setMobile = () => {
-      window.innerWidth <= 555 ? !isMobile && setIsMobile(true)
-        : isMobile && setIsMobile(false);
+      let isMob;
+      setIsMobile((prev) => {
+        isMob = prev;
+        return isMob;
+      })
+      if((window.innerWidth <= 775) && !isMob){
+
+        setIsMobile(true);
+      }
+       if(isMob && !(window.innerWidth <= 775)){
+        setIsMobile(false);
+       }
     };
 
-    window.addEventListener('resize', setMobile);
+    if (typeof window !== 'undefined') {
 
+      window.addEventListener('resize', setMobile);
+      
+    }
 
-    if (href !== pathname) navigate(href);
-
-
-    return () => removeEventListener('resize', setMobile);
-  }, [href])
+    if (typeof window !== 'undefined') return () => window.removeEventListener('resize', setMobile);
+  }, []);
 
   return (
     <Nav next={nav.next} prev={nav.prev} route={route} isMobile={isMobile} search={pathname === '/search'} />

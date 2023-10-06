@@ -8,13 +8,13 @@ const config: Config = {
   ],
   theme: {
     screens: {
-      'sm': '555px',
+      'sm': '775px',
 
       'md': '768px',
 
       'lg': '1024px',
 
-      'xl': '1280px',
+      'xl': '1100px',
 
       '2xl': '1536px',
     },

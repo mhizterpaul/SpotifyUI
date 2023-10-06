@@ -8,7 +8,7 @@ type Props = {
 
 const Recommendations = ({ recommendations }: Props) => {
     return (
-        <section className='flex flex-col justify-center gap-y-4 mt-4'>
+        <section className='flex flex-col w-full justify-center gap-y-4 mt-8'>
             <h3 className='flex flex-row justify-between items-center'>
                 Shows you might like
                 <span className='uppercase inline-block text-xs' >see all</span>
