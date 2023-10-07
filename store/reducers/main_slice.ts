@@ -7,6 +7,7 @@ export type State = {
     href: string,
     curr: number|null,
     history: string[],
+    open: boolean,
     end: boolean | undefined,
     access_token: string| null,
     fetchAccessTokenStatus: ApiStatus
@@ -15,6 +16,7 @@ export type State = {
 const initialState: State = { 
     href: '/', 
     curr: null, 
+    open: false,
     history: [],
     end: undefined,
     access_token: null,
@@ -68,6 +70,12 @@ export const MainSlice = createSlice({
 
             return state;
         }, 
+        setOpen: (state, action: PayloadAction<boolean>) => {
+            return {
+                ...state,
+                open: action.payload
+            }
+        },
         setHref: (state, action: PayloadAction<string>) => {
             if(action.payload.startsWith('/')) return {...state, href: action.payload}
             return state
@@ -146,7 +154,7 @@ export const MainSlice = createSlice({
 
 })
 
-export const {goBack, goForward, pushRef, setHref} = MainSlice.actions;
+export const {goBack, goForward, pushRef, setHref, setOpen} = MainSlice.actions;
 
 export default MainSlice.reducer
 

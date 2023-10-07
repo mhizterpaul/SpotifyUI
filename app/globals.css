@@ -24,15 +24,8 @@
 }
 
 
-.sidebar .--big-svg {
-  height: 2.5rem;
-  width: 2.5rem;
-}
 
-.main , .nav {
-  max-width: 864px;
-  padding-right: 2rem
-}
+
 
 .container {
   display: grid; 
@@ -41,35 +34,58 @@
                        's m m'
                        'f f f';
   grid-template-rows: 1fr, 8fr, 1fr;
-  grid-template-columns: minmax(0, max-content), minmax(60%, 1109px);
+  grid-template-columns: minmax(0, max-content), minmax(auto, 1fr);
 }
 
 .sidebar {
   grid-area: s;
 }
 
-.sidebar img, .sidebar svg{
+
+.sidebar ul li {
+  width: 100%;
+  margin-top: 0.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+
+}
+
+
+.sidebar svg {
   width: 2rem;
   height: 2rem;
   display: inline-block;
 }
 
-.nav {
-  grid-area: n;
+.sidebar li > svg {
+  margin-right: 0.7rem;
+}
+
+.sidebar .--big-svg {
+  height: 2.5rem;
+  width: 2.5rem;
+  margin-left: -4.5px;
+}
+
+.main {
+  min-height: 32.5rem;
+  scrollbar-width: none;
+}
+
+.main , .nav {
+  max-width: 864px;
 }
 
 
+.main::-webkit-scrollbar, .overflow-y-scroll::-webkit-scrollbar{
+  display: none;
+}
 
 .footer svg {
   width: 1.4rem;
   height: 1.4rem;
 }
-
-.main {
-  grid-area: m;
-  min-height: 33rem;
-}
-
 
 
 .footer {
@@ -146,20 +162,28 @@ li {
 
 .translateIn {
   animation: 300ms ease-in-out 0s 1 normal forwards running translateIn;
+  margin-right: 0;
   display: none;
 }
 
 
 .translateOut{
   display: flex;
+  margin-right: 2rem;
   animation: 300ms ease-in-out 0s 1 normal forwards running translateOut;
 }
 
-@media (min-width: 1124px), (min-height: 65rem ) {
+@media screen and (min-width: 1124px) and (min-height: 65rem ) {
   #root {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+  }
+}
+
+@media screen and (min-width: 777px) {
+  .main, .nav, .footer{
+    padding-right: 2rem;
   }
 }

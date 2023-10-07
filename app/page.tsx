@@ -9,7 +9,7 @@ import Loader from '@/components/network_request';
 import { useAppSelector, useAppDispatch } from '@/store/hooks';
 import { fetchAccessToken } from '@/store/reducers/main_slice';
 import Playlist from '@/components/main/playlist';
-
+import Scrollbars from '@/components/scrollbar/';
 
 const Library = lazy(() => import('../components/main/library'));
 const TopGenres = lazy(() => import('../components/main/top_genres'));
@@ -34,7 +34,7 @@ function Home() {
 
 
   return (
-    <main className='main xl:pr-4 w-full overflow-y-scroll overflow-x-hidden  h-[50vh] min-h-[444px] max-h-[620px] sm:ml-8'>
+    <main className={`main xl:pr-4 sm:col-start-2 ${accessToken.open ? 'col-start-2' : 'col-start-1'} col-end-4 w-full overflow-y-scroll overflow-x-hidden  h-[50vh] min-h-[444px] max-h-[620px] sm:ml-8`}>
        {/*accessToken.access_token == null ? <Loader status={status} meta='Access Token' /> :*/}
 
         <Routes>
@@ -52,7 +52,9 @@ function Home() {
           <Route path='/' element={
             <>
               <FeaturedPlaylists />
+              <Scrollbars style={{height: 500}}>
               <Recommendations />
+              </Scrollbars>
             </>}
           />
         </Routes>

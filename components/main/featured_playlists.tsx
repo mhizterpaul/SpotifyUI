@@ -39,7 +39,7 @@ const FeaturedPlaylists = () => {
 
 
   return (
-    <section className = 'flex flex-col gap-y-4 h-1/2 max-h-[230px] mt-4 overflow-hidden'>
+    <section className = 'flex flex-col gap-y-4 h-1/2 max-h-[210px] mt-4 overflow-hidden'>
       <h3>{greet()}</h3>
       <div className='flex flex-row w-full items-center justify-between gap-x-8 gap-y-4 flex-wrap'>
         {data.data.slice(0,5).map((el: FeaturedPlaylist, id: number) =>
