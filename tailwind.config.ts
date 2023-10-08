@@ -14,7 +14,7 @@ const config: Config = {
 
       'lg': '1024px',
 
-      'xl': '1100px',
+      'xl': '1365px',
 
       '2xl': '1536px',
     },

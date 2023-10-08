@@ -4,10 +4,13 @@ import { connect } from "react-redux";
 import Loader from "../network_request";
 import { getTopGenres, test } from "@/utils/api";
 import { Component } from "react";
+import React from 'react'
 import Image from "next/image";
 import { Category } from "@/utils/types";
 import image from '@/static/images/test.jpeg'
-import {random} from '@/utils'
+import { random } from '@/utils'
+import Carousel from 'nuka-carousel'
+import {PiCaretRightBold, PiCaretLeftBold} from 'react-icons/pi' 
 
 type Props = {
     access_token: string | null,
@@ -23,8 +26,8 @@ const color = [
 
 
 const imgStyle: React.CSSProperties = {
-    width: 19.75/1.5 + 'rem',
-    height: 10.625/1.5 + 'rem',
+    width: 19.75 / 1.5 + 'rem',
+    height: 10.625 / 1.5 + 'rem',
     flexShrink: '0',
     borderRadius: '5.8125rem 0rem 0.625rem 0rem',
     background: 'lightgray 50% / cover no-repeat',
@@ -35,19 +38,27 @@ const imgStyle: React.CSSProperties = {
 }
 
 const style: React.CSSProperties = {
-    width: 30.8125/2 +'rem',
-    height: 17.1875/1.5 +'rem',
+    width: 30.8125 / 2 + 'rem',
+    height: 17.1875 / 1.5 + 'rem',
     flexShrink: '0',
     borderRadius: '0.625rem',
     position: 'relative'
-}
+},btnStyle = {
+    color: '#181818',
+    width: '2rem',
+    height: '2rem'
+}, btnClassName = 'rounded-full p-2 bg-slate-200';
 
-class TopGenres extends Component<Props, { genres: any }>{
+class TopGenres extends Component<Props, { genres: any, updatedWithCarousel: boolean }>{
+    boundingRectRef: React.RefObject<HTMLDivElement>;
+
     constructor(props: Props) {
-        super(props);
+        super(props)
         this.state = {
-            genres: null
+            genres: null,
+            updatedWithCarousel: false
         }
+        this.boundingRectRef = React.createRef();
     }
 
     componentDidMount(): void {
@@ -61,19 +72,53 @@ class TopGenres extends Component<Props, { genres: any }>{
     }
 
     componentDidUpdate(prevProps: Readonly<Props>, prevState: Readonly<{ genres: any; }>, snapshot?: any): void {
-        console.log(this.state);
+        if ((this.boundingRectRef.current == null) && (this.state.updatedWithCarousel === false)) this.setState(prev => ({ ...prev, updatedWithCarousel: true }));
+    }
+
+    boundingRectCalc() {
+        const width = this.boundingRectRef.current.clientWidth;
+        return Math.floor(width / (Number(style.width.slice(0, 4)) * 16))
     }
 
     render() {
         return this.state.genres ? (
             <section className='mt-8 sm:mt-4 w-full'>
                 <h3>Your top genres</h3>
-                <div className={'flex flex-row mt-4 gap-x-8'}>
-                    {this.state.genres.map((genre: Category) => {
-                        const myStyle = {...style, background: random(color)}
-                        return (<figure key={genre.id} style={myStyle} ><Image src={image || genre.image} width={100} height={100} alt={genre.name} style={imgStyle} /><figcaption className='top-4 left-4 absolute text-xl font-black'>{genre.name}</figcaption></figure>);
-                    })}
-                </div>
+                <Carousel ref={this.boundingRectRef} cellSpacing={20} defaultControlsConfig={{
+                    pagingDotsStyle: { display: 'none' },
+                    prevButtonText: <button className={btnClassName}><PiCaretLeftBold style={btnStyle}/></button>,
+                    nextButtonText: <button className={btnClassName}><PiCaretRightBold style={btnStyle}/></button>
+                }} className={'mt-4'}>
+                    {
+                        (() => {
+                            const withCarousel = () => {
+                                const innerImgCount = this.boundingRectCalc(),
+                                    carouseldata = this.state.genres.map((el: Category, id: number, arr: Category[]) => {
+                                        if ((id === 0) || (((id) % innerImgCount) === 0)) {
+                                            const innerImgs = arr.slice(id, id + innerImgCount);
+                                            return (
+                                                <div key={id} className={`w-full h-[${style.height}] flex flex-nowrap ${((id + innerImgCount) >= (arr.length - 1)) ? 'justify-start gap-x-4' : innerImgCount < 3 ? 'justify-around': 'justify-between'}`}>
+                                                    {
+                                                        innerImgs.map((genre: Category) => {
+                                                            const myStyle = { ...style, background: random(color) }
+                                                            return (<figure key={genre.id} style={myStyle} ><Image src={image || genre.image} width={100} height={100} alt={genre.name} style={imgStyle} /><figcaption className='top-4 left-4 absolute text-xl font-black'>{genre.name}</figcaption></figure>);
+                                                        })
+                                                    }
+                                                </div>
+                                            )
+                                        }
+                                    });
+                                return carouseldata.filter((el: React.ReactNode | undefined) => el != undefined);
+                            }
+                            return this.boundingRectRef.current == null ? (<div className={'flex flex-row mt-4 gap-x-8'}>
+                                {this.state.genres.map((genre: Category) => {
+                                    const myStyle = { ...style, background: random(color) }
+                                    return (<figure key={genre.id} style={myStyle} ><Image src={image || genre.image} width={100} height={100} alt={genre.name} style={imgStyle} /><figcaption className='top-4 left-4 absolute text-xl font-black'>{genre.name}</figcaption></figure>);
+                                })}
+                            </div>) : withCarousel()
+                        })()
+                    }
+                </Carousel>
             </section>
 
         ) : <Loader status={this.props.status} meta={'TopGenres'} />

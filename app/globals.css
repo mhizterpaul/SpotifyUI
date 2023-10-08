@@ -27,14 +27,14 @@
 
 
 
-.container {
+.main-container {
   display: grid; 
   grid-template-areas: 's n n'
                        's m m'
                        's m m'
                        'f f f';
-  grid-template-rows: 1fr, 8fr, 1fr;
-  grid-template-columns: minmax(0, max-content), minmax(auto, 1fr);
+  grid-template-rows: 1fr 4fr 4fr 1fr;
+  grid-template-columns: minmax(0, max-content) minmax(auto, 1fr);
 }
 
 .sidebar {
@@ -70,17 +70,8 @@
 
 .main {
   min-height: 32.5rem;
-  scrollbar-width: none;
 }
 
-.main , .nav {
-  max-width: 864px;
-}
-
-
-.main::-webkit-scrollbar, .overflow-y-scroll::-webkit-scrollbar{
-  display: none;
-}
 
 .footer svg {
   width: 1.4rem;
@@ -92,6 +83,10 @@
   grid-area: f;
 }
 
+
+.slider-control-centerright > button, .slider-control-centerleft > button{
+  background-color: transparent !important;
+}
 
 
 a {

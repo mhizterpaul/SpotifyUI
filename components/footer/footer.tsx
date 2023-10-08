@@ -7,7 +7,7 @@ import react from '@/public/vercel.svg'
 
 
 const Footer = () => {
-    return (<footer className='footer bg-[#181818] w-full overflow-hidden'>
+    return (<footer className='footer bg-[#181818] w-full min-h-12 overflow-hidden'>
         <section className='w-full flex items-center justify-between'>
             <div className='flex flex-row items-center'>
                 <Image src={react} alt="album art" />

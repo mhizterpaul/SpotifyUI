@@ -33,7 +33,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-      <section className='container px-4 sm:px-0 mx-auto relative max-h-[650px] h-screen max-w-[1124px] min-w-[625px] overflow-hidden'>
+      <section className='main-container mx-auto relative max-h-[650px] h-screen overflow-hidden'>
             <RootRouterProvider>
                 < Nav />
                 {children}
