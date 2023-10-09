@@ -6,7 +6,7 @@ import Volume from "./volume"
 import react from '../../public/vercel.svg'
 
 const Footer = () => {
-    return (<footer className='footer bg-[#181818] w-full whitespace-nowrap text-[2vw] min-w-[375px] min-h-12 overflow-hidden'>
+    return (<footer className='footer bg-[#181818] w-full z-10 whitespace-nowrap text-[2vw] min-w-[375px] min-h-12 overflow-hidden'>
         <section className='flex items-center justify-between'>
             <div className='flex flex-row items-center max-w-[25vw]'>
                 <Image src={react} className={'w-2/6'} alt="album art" />

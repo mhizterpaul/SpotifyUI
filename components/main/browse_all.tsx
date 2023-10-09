@@ -57,7 +57,7 @@ class BrowseAll extends Component<Props, { categories: any }>{
 
   render() {
     return this.state.categories ? (
-      <section className='flex flex-col w-fulljustify-center mt-8'>
+      <section className='flex flex-col w-full justify-center gap-y-4 mt-8'>
         <h3>Browse all</h3>
         <div className={'flex flex-row flex-wrap items-center justify-between gap-4 mt-4 '}>
           {this.state.categories.map((cateogry: Category) => {

@@ -69,12 +69,16 @@ class TopGenres extends Component<Props, { genres: any, updatedWithCarousel: boo
         if((e.timeStamp - this.timeStamp) < 1000){
             if(this.debounce != null) clearTimeout(this.debounce);
         }
-        this.debounce = setTimeout(() => this.setState(prev => ({ ...prev, updatedWithCarousel: true })) , 1000);
+        this.debounce = setTimeout(() => this.setState(prev => ({ ...prev, updatedWithCarousel: true })), 1000);
+    }
+
+    componentWillUnmount(): void {
+        window.removeEventListener('resize', this.debouncedRecalcBoundingRect.bind(this));
     }
 
     componentDidMount(): void {
         //if (this.props.access_token == null) 
-        window.addEventListener('resize', this.debouncedRecalcBoundingRect)
+        window.addEventListener('resize', this.debouncedRecalcBoundingRect.bind(this));
         return this.setState(state => ({ ...state, genres: test }));
         getTopGenres(this.props.access_token).then(
             data => this.setState(state => ({ ...state, genres: data }))

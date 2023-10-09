@@ -9,7 +9,7 @@ import Loader from '@/components/network_request';
 import { useAppSelector, useAppDispatch } from '@/store/hooks';
 import { fetchAccessToken } from '@/store/reducers/main_slice';
 import Playlist from '@/components/main/playlist';
-import Scrollbars from 'react-custom-scroll'
+import Scrollbars from '@/components/scrollbars/Scrollbars'
 
 
 const Library = lazy(() => import('../components/main/library'));
@@ -17,7 +17,7 @@ const TopGenres = lazy(() => import('../components/main/top_genres'));
 const BrowseAll = lazy(() => import('../components/main/browse_all'));
 
 function Home() {
-  
+
   const accessToken = useAppSelector(state => state.main);
   const dispatch = useAppDispatch();
   const [status, setStatus] = useState('IDLE');
@@ -32,36 +32,36 @@ function Home() {
 
   }, [dispatch, accessToken.fetchAccessTokenStatus])
 
-  if(window.location.href.split('3000/')[1].startsWith('?')) return <Loader status = {'pending'} meta ='navigating'/>
+  if (window.location.href.split('3000/')[1].startsWith('?')) return <Loader status={'pending'} meta='navigating' />
 
   return (
-    <main className={`main xl:pr-4 sm:col-start-2 ${accessToken.open ? 'col-start-2' : 'col-start-1'} w-full row-start-2 row-end-4 col-end-4 overflow-y-scroll overflow-x-hidden  h-[50vh] min-h-[444px] max-h-[620px]`}>
-      {/*accessToken.access_token == null ? <Loader status={status} meta='Access Token' /> :*/}
 
-      <Routes>
-        <Route path='/search' element={
-          <div>
-            <TopGenres />
-            <BrowseAll />
-          </div>
-        }
-        />
-        <Route path={'/playlist?new=:id'} element={<Playlist />} />
-        <Route path={'/playlist/'} element={<Playlist />} />
-        <Route path='/library?list=:id' element={<Library />} />
-        <Route path='/library' element={<Library />} />
+    <main className={`main xl:pr-4 sm:col-start-2 ${accessToken.open ? 'col-start-2' : 'col-start-1'} w-full row-start-2 row-end-4 col-end-4 h-[50vh] min-h-[444px] max-h-[620px]`}>
+      <Scrollbars>
+        {/*accessToken.access_token == null ? <Loader status={status} meta='Access Token' /> :*/}
+        <Routes>
+          <Route path='/search' element={
+              <>
+                <TopGenres />
+                <BrowseAll />
+              </>
+          }
+          />
+          <Route path={'/playlist?new=:id'} element={<Playlist />} />
+          <Route path={'/playlist/'} element={<Playlist />} />
+          <Route path='/library?list=:id' element={<Library />} />
+          <Route path='/library' element={<Library />} />
 
-        <Route path='/' element={
-          <Scrollbars heightRelativeToParent={620}>
-          <div className='max-h-[100%]'>
-            <FeaturedPlaylists />
-            <Recommendations />
-          </div>
-          </Scrollbars>
-        }
-        />
-      </Routes>
-    </main>
+          <Route path='/' element={
+            <>
+              <FeaturedPlaylists />
+              <Recommendations />
+            </>
+          }
+          />
+        </Routes>
+      </Scrollbars>
+    </main >
   )
 }
 
