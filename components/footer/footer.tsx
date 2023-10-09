@@ -3,8 +3,8 @@ import Image from "next/image"
 import ControlInfo from "./controlInfo"
 import Player from "./player"
 import Volume from "./volume"
-import react from '@/public/vercel.svg'
-
+import react from '../../public/vercel.svg'
+import '../../app/globals.css'
 
 const Footer = () => {
     return (<footer className='footer bg-[#181818] w-full min-h-12 overflow-hidden'>

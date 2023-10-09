@@ -33,10 +33,10 @@ function Home() {
 
   }, [dispatch, accessToken.fetchAccessTokenStatus])
 
-
+  if(window.location.href.split('3000/')[1].startsWith('?')) return <Loader status = {'pending'} meta ='navigating'/>
 
   return (
-    <main className={`main xl:pr-4 sm:col-start-2 ${accessToken.open ? 'col-start-2' : 'col-start-1'} row-start-2 row-end-4 col-end-4 w-full overflow-y-scroll overflow-x-hidden  h-[50vh] min-h-[444px] max-h-[620px]`}>
+    <main className={`main xl:pr-4 sm:col-start-2 ${accessToken.open ? 'col-start-2' : 'col-start-1'} w-full row-start-2 row-end-4 col-end-4 overflow-y-scroll overflow-x-hidden  h-[50vh] min-h-[444px] max-h-[620px]`}>
       {/*accessToken.access_token == null ? <Loader status={status} meta='Access Token' /> :*/}
 
       <Routes>

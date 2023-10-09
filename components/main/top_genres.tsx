@@ -61,10 +61,21 @@ class TopGenres extends Component<Props, { genres: any, updatedWithCarousel: boo
         this.boundingRectRef = React.createRef();
     }
 
+    timeStamp = 0;
+    debounce : NodeJS.Timeout | null = null;
+
+    debouncedRecalcBoundingRect(e: UIEvent) : any {
+        if(this.timeStamp == 0) return this.timeStamp = e.timeStamp;
+        if((e.timeStamp - this.timeStamp) < 1000){
+            if(this.debounce != null) clearTimeout(this.debounce);
+        }
+        this.debounce = setTimeout(() => this.setState(prev => ({ ...prev, updatedWithCarousel: true })) , 1000);
+    }
+
     componentDidMount(): void {
         //if (this.props.access_token == null) 
+        window.addEventListener('resize', this.debouncedRecalcBoundingRect)
         return this.setState(state => ({ ...state, genres: test }));
-
         getTopGenres(this.props.access_token).then(
             data => this.setState(state => ({ ...state, genres: data }))
         )
