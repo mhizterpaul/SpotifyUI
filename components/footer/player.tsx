@@ -1,7 +1,6 @@
 import { useState, useRef } from "react";
-import { FaBackward, FaForward } from "react-icons/fa";
 import { BsPlayCircle, BsPauseCircle } from 'react-icons/bs'
-import { IoPlaySkipForwardOutline } from 'react-icons/io5'
+import { IoPlaySkipForwardOutline, IoPlaySkipBackOutline } from 'react-icons/io5'
 import { RxShuffle } from 'react-icons/rx'
 import { BiRepeat } from 'react-icons/bi'
 
@@ -37,30 +36,33 @@ const Player: React.FC<PlayerProps> = ({ src }) => {
     };
 
     return (
-        <div>
+        <div className='max-w-[25vw]'>
             <audio
                 ref={audioRef}
                 src={src}
                 onTimeUpdate={handleTimeUpdate}
                 onEnded={() => setIsPlaying(false)}
             />
-            <div>
-                <RxShuffle />
-                <button onClick={handleRewind}>
-                    <FaBackward />
-                </button>
-                <button onClick={togglePlay}>
-                    {isPlaying ? <BsPauseCircle /> : <BsPlayCircle />}
-                </button>
-                <button onClick={handleForward}>
-                    <FaForward />
-                </button>
-                <BiRepeat />
-            </div>
-            <div><span id="current-time" className="time">{currentTime}</span>
-                <input type="range" id="seek-slider" max="100" value="0"/>
+            <section className='flex flex-col items-center '>
+                <div className='flex flex-nowrap p-4'>
+                    <RxShuffle />
+                    <button onClick={handleRewind}>
+                        <IoPlaySkipBackOutline />
+                    </button>
+                    <button onClick={togglePlay}>
+                        {isPlaying ? <BsPauseCircle /> : <BsPlayCircle />}
+                    </button>
+                    <button onClick={handleForward}>
+                        <IoPlaySkipForwardOutline />
+                    </button>
+                    <BiRepeat />
+                </div>
+                <div className='flex items-center pb-2 gap-x-2'><span id="current-time" className="time">{currentTime}</span>
+                    <input type="range" id="seek-slider" max="100" value="0" />
                     <span id="duration" className="time">0:00</span></div>
+            </section>
         </div>
+
     );
 };
 

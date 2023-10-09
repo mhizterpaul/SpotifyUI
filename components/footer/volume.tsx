@@ -12,7 +12,7 @@ const  handleSlide = (e)=> {
 
 const Volume = () => {
     return (
-        <div className='flex flex-r0w'>
+        <div className='flex flex-row text-[2vw] max-w-[25vw]'>
             <AiOutlinePlaySquare />
             <PiMicrophoneStageBold />
             <HiOutlineQueueList />
@@ -26,7 +26,7 @@ const Volume = () => {
               type="range" 
               value="3" 
               max="10" 
-              className='range'
+              className='range w-[70%]'
               onChange={handleSlide}
             />
             <BsPip />

@@ -22,6 +22,7 @@
     "postcss": "8.4.27",
     "query-string": "^8.1.0",
     "react": "18.2.0",
+    "react-custom-scroll": "^5.0.0",
     "react-dom": "18.2.0",
     "react-icons": "^4.11.0",
     "react-redux": "^8.1.2",
@@ -41,9 +42,12 @@
     "@storybook/react": "^7.4.6",
     "@storybook/testing-library": "^0.2.2",
     "@types/react-redux": "^7.1.26",
+    "css-loader": "^6.8.1",
     "eslint": "^8.46.0",
     "eslint-config-next": "^13.4.13",
     "eslint-plugin-storybook": "^0.6.15",
-    "storybook": "^7.4.6"
+    "postcss-loader": "^7.3.3",
+    "storybook": "^7.4.6",
+    "style-loader": "^3.3.3"
   }
 }
