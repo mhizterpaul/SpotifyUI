@@ -9,8 +9,7 @@ import Loader from '@/components/network_request';
 import { useAppSelector, useAppDispatch } from '@/store/hooks';
 import { fetchAccessToken } from '@/store/reducers/main_slice';
 import Playlist from '@/components/main/playlist';
-
-
+import Scrollbars from 'react-custom-scroll'
 
 
 const Library = lazy(() => import('../components/main/library'));
@@ -41,10 +40,10 @@ function Home() {
 
       <Routes>
         <Route path='/search' element={
-          <>
+          <div>
             <TopGenres />
             <BrowseAll />
-          </>
+          </div>
         }
         />
         <Route path={'/playlist?new=:id'} element={<Playlist />} />
@@ -53,10 +52,12 @@ function Home() {
         <Route path='/library' element={<Library />} />
 
         <Route path='/' element={
-          <>
+          <Scrollbars heightRelativeToParent={620}>
+          <div className='max-h-[100%]'>
             <FeaturedPlaylists />
             <Recommendations />
-          </>
+          </div>
+          </Scrollbars>
         }
         />
       </Routes>
