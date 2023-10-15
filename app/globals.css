@@ -41,6 +41,13 @@
   grid-area: s;
 }
 
+.main-children {
+  display: grid;
+  grid-template-areas: 'm m p';
+  grid-template-rows: 2fr 1fr;
+  grid-template-columns: 1fr;
+}
+
 
 .sidebar ul li {
   width: 100%;

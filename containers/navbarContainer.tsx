@@ -2,10 +2,10 @@
 import Nav from "@/components/nav/navbar";
 import { RootState } from "@/store";
 import { connect } from "react-redux";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useTransition } from "react";
 import withProvider from "@/store/with_provider";
 import { Dispatch } from "@reduxjs/toolkit";
-import { goBack, goForward, pushRef, setHref } from "@/store/reducers/main_slice";
+import { goBack, goForward, pushRef, setHref, setStartNavTransition } from "@/store/reducers/main_slice";
 import { useNavigate, useLocation } from 'react-router-dom'
 
 type Props = {
@@ -24,6 +24,7 @@ function NavbarContainer({ href, end, curr, dispatch }: Props) {
     [nav, setNav] = useState({ prev: true, next: false }),
     currUrl = window.location.href.split('3000/')[1],
     location = useLocation(),
+    [isPending, startTransition] = useTransition(),
     pathname = location.pathname,
     navigate = useNavigate(),
     route = (option?: 'previous' | 'next') => {
@@ -32,15 +33,15 @@ function NavbarContainer({ href, end, curr, dispatch }: Props) {
       //buttons should be enabled if there are items
       //in the history arr
       //the corresponding button should be closed when the user reaches the end of the arr
-      if( (curr != null) && curr > 0) {
-        setNav((state) => ({...state, prev: false}));
-        if(!end) setNav((state) => ({...state, next: false}));
+      if ((curr != null) && curr > 0) {
+        setNav((state) => ({ ...state, prev: false }));
+        if (!end) setNav((state) => ({ ...state, next: false }));
       }
 
-      if((curr == null) && (href !== '/') && !nav.next) setNav({next: true, prev: false})
+      if ((curr == null) && (href !== '/') && !nav.next) setNav({ next: true, prev: false })
 
-      if (((end === true)|| (curr == null)) && (option === 'next')) {
-        
+      if (((end === true) || (curr == null)) && (option === 'next')) {
+
         dispatch(pushRef('next'));
         setNav({ prev: false, next: true })
       }
@@ -51,7 +52,7 @@ function NavbarContainer({ href, end, curr, dispatch }: Props) {
       }
 
 
-      if ((curr != null) && (curr >= 0) && (option != undefined)){
+      if ((curr != null) && (curr >= 0) && (option != undefined)) {
         option === 'previous' ? dispatch(goBack()) :
           dispatch(goForward());
 
@@ -69,35 +70,42 @@ function NavbarContainer({ href, end, curr, dispatch }: Props) {
       dispatch(setHref(`/${currUrl.slice(1)}`));
     }
 
-    if (href !== pathname) return navigate(href);
+    if (href !== pathname) {
+      dispatch(setStartNavTransition(true));
+      startTransition(() => {
+        navigate(href);
+      });
+    }
 
   }, [href])
 
   useEffect(() => {
-    
+
     const setMobile = () => {
       let isMob;
       setIsMobile((prev) => {
         isMob = prev;
         return isMob;
       })
-      if((window.innerWidth <= 775) && !isMob){
+      if ((window.innerWidth <= 775) && !isMob) {
 
         setIsMobile(true);
       }
-       if(isMob && !(window.innerWidth <= 775)){
+      if (isMob && !(window.innerWidth <= 775)) {
         setIsMobile(false);
-       }
+      }
     };
 
     if (typeof window !== 'undefined') {
 
       window.addEventListener('resize', setMobile);
-      
+
     }
 
     if (typeof window !== 'undefined') return () => window.removeEventListener('resize', setMobile);
   }, []);
+
+  if(!isPending) dispatch(setStartNavTransition(false));
 
   return (
     <Nav next={nav.next} prev={nav.prev} route={route} isMobile={isMobile} search={pathname === '/search'} />

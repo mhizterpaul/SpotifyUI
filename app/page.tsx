@@ -9,7 +9,8 @@ import Loader from '@/components/network_request';
 import { useAppSelector, useAppDispatch } from '@/store/hooks';
 import { fetchAccessToken } from '@/store/reducers/main_slice';
 import Playlist from '@/components/main/playlist';
-import Scrollbars from '@/components/scrollbars/Scrollbars'
+import Scrollbars from '@/components/scrollbars/'
+import NowPlaying from '@/components/footer/nowPlaying';
 
 
 const Library = lazy(() => import('../components/main/library'));
@@ -18,49 +19,55 @@ const BrowseAll = lazy(() => import('../components/main/browse_all'));
 
 function Home() {
 
-  const accessToken = useAppSelector(state => state.main);
+  const main = useAppSelector(state => state.main);
   const dispatch = useAppDispatch();
   const [status, setStatus] = useState('IDLE');
 
   useEffect(() => {
 
-    if (accessToken.fetchAccessTokenStatus === 'IDLE') {
+    if (main.fetchAccessTokenStatus === 'IDLE') {
       dispatch(fetchAccessToken());
     }
 
-    setStatus(accessToken.fetchAccessTokenStatus);
+    setStatus(main.fetchAccessTokenStatus);
 
-  }, [dispatch, accessToken.fetchAccessTokenStatus])
+  }, [dispatch, main.fetchAccessTokenStatus])
 
-  if (window.location.href.split('3000/')[1].startsWith('?')) return <Loader status={'pending'} meta='navigating' />
-
+  if (main.startNavTransition) return <Loader status='PENDING' meta='NAVIGATION' />
   return (
 
-    <main className={`main xl:pr-4 sm:col-start-2 ${accessToken.open ? 'col-start-2' : 'col-start-1'} w-full row-start-2 row-end-4 col-end-4 h-[50vh] min-h-[444px] max-h-[620px]`}>
-      <Scrollbars>
-        {/*accessToken.access_token == null ? <Loader status={status} meta='Access Token' /> :*/}
-        <Routes>
-          <Route path='/search' element={
+    <main className={`main ${nowPlaying ? 'main-children' : ''} xl:pr-4 sm:col-start-2 ${main.open ? 'col-start-2' : 'col-start-1'} w-full row-start-2 row-end-4 col-end-4 h-[50vh] min-h-[444px] max-h-[620px]`}>
+      <div className='main-firstChild'>
+        <Scrollbars>
+          {/*accessToken.access_token == null ? <Loader status={status} meta='Access Token' /> :*/}
+          <Routes>
+            <Route path='/search' element={
               <>
                 <TopGenres />
                 <BrowseAll />
               </>
-          }
-          />
-          <Route path={'/playlist?new=:id'} element={<Playlist />} />
-          <Route path={'/playlist/'} element={<Playlist />} />
-          <Route path='/library?list=:id' element={<Library />} />
-          <Route path='/library' element={<Library />} />
+            }
+            />
+            <Route path={'/playlist?new=:id'} element={<Playlist />} />
+            <Route path={'/playlist/'} element={<Playlist />} />
+            <Route path='/library?list=:id' element={<Library />} />
+            <Route path='/library' element={<Library />} />
 
-          <Route path='/' element={
-            <>
-              <FeaturedPlaylists />
-              <Recommendations />
-            </>
-          }
-          />
-        </Routes>
-      </Scrollbars>
+            <Route path='/' element={
+              <>
+                <FeaturedPlaylists />
+                <Recommendations />
+              </>
+            }
+            />
+          </Routes>
+        </Scrollbars>
+      </div>
+      {nowPlaying ? <div className='main-lastChild'>
+        <Scrollbars>
+          <NowPlaying />
+        </Scrollbars>
+      </div> : null}
     </main >
   )
 }
