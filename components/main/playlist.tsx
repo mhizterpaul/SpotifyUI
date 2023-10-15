@@ -4,7 +4,7 @@ import { LuClock3 } from 'react-icons/lu'
 import { useState, useContext, useEffect } from "react";
 import Image from 'next/image'
 import { useAppDispatch } from "@/store/hooks";
-import withProvider, {Context} from "./withLibraryContext";
+import withProvider, { Context } from "./withProvider";
 import { pushRef } from "@/store/reducers/main_slice";
 
 
@@ -13,14 +13,14 @@ const Playlist = () => {
   const dispatch = useAppDispatch();
   //use context to add playlist or track to library
   //and playlist, liked songs or episodes
-  const {playlist, likedSongs, addMedia, removeMedia} = useContext(Context);
+  const { playlist, likedSongs, addMedia, removeMedia } = useContext(Context);
   useEffect(setfavorite, [favorite]);
 
 
   return (
     <>
       <h2 className='flex items-center justify-around'>
-        <Image src={Datas.img} alt='Playlist cover photo' width= {100} height={100}/>
+        <Image src={Datas.img} alt='Playlist cover photo' width={100} height={100} />
         <div className='flex flex-col justify-around items-center'>
           <small>playlist</small>
           <h3>playlist header/name top right </h3>
@@ -47,7 +47,7 @@ const Playlist = () => {
                   <tr key={title} className='group text-gray-600 hover:bg-gray-400 '>
                     <td>
                       <span className='group-hover:hidden'>{id}</span>
-                      <BsPlayCircle className='hidden group-hover:block'/>
+                      <BsPlayCircle className='hidden group-hover:block' />
                     </td>
                     <td>
                       {albumArt}
@@ -60,7 +60,7 @@ const Playlist = () => {
                         {title}
                       </div>
                     </td>
-                    <td onClick = {()=> (dispatch(pushRef('/playlist '+{album})))}>
+                    <td onClick={() => (dispatch(pushRef('/playlist ' + { album })))}>
                       {album}
                     </td>
                     <td className='hidden group-hover:table-cell'>
