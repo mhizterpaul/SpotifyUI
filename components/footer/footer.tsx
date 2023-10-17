@@ -16,7 +16,7 @@ const Footer = ({ status }: { status: ApiStatus }) => {
     //pick any audio from loadedPlaylist and feed it to the 
     //player component  
 
-    const { playlist, likedSongs, addMedia, removeMedia } = useContext(Context);
+    const { nowPlaying, setNowPlaying, playlist, tracks, setMedia } = useContext(Context);
 
     return (<footer className='footer bg-[#181818] w-full z-10 whitespace-nowrap text-[2vw] min-w-[375px] min-h-12 overflow-hidden'>
         <section className='flex items-center justify-between'>

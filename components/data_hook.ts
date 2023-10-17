@@ -3,6 +3,8 @@ import { useState, useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { getAccessToken } from "@/utils/api";
 import { ApiStatus } from "@/store/reducers/main_slice";
+import useSWR from 'swr/immutable'
+
 
 const res : {data: any, status: ApiStatus} = {
   data: null,
@@ -16,7 +18,7 @@ function useData(params: { callBack : () => any }) {
   const selector = useAppSelector(state => state.main);
   const dispatch = useAppDispatch();
 
-  useEffect(() => {
+  useSWR('useData', () => {
 
 
     const fetchData: any= async()=> {
@@ -28,8 +30,9 @@ function useData(params: { callBack : () => any }) {
       try {
         const data = await params.callBack();
         setData((prev) => ({...prev, data, status: 'SUCCESS'}));
+        return data;
       }catch(e: any){
-        console.log(e);
+
         if(e.data.error.message.includes('expired')){
           await dispatch(getAccessToken);
           if(selector.fetchAccessTokenStatus === 'SUCCESS') fetchData();
@@ -42,7 +45,7 @@ function useData(params: { callBack : () => any }) {
 
     fetchData();
 
-  }, [data, dispatch, params, selector.fetchAccessTokenStatus]);
+  });
 
   return data;
 }

@@ -35,8 +35,5 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# storybook
-/.storybook/
-
 # audio
 /static/audio/*.mp3

@@ -49,7 +49,7 @@ function Home() {
             }
             />
             <Route path={'/playlist?new=:id'} element={<Playlist />} />
-            <Route path={'/playlist/'} element={<Playlist />} />
+            <Route path={'/playlist/:id'} element={<Playlist />} />
             <Route path='/library?list=:id' element={<Library />} />
             <Route path='/library' element={<Library />} />
 
