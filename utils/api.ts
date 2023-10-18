@@ -34,7 +34,7 @@ export function getPlaylist(access_token:string, id: string){
         }).then (({data}) => data.tracks.items.map((item: GenericPayload) => ({
             added_at: item.added_at,
             href: item.href,
-            images: item.images[0].url,
+            image: item.images[0].url,
             name: item.track.name,
             popularity: item.popularity,
             artists: item.artists.map((artist: GenericPayload) => artist.name),

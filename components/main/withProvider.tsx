@@ -13,7 +13,7 @@ const value = {
     nowPlaying: {
 
     },
-    setNowPlayling: (track)=> {
+    setNowPlaying: (track)=> {
         value.nowPlaying = track;
     },
    setMedia: (medias: Object) => {

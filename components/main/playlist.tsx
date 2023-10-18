@@ -12,7 +12,7 @@ import { useAppSelector } from "@/store/hooks";
 import useSWR from "swr/immutable";
 
 const Playlist = () => {
-  const { playlist, tracks, setMedia } = useContext(Context);
+  const { playlist, setNowPlaying, tracks, setMedia } = useContext(Context);
   const { id } = useParams();
   const access_token = useAppSelector(state => state.main.access_token);
   const {data} = useSWR('getPlaylist', () => getPlaylist(access_token, id));
@@ -63,11 +63,11 @@ const Playlist = () => {
           {
 
             Datas.items.map(
-              ({ albumArt, title, album, artist, duration }, id) => {
+              ({ albumArt, title, album, artist, duration }, index) => {
                 return (
                   <tr key={title} className='group text-gray-600 hover:bg-gray-400 '>
-                    <td>
-                      <span className='group-hover:hidden'>{id}</span>
+                    <td onClick={()=>setNowPlaying(data[index])}>
+                      <span className='group-hover:hidden'>{index+1}</span>
                       <BsPlayCircle className='hidden group-hover:block' />
                     </td>
                     <td>
