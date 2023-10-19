@@ -3,7 +3,31 @@ import { createContext } from 'react'
 
 
 
-const value = {
+type T = {
+    added_at: string,
+    href: string,
+    image: string,
+    name: string,
+    popularity: string,
+    artists: any[],
+    duration_ms: number,
+    description: string,
+    album: string,
+    total: number
+
+} | {}
+
+type V = {
+    playlist: string[],
+    tracks: string[],
+    nowPlaying: T,
+    currentPlaylist: T[],
+    setCurrPlaylist : (playlist: T[])=>void,
+    setNowPlaying: (track:T)=>void,
+    setMedia: (medias: {dTracks:{[key: string]: boolean}, dPlaylist: {[key:string]: boolean}})=>void
+}
+
+const value: V = {
     playlist:[
 
     ],
@@ -13,10 +37,16 @@ const value = {
     nowPlaying: {
 
     },
-    setNowPlaying: (track)=> {
+    currentPlaylist: [
+
+    ],
+    setCurrPlaylist: (playlist: T[])=> {
+        value.currentPlaylist = playlist;
+    },
+    setNowPlaying: (track: T)=> {
         value.nowPlaying = track;
     },
-   setMedia: (medias: Object) => {
+   setMedia: (medias: {dTracks:{[key: string]: boolean}, dPlaylist: {[key:string]: boolean}}) => {
     for(const media in medias){
         for(const item in media){
             if(media[item] === true && !value[media].contains(media[item])){
@@ -26,7 +56,7 @@ const value = {
     }
    }
 
-}
+};
 export const Context = createContext(value);
 
 const withProvider = (Component : React.FC) => {

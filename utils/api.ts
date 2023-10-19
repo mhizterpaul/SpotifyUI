@@ -31,18 +31,29 @@ export function getPlaylist(access_token:string, id: string){
             headers: {
                 'Authorization': 'Bearer ' + access_token
             }
-        }).then (({data}) => data.tracks.items.map((item: GenericPayload) => ({
+        }).then (({data}) => {
+            
+            return {
+                name: data.name,
+                image: data.images[0].url,
+                href: data.href,
+                followers: data.followers.total,
+                description: data.description,
+                total: data.tracks.total,
+
+                items: data.tracks.items.map((item: GenericPayload) => ({
             added_at: item.added_at,
             href: item.href,
             image: item.images[0].url,
             name: item.track.name,
             popularity: item.popularity,
-            artists: item.artists.map((artist: GenericPayload) => artist.name),
+            artists: item.artists.map((artist: GenericPayload) => ({name: artist.name, image: artist.images[0].url, followers: artist.followers.total, popularity: artist.popularity})),
             duration_ms: item.duration_ms,
             description: item.description,
             album: item.album.name,
             total: item.tracks.total
-        }))
+        }))}
+    }
             )
 
 }

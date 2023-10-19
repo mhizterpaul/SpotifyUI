@@ -48,6 +48,11 @@
   grid-template-columns: 1fr;
 }
 
+.inactive {
+  pointer-events: none;
+   cursor: default;
+   color: gray;
+}
 
 .sidebar ul li {
   width: 100%;

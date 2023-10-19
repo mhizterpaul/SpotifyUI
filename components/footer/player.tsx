@@ -9,13 +9,12 @@ import {random} from '../../utils/'
 import { Context } from "../main/withProvider";
 
 interface PlayerProps {
-    src: string;
 }
 
 const Player: React.FC<PlayerProps> = () => {
     const [isPlaying, setIsPlaying] = useState(false);
     const [currentTime, setCurrentTime] = useState(0);
-    const {nowPlaying} = useContext(Context)
+    const {nowPlaying, currentPlaylist, setNowPlaying} = useContext(Context)
     const [audio, setAudio] = useState(nowPlaying.name? random(Audios.items): null)
     const audioRef = useRef<HTMLAudioElement>(null);
     const sliderRef = useRef<HTMLInputElement>(null);
@@ -33,7 +32,7 @@ const Player: React.FC<PlayerProps> = () => {
     };
 
     const handleNext = () => {
-        if (audioRef.current) audioRef.current.currentTime += 10;
+        setNowPlaying(currentPlaylist[currentPlaylist.indexOf(nowPlaying)+1]);
     };
     const seek = () => {
         if(sliderRef.current && audioRef.current) audioRef.current.currentTime = Number(sliderRef.current.value);
