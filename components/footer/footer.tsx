@@ -3,25 +3,28 @@ import Image from "next/image"
 import Player from "./player"
 import Volume from "./volume"
 import { useState } from 'react'
-import { RootState } from "@/store"
-import { connect } from "react-redux"
-import { ApiStatus } from "@/store/reducers/main_slice"
 import withProvider, { Context } from '../main/withProvider'
 import { useContext } from 'react';
+import {IoIosArrowDropupCircle, IoIosArrowDropdownCircle} from 'react-icons/io'
+import { useAppDispatch, useAppSelector } from "@/store/hooks"
+import { pushRef, setNowPlayingView } from "@/store/reducers/main_slice"
+import withStoreProvider from "@/store/with_provider"
 
 
-const Footer = ({ status }: { status: ApiStatus }) => {
+const Footer = () => {
     const [favorite, setFavorite] = useState(false);
     const { nowPlaying } = useContext(Context);
-
+    const dispatch = useAppDispatch();
+    const nowPlayingView = useAppSelector(state => state.main.nowPlayingView);
 
 
     return (<footer className={`${nowPlaying.image ? '':'inactive'}`+' footer bg-[#181818] w-full z-10 whitespace-nowrap text-[2vw] min-w-[375px] min-h-12 overflow-hidden'}>
         <section className='flex items-center justify-between'>
             {nowPlaying.image ?
                 <div className={'flex flex-row items-center max-w-[25vw]'}>
-                    <Image src={nowPlaying.image} className={'w-2/6'} alt="album art" />
-                    positioned arrow that initiates the now playling view on click
+                    <Image src={nowPlaying.image} className={'group relative w-2/6'} alt="album art" />
+                    { !nowPlayingView ? <IoIosArrowDropupCircle onClick={()=>{dispatch(setNowPlayingView(true))}} className='group-hover:block hidden absolute top-1/2 left-1/2'/>
+                     : <IoIosArrowDropdownCircle onClick={dispatch(setNowPlayingView(false))}  className={'group-hover:block hidden absolute top-1/2 left-1/2'}/>}
                     <span className='inline-block mx-2 leading-4 w-1/2'>
                         <span onClick={dispatch(pushRef(`playlist/${nowPlaying.href}`))}>{nowPlaying.name}</span> <br />
                         <span className='hover:underline'>
@@ -39,9 +42,6 @@ const Footer = ({ status }: { status: ApiStatus }) => {
     </footer>)
 }
 
-const mapStateToProps = (state: RootState) => ({
-    status: state.main.fetchAccessTokenStatus,
-});
 
 
-export default withProvider(connect(mapStateToProps)(Footer))
+export default withStoreProvider(withProvider(Footer))

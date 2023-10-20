@@ -5,6 +5,7 @@ export type ApiStatus = 'IDLE'|'PENDING'|'SUCCESS'|'ERROR';
 
 export type State = {
     href: string,
+    nowPlayingView: boolean,
     curr: number|null,
     history: string[],
     open: boolean,
@@ -17,6 +18,7 @@ export type State = {
 const initialState: State = { 
     href: '/', 
     curr: null, 
+    nowPlayingView: false,
     open: false,
     history: [],
     end: undefined,
@@ -47,6 +49,12 @@ export const MainSlice = createSlice({
  
 
             return state;
+        },
+        setNowPlayingView : (state, action:PayloadAction<boolean>)=> {
+            return {
+                ...state,
+                nowPlayingView: action.payload
+            }
         },
         setStartNavTransition: (state, action: PayloadAction<boolean>) => {
             return {
@@ -162,7 +170,7 @@ export const MainSlice = createSlice({
 
 })
 
-export const {goBack, goForward, pushRef, setHref, setOpen, setStartNavTransition} = MainSlice.actions;
+export const {goBack, goForward, pushRef, setHref, setOpen, setStartNavTransition, setNowPlayingView} = MainSlice.actions;
 
 export default MainSlice.reducer
 

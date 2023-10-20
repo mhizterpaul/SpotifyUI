@@ -36,34 +36,33 @@ function Home() {
   if (main.startNavTransition) return <Loader status='PENDING' meta='NAVIGATION' />
   return (
 
-    <main className={`main ${nowPlaying ? 'main-children' : ''} xl:pr-4 sm:col-start-2 ${main.open ? 'col-start-2' : 'col-start-1'} w-full row-start-2 row-end-4 col-end-4 h-[50vh] min-h-[444px] max-h-[620px]`}>
-      <div className='main-firstChild'>
-        <Scrollbars>
-          {/*accessToken.access_token == null ? <Loader status={status} meta='Access Token' /> :*/}
-          <Routes>
-            <Route path='/search' element={
-              <>
-                <TopGenres />
-                <BrowseAll />
-              </>
-            }
-            />
-            <Route path={'/playlist?new=:id'} element={<Playlist />} />
-            <Route path={'/playlist/:id'} element={<Playlist />} />
-            <Route path='/library?list=:id' element={<Library />} />
-            <Route path='/library' element={<Library />} />
+    <main className={`main ${main.nowPlayingView ? 'main-children' : ''} xl:pr-4 sm:col-start-2 ${main.open ? 'col-start-2' : 'col-start-1'} w-full row-start-2 row-end-4 col-end-4 h-[50vh] min-h-[444px] max-h-[620px]`}>
+      <Scrollbars>
+      <div className='main-firstChild w-full'>
+        {/*accessToken.access_token == null ? <Loader status={status} meta='Access Token' /> :*/}
+        <Routes>
+          <Route path='/search' element={
+            <>
+              <TopGenres />
+              <BrowseAll />
+            </>
+          }
+          />
+          <Route path={'/playlist/:id'} element={<Playlist />} />
+          <Route path='/library/:id' element={<Library />} />
+          <Route path='/library' element={<Library />} />
 
-            <Route path='/' element={
-              <>
+          <Route path='/' element={
+            <>
                 <FeaturedPlaylists />
                 <Recommendations />
-              </>
-            }
-            />
-          </Routes>
-        </Scrollbars>
+            </>
+          }
+          />
+        </Routes>
       </div>
-      {nowPlaying ? <div className='main-lastChild'>
+      </Scrollbars>
+      {main.nowPlayingView ? <div className='main-lastChild'>
         <Scrollbars>
           <NowPlaying />
         </Scrollbars>

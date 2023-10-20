@@ -25,7 +25,7 @@ borderRadius: '0.25rem 0rem 0rem 0.25rem'
 }
 
 
-const FeaturedPlaylists = () => {
+const FeaturedPlaylists = ({defaultData}) => {
   //get country info
   const selector = useAppSelector(state => state.main);
   const data = useData({
@@ -39,10 +39,10 @@ const FeaturedPlaylists = () => {
 
 
   return (
-    <section className = 'flex flex-col gap-y-4 h-1/2 max-h-[210px] mt-4 overflow-hidden'>
+    <section className = {`flex flex-col gap-y-4 ${defaultData ? 'h-2/3 h-max-[320px] overflow-x-hidden overflow-y-scroll' : 'h-1/2 max-h-[210px] overflow-hidden'} mt-4 `}>
       <h3>{greet()}</h3>
       <div className='flex flex-row w-full items-center justify-between gap-x-8 gap-y-4 flex-wrap'>
-        {data.data.slice(0,5).map((el: FeaturedPlaylist, id: number) =>
+        {(defaultData||data.data.slice(0,5)).map((el: FeaturedPlaylist, id: number) =>
         (
           (<div key={el.id} className = {[(id === 4 && 'md:mr-[36%]')].join(' ')} style={styles}>
             <Image src={image || el.image} alt={el.name} height={100} width={100} style={imgStyle}/>

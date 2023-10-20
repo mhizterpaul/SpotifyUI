@@ -63,6 +63,10 @@
 
 }
 
+.sidebar ul li:hover {
+  background-color: gray;
+}
+
 
 .sidebar svg {
   width: 2rem;

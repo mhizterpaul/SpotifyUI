@@ -4,20 +4,21 @@ import { LiaTimesSolid } from 'react-icons/lia'
 import { LuMusic3 } from 'react-icons/lu'
 import { SlOptions } from 'react-icons/sl';
 import { Context } from '../main/withProvider';
-
+import { useAppDispatch } from '@/store/hooks';
+import {setNowPlayingView} from '../../store/reducers/main_slice'
 
 const NowPlaying = () => {
     const {nowPlaying, currentPlaylist} = useContext(Context);
     const nextInQueue = currentPlaylist[currentPlaylist.indexOf(nowPlaying)+1];
     const {album, Image, name, artists, } = nowPlaying;
-
+    const dispatch = useAppDispatch();
     return (
         <section>
             <h3>
                 <span>
                     {album}
                 </span>
-                <LiaTimesSolid />
+                <LiaTimesSolid onClick={dispatch(setNowPlayingView(false))}/>
             </h3>
             <section>
                 <Image src={Image} alt={name}/>

@@ -22,6 +22,8 @@ type V = {
     tracks: string[],
     nowPlaying: T,
     currentPlaylist: T[],
+    playlistsInLibrary: {[key: string]: any, items:T[]}[],
+    addPlaylistToLibrary: (playlist: {[key: string]: any, items:T[]})=> void,
     setCurrPlaylist : (playlist: T[])=>void,
     setNowPlaying: (track:T)=>void,
     setMedia: (medias: {dTracks:{[key: string]: boolean}, dPlaylist: {[key:string]: boolean}})=>void
@@ -40,6 +42,10 @@ const value: V = {
     currentPlaylist: [
 
     ],
+    playlistsInLibrary: [],
+    addPlaylistToLibrary:(playlist: {[key: string]: any, items:T[]})=>{
+        value.playlistsInLibrary.push(playlist);
+    },
     setCurrPlaylist: (playlist: T[])=> {
         value.currentPlaylist = playlist;
     },

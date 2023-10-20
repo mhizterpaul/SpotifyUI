@@ -43,10 +43,10 @@ const Player: React.FC<PlayerProps> = () => {
     };
 
     return (
-        <div className='max-w-[25vw]'>
+        <div className={`max-w-[25vw]`}>
             <audio
                 ref={audioRef}
-                src={audio.src}
+                src={audio?.src}
                 onTimeUpdate={handleTimeUpdate}
                 onEnded={() => setIsPlaying(false)}
             />
@@ -65,8 +65,8 @@ const Player: React.FC<PlayerProps> = () => {
                     <BiRepeat />
                 </div>
                 <div className='flex items-center pb-2 gap-x-2'><span id="current-time" className="time">{currentTime}</span>
-                    <input type='range' ref={sliderRef} min={0} max={audio.duration} onChange={(seek)}/>
-                    <span id="duration" className="time">{audio.duration}</span></div>
+                    <input type='range' ref={sliderRef} min={0} max={audio?.duration} onChange={(seek)}/>
+                    <span id="duration" className="time">{audio?.duration}</span></div>
             </section>
         </div>
 
