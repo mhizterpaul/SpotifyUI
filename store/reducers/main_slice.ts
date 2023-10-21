@@ -12,7 +12,6 @@ export type State = {
     end: boolean | undefined,
     access_token: string| null,
     fetchAccessTokenStatus: ApiStatus
-    startNavTransition: boolean,
 }
 
 const initialState: State = { 
@@ -24,7 +23,6 @@ const initialState: State = {
     end: undefined,
     access_token: null,
     fetchAccessTokenStatus: 'IDLE',
-    startNavTransition: false,
 }
 
 export const fetchAccessToken = createAsyncThunk('access_token/fetchAccessToken', getAccessToken);
@@ -54,12 +52,6 @@ export const MainSlice = createSlice({
             return {
                 ...state,
                 nowPlayingView: action.payload
-            }
-        },
-        setStartNavTransition: (state, action: PayloadAction<boolean>) => {
-            return {
-                ...state,
-                startNavTransition: action.payload
             }
         },
         goForward: (state) => {
@@ -170,7 +162,7 @@ export const MainSlice = createSlice({
 
 })
 
-export const {goBack, goForward, pushRef, setHref, setOpen, setStartNavTransition, setNowPlayingView} = MainSlice.actions;
+export const {goBack, goForward, pushRef, setHref, setOpen, setNowPlayingView} = MainSlice.actions;
 
 export default MainSlice.reducer
 

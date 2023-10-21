@@ -24,7 +24,7 @@ const Nav = ({search, isMobile, route, next, prev} : Props) => {
      const dispatch = useAppDispatch();
     return (
         <>
-            <nav className={`flex relative sm:col-start-2 ${isOpen? 'col-start-2' : 'col-start-1'} col-end-4 w-full row-start-1 row-end-2 flex-row nav items-center justify-between py-2`}>
+            <nav className={`flex relative sm:col-start-2 ${isOpen? 'col-start-2' : 'col-start-1'} col-end-4 w-full row-start-1 row-end-2 pl-4 sm:pl-0 flex-row nav items-center justify-between py-2`}>
                 <div className='whitespace-nowrap'>
                     <button className={`${btn} mr-4 sm:ml-8`} onClick={() => route('previous')} disabled={prev}>
                     </button>

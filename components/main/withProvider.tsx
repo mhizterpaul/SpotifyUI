@@ -22,6 +22,7 @@ type V = {
     tracks: string[],
     nowPlaying: T,
     currentPlaylist: T[],
+    ownPlaylist: any[],
     playlistsInLibrary: {[key: string]: any, items:T[]}[],
     addPlaylistToLibrary: (playlist: {[key: string]: any, items:T[]})=> void,
     setCurrPlaylist : (playlist: T[])=>void,
@@ -42,6 +43,7 @@ const value: V = {
     currentPlaylist: [
 
     ],
+    ownPlaylist: [],
     playlistsInLibrary: [],
     addPlaylistToLibrary:(playlist: {[key: string]: any, items:T[]})=>{
         value.playlistsInLibrary.push(playlist);

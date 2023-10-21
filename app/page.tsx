@@ -2,9 +2,9 @@
 'use client'
 import FeaturedPlaylists from '@/components/main/featured_playlists';
 import Recommendations from '@/containers/recommendations';
-import { lazy, useEffect, useRef, useState } from 'react';
+import { lazy, useEffect, useState } from 'react';
 import withProvider from '@/store/with_provider';
-import { Route, Routes, useNavigate } from 'react-router-dom';
+import { Route, Routes, useLocation } from 'react-router-dom';
 import Loader from '@/components/network_request';
 import { useAppSelector, useAppDispatch } from '@/store/hooks';
 import { fetchAccessToken } from '@/store/reducers/main_slice';
@@ -22,6 +22,8 @@ function Home() {
   const main = useAppSelector(state => state.main);
   const dispatch = useAppDispatch();
   const [status, setStatus] = useState('IDLE');
+  const location = useLocation(),
+  pathname = location.pathname;
 
   useEffect(() => {
 
@@ -33,13 +35,14 @@ function Home() {
 
   }, [dispatch, main.fetchAccessTokenStatus])
 
-  if (main.startNavTransition) return <Loader status='PENDING' meta='NAVIGATION' />
+  if ((pathname !== main.href)&&(pathname !== main.href.split('?')[0]) ) return <Loader status='PENDING' meta='NAVIGATION' />
   return (
 
-    <main className={`main ${main.nowPlayingView ? 'main-children' : ''} xl:pr-4 sm:col-start-2 ${main.open ? 'col-start-2' : 'col-start-1'} w-full row-start-2 row-end-4 col-end-4 h-[50vh] min-h-[444px] max-h-[620px]`}>
+    <main className={`main ${main.nowPlayingView ? 'main-children' : ''} xl:pr-4 sm:col-start-2 ${main.open ? 'col-start-2' : 'col-start-1'} w-full row-start-2 row-end-4 col-end-4 h-[50vh] min-h-[31rem] pl-4 sm:pl-0 max-h-[620px]`}>
       <Scrollbars>
       <div className='main-firstChild w-full'>
         {/*accessToken.access_token == null ? <Loader status={status} meta='Access Token' /> :*/}
+
         <Routes>
           <Route path='/search' element={
             <>
@@ -49,7 +52,7 @@ function Home() {
           }
           />
           <Route path={'/playlist/:id'} element={<Playlist />} />
-          <Route path='/library/:id' element={<Library />} />
+          <Route path='/library/playlist/' element={<Library />} />
           <Route path='/library' element={<Library />} />
 
           <Route path='/' element={

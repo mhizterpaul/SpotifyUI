@@ -43,30 +43,30 @@ const Player: React.FC<PlayerProps> = () => {
     };
 
     return (
-        <div className={`max-w-[25vw]`}>
+        <div className={`w-[50vw] min-w-[150px] max-w-[350px]`}>
             <audio
                 ref={audioRef}
                 src={audio?.src}
                 onTimeUpdate={handleTimeUpdate}
                 onEnded={() => setIsPlaying(false)}
             />
-            <section className='flex flex-col items-center '>
-                <div className='flex flex-nowrap p-4'>
+            <section className='player flex flex-col items-center '>
+                <div className='flex w-4/6 pb-1 flex-nowrap pt-2 justify-between items-center'>
                     <RxShuffle />
                     <button onClick={handlePrevious}>
                         <IoPlaySkipBackOutline />
                     </button>
-                    <button onClick={togglePlay}>
-                        {isPlaying ? <BsPauseCircle /> : <BsPlayCircle />}
+                    <button onClick={togglePlay} className={''}>
+                        {isPlaying ? <BsPauseCircle className={'play'}/> : <BsPlayCircle className={'play'} />}
                     </button>
                     <button onClick={handleNext}>
                         <IoPlaySkipForwardOutline />
                     </button>
                     <BiRepeat />
                 </div>
-                <div className='flex items-center pb-2 gap-x-2'><span id="current-time" className="time">{currentTime}</span>
-                    <input type='range' ref={sliderRef} min={0} max={audio?.duration} onChange={(seek)}/>
-                    <span id="duration" className="time">{audio?.duration}</span></div>
+                <div className='w-full flex justify-center gap-x-2 items-center'><span id="current-time" className="pr-2">{currentTime}</span>
+                    <input type='range' className={'w-5/6 slider'} ref={sliderRef} min={0} max={audio?.duration} onChange={(seek)}/>
+                    <span id="duration" className="pl-2">{audio?.duration}</span></div>
             </section>
         </div>
 

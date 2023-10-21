@@ -34,7 +34,7 @@
                        's m m'
                        'f f f';
   grid-template-rows: 1fr 4fr 4fr 1fr;
-  grid-template-columns: minmax(0, max-content) minmax(auto, 1fr);
+  grid-template-columns: minmax(14.5rem, max-content) minmax(auto, 1fr);
 }
 
 .sidebar {
@@ -54,38 +54,93 @@
    color: gray;
 }
 
-.sidebar ul li {
+.sidebar ul>li {
   width: 100%;
   margin-top: 0.2rem;
   display: flex;
   align-items: center;
   justify-content: flex-start;
-
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  border-radius: 2rem;
+  padding-left: 15%;
 }
+
+.sidebar>ul, .sidebar>h2 {
+  width: 100%;
+}
+input[type=range] {
+  -webkit-appearance: none; /* Hides the slider so that custom slider can be made */
+  background: transparent; /* Otherwise white in Chrome */
+}
+
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+}
+
+input[type=range]:focus {
+  outline: none; /* Removes the blue border. You should probably do some kind of focus styling for accessibility reasons though. */
+}
+
+input[type=range]::-ms-track {
+  cursor: pointer;
+
+  /* Hides the slider so custom styles can be added */
+  background: transparent; 
+  border-color: transparent;
+  color: transparent;
+}
+
+
 
 .sidebar ul li:hover {
   background-color: gray;
+  pointer-events: visible;
+  cursor: pointer;
 }
 
+.sidebar li.--big-svg{
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+}
+input[type=range]::-webkit-slider-thumb {
+  margin-top: 1px;
+}
 
+input[type=range]::-webkit-slider-thumb, input[type=range]::-moz-range-thumb, input[type=range]::-ms-thumb {
+background: transparent;
+}  
+
+input[type=range]::-webkit-slider-runnable-track {
+  height: 0.25rem;
+  background: white;
+  border-radius: 1rem;
+}
+
+input[type=range]::-moz-range-track {
+  height: 0.25rem;
+  background: white;
+  border-radius: 1rem;
+}
+
+input[type=range]::-ms-fill-upper, input[type=range]::-ms-fill-lower {
+  background: white;
+}
 .sidebar svg {
   width: 2rem;
   height: 2rem;
   display: inline-block;
 }
 
-.sidebar li > svg {
+.sidebar li>svg {
   margin-right: 0.7rem;
 }
 
-.sidebar .--big-svg {
+.sidebar svg.--big-svg {
   height: 2.5rem;
   width: 2.5rem;
   margin-left: -4.5px;
-}
-
-.main {
-  min-height: 32.5rem;
+  
 }
 
 
@@ -97,6 +152,16 @@
 
 .footer {
   grid-area: f;
+}
+
+.player svg {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.player svg.play {
+  width: 3rem;
+  height: 3rem;
 }
 
 

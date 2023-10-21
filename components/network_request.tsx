@@ -10,10 +10,11 @@ type NetworkParam = {
 
 function Loader({ status, meta}: NetworkParam) {
     
-    return (
-        status === ('PENDING' || 'IDLE') ? <div className={styles.spinner }></div>
-            : <div> {status + " " + meta}</div>
-    )
+    return (<div className='flex justify-center items-center w-full h-full'>
+        {
+        status === ('PENDING' || 'IDLE') ? <div className={`${styles.spinner}` }></div>
+            : <div> {status + " " + meta}</div>}
+     </div>)
 }
 
 export default Loader

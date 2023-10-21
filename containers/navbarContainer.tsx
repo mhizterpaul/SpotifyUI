@@ -2,10 +2,10 @@
 import Nav from "@/components/nav/navbar";
 import { RootState } from "@/store";
 import { connect } from "react-redux";
-import { useEffect, useState, useTransition } from "react";
+import { useEffect, useState } from "react";
 import withProvider from "@/store/with_provider";
 import { Dispatch } from "@reduxjs/toolkit";
-import { goBack, goForward, pushRef, setHref, setStartNavTransition } from "@/store/reducers/main_slice";
+import { goBack, goForward, pushRef, setHref } from "@/store/reducers/main_slice";
 import { useNavigate, useLocation } from 'react-router-dom'
 
 type Props = {
@@ -24,7 +24,6 @@ function NavbarContainer({ href, end, curr, dispatch }: Props) {
     [nav, setNav] = useState({ prev: true, next: false }),
     currUrl = window.location.href.split('3000/')[1],
     location = useLocation(),
-    [isPending, startTransition] = useTransition(),
     pathname = location.pathname,
     navigate = useNavigate(),
     route = (option?: 'previous' | 'next') => {
@@ -71,10 +70,7 @@ function NavbarContainer({ href, end, curr, dispatch }: Props) {
     }
 
     if (href !== pathname) {
-      dispatch(setStartNavTransition(true));
-      startTransition(() => {
         navigate(href);
-      });
     }
 
   }, [href])
@@ -104,8 +100,6 @@ function NavbarContainer({ href, end, curr, dispatch }: Props) {
 
     if (typeof window !== 'undefined') return () => window.removeEventListener('resize', setMobile);
   }, []);
-
-  if(!isPending) dispatch(setStartNavTransition(false));
 
   return (
     <Nav next={nav.next} prev={nav.prev} route={route} isMobile={isMobile} search={pathname === '/search'} />

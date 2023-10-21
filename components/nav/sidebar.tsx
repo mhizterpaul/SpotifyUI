@@ -1,6 +1,10 @@
 import { pushRef } from '@/store/reducers/main_slice';
 import { useAppDispatch } from '@/store/hooks';
 import {BiHomeAlt} from 'react-icons/bi'
+import { Context } from '../main/withProvider';
+import { useContext } from 'react';
+import { BsPinAngleFill } from 'react-icons/bs';
+
 
 export const likedStyles = {
     background: 'linear-gradient(135deg, #4000F4 0%, #603AED 22.48%, #7C6EE6 46.93%, #979FE1 65.71%, #A2B3DE 77.68%, #ADC8DC 88.93%, #C0ECD7 100%)',
@@ -9,15 +13,17 @@ export const likedStyles = {
 
 const Sidebar = (params: { isOpen?: boolean }) => {
     const dispatch = useAppDispatch();
-    const {}
+    const {ownPlaylist, playlistsInLibrary} = useContext(Context);
 
-    return (<aside className={/*my-auto */ [`bg-black sidebar hidden sm:flex flex-col h-[80vh] min-h-[580px] items-center max-h-[680px] sm:ml-4 justify-around
-         text-lg pl-6 font-medium w-[15rem]`, params.isOpen == null ? '' : params.isOpen === true ? 'translateOut' : 'translateIn'].join(' ')}>
-        <h2 className='text-3xl mt-6 -mb-9'>
+    return (<aside className={/*my-auto */ [`bg-black sidebar hidden sm:flex flex-col h-[55vh] min-h-[560px] items-center max-h-[680px] justify-around
+         text-lg mr-8 font-medium w-[15rem]`, params.isOpen == null ? '' : params.isOpen === true ? 'translateOut' : 'translateIn'].join(' ')}>
+        <h2 className='text-3xl mt-6 -mb-9 '>
+            <ul className='list-none'>
             <li onClick={() => dispatch(pushRef('/'))}>
             <svg xmlns="http://www.w3.org/2000/svg" className='inline-block mb-2 mr-1' width="32" height="32" viewBox="0 0 32 32"><path fill="currentColor" d="M16 0C7.197 0 0 7.197 0 16s7.197 16 16 16s16-7.197 16-16S24.88 0 16 0zm7.36 23.12c-.319.479-.881.64-1.36.317c-3.76-2.317-8.479-2.797-14.083-1.52c-.557.165-1.037-.235-1.199-.72c-.156-.557.24-1.036.719-1.197c6.084-1.36 11.365-.803 15.521 1.76c.563.24.64.88.401 1.36zm1.921-4.401c-.401.563-1.12.803-1.683.401c-4.317-2.641-10.88-3.437-15.916-1.839c-.641.156-1.365-.161-1.521-.803c-.161-.64.156-1.359.797-1.52c5.844-1.761 13.041-.876 18 2.161c.484.24.724 1.041.323 1.599zm.162-4.479c-5.125-3.043-13.683-3.36-18.563-1.839c-.801.239-1.599-.24-1.839-.964c-.239-.797.24-1.599.959-1.839c5.683-1.681 15.041-1.359 20.964 2.161c.719.401.957 1.36.557 2.079c-.401.563-1.36.801-2.079.401z" /></svg>
             Spotify<sup>&reg;</sup>
             </li>
+            </ul>
         </h2>
         <ul className='self-start'>
             <li onClick={() => dispatch(pushRef('/'))}>
@@ -27,10 +33,10 @@ const Sidebar = (params: { isOpen?: boolean }) => {
             <li onClick={() => dispatch(pushRef('/search'))}>
                 <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 256 256"><path fill="currentColor" d="m229.66 218.34l-50.07-50.06a88.11 88.11 0 1 0-11.31 11.31l50.06 50.07a8 8 0 0 0 11.32-11.32ZM40 112a72 72 0 1 1 72 72a72.08 72.08 0 0 1-72-72Z" /></svg> Search
             </li>
-            <li onClick={() => dispatch(pushRef('/library'))}><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M7 3h2v18H7zM4 3h2v18H4zm6 0h2v18h-2zm9.062 17.792l-6.223-16.89l1.877-.692l6.223 16.89z" /></svg> Your library <span>${}</span></li>
+            <li onClick={() => dispatch(pushRef('/library'))}><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M7 3h2v18H7zM4 3h2v18H4zm6 0h2v18h-2zm9.062 17.792l-6.223-16.89l1.877-.692l6.223 16.89z" /></svg> Your library {playlistsInLibrary.length || ownPlaylist.length ? <span><BsPinAngleFill/> playlist &bull; {playlistsInLibrary.length + ownPlaylist.length}</span>: null}</li>
         </ul>
         <ul className='self-start'>
-            <li onClick={() => dispatch(pushRef('/library/playlist?new=true'))}><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" className='--big-svg' viewBox="0 0 16 16"><path fill="currentColor" fillRule="evenodd" d="M4 2a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H4Zm4 9a.75.75 0 0 1-.75-.75v-1.5h-1.5a.75.75 0 0 1 0-1.5h1.5v-1.5a.75.75 0 0 1 1.5 0v1.5h1.5a.75.75 0 0 1 0 1.5h-1.5v1.5A.75.75 0 0 1 8 11Z" clipRule="evenodd" /></svg> Create Playlist</li>
+            <li className={'--big-svg'} onClick={() => dispatch(pushRef('/library/playlist?new'))}><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" className='--big-svg' viewBox="0 0 16 16"><path fill="currentColor" fillRule="evenodd" d="M4 2a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H4Zm4 9a.75.75 0 0 1-.75-.75v-1.5h-1.5a.75.75 0 0 1 0-1.5h1.5v-1.5a.75.75 0 0 1 1.5 0v1.5h1.5a.75.75 0 0 1 0 1.5h-1.5v1.5A.75.75 0 0 1 8 11Z" clipRule="evenodd" /></svg> Create Playlist</li>
             <li onClick={()=>dispatch(pushRef('/playlist/likedSongs'))}>
                 <div className='inline-block mr-4' style={likedStyles}>
                     <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M12 20.325q-.35 0-.713-.125t-.637-.4l-1.725-1.575q-2.65-2.425-4.788-4.813T2 8.15Q2 5.8 3.575 4.225T7.5 2.65q1.325 0 2.5.562t2 1.538q.825-.975 2-1.538t2.5-.562q2.35 0 3.925 1.575T22 8.15q0 2.875-2.125 5.275T15.05 18.25l-1.7 1.55q-.275.275-.637.4t-.713.125Z" /></svg>
