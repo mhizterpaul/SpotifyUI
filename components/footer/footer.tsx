@@ -1,7 +1,6 @@
 'use client'
 import Image from "next/image"
 import Player from "./player"
-import Volume from "./volume"
 import { useState } from 'react'
 import withProvider, { Context } from '../main/withProvider'
 import { useContext } from 'react';
@@ -35,7 +34,6 @@ const Footer = () => {
                     </span>
                 </div>
             <Player />
-            <Volume />
     </footer>)
 }
 

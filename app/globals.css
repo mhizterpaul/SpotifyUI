@@ -48,9 +48,32 @@
   grid-template-columns: 1fr;
 }
 
-.inactive {
+.main > div:first-child>div:first-child::-webkit-scrollbar {
+  display: none;
+
+}
+
+
+.main, .nav, .footer, .main-firstChild{
+  padding-right: 1rem;
+}
+
+.main > div:first-child > div:last-child {
+  transform: translateX(0.8rem);
+}
+
+.main > div:first-child {
+  overflow: visible !important;
+}
+
+.main > div:first-child > div:first-child{
+  scrollbar-width: none;
+};
+
+
+inactive {
   pointer-events: none;
-   cursor: default;
+   cursor: none;
    color: gray;
 }
 
@@ -132,9 +155,15 @@ input[type=range]::-ms-fill-upper, input[type=range]::-ms-fill-lower {
   display: inline-block;
 }
 
-.sidebar li>svg {
-  margin-right: 0.7rem;
+.sidebar .small-svg{
+  width: 1.5rem;
+  height: 1.5rem;
 }
+
+.sidebar li>svg {
+  margin-right: 0.5rem;
+}
+
 
 .sidebar svg.--big-svg {
   height: 2.5rem;
@@ -147,6 +176,10 @@ input[type=range]::-ms-fill-upper, input[type=range]::-ms-fill-lower {
 .footer svg {
   width: 1.4rem;
   height: 1.4rem;
+}
+
+footer input, footer svg {
+  cursor: pointer;
 }
 
 
@@ -249,6 +282,7 @@ li {
   animation: 300ms ease-in-out 0s 1 normal forwards running translateOut;
 }
 
+
 @media screen and (min-width: 1124px) and (min-height: 65rem ) {
   #root {
     display: flex;
@@ -259,7 +293,8 @@ li {
 }
 
 @media screen and (min-width: 777px) {
-  .main, .nav, .footer{
-    padding-right: 2rem;
-  }
+  
+
+  
+
 }

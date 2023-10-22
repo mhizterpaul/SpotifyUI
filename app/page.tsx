@@ -24,6 +24,21 @@ function Home() {
   const [status, setStatus] = useState('IDLE');
   const location = useLocation(),
   pathname = location.pathname;
+  const renderThumb = ({ style, ...props }) => {
+    const thumbStyle = {
+        backgroundColor: `#797d7d`,
+        borderRadius: '0.25rem',
+    };
+    return (
+        <div
+            style={{ ...style, ...thumbStyle }}
+            {...props}/>
+    );
+
+    };
+    
+   
+ 
 
   useEffect(() => {
 
@@ -38,8 +53,8 @@ function Home() {
   if ((pathname !== main.href)&&(pathname !== main.href.split('?')[0]) ) return <Loader status='PENDING' meta='NAVIGATION' />
   return (
 
-    <main className={`main ${main.nowPlayingView ? 'main-children' : ''} xl:pr-4 sm:col-start-2 ${main.open ? 'col-start-2' : 'col-start-1'} w-full row-start-2 row-end-4 col-end-4 h-[50vh] min-h-[31rem] pl-4 sm:pl-0 max-h-[620px]`}>
-      <Scrollbars>
+    <main className={`main ${main.nowPlayingView ? 'main-children' : ''} xl:pr-2 sm:col-start-2 ${main.open ? 'col-start-2' : 'col-start-1'} w-full row-start-2 row-end-4 col-end-4 h-[50vh] min-h-[31rem] pl-2 sm:pl-0 max-h-[620px]`}>
+      <Scrollbars thumbSize={100} renderThumbHorizontal={renderThumb} renderThumbVertical={renderThumb}>
       <div className='main-firstChild w-full'>
         {/*accessToken.access_token == null ? <Loader status={status} meta='Access Token' /> :*/}
 
@@ -66,7 +81,7 @@ function Home() {
       </div>
       </Scrollbars>
       {main.nowPlayingView ? <div className='main-lastChild'>
-        <Scrollbars>
+        <Scrollbars thumbSize={100} renderTrackVertical={renderTrack} renderThumbHorizontal={renderThumb} renderThumbVertical={renderThumb}>
           <NowPlaying />
         </Scrollbars>
       </div> : null}

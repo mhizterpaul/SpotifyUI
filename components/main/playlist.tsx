@@ -16,15 +16,15 @@ import {ShareSocial} from 'react-share-social'
 import { likedStyles } from "../nav/sidebar";
 
 const Playlist = () => {
-  const { playlist, ownPlaylist, addPlaylistToLibrary, setNowPlaying, setCurrPlaylist, tracks, setMedia } = useContext(Context);
+  const { Playlist, ownPlaylist, addPlaylistToLibrary, setNowPlaying, setCurrPlaylist, Tracks, setMedia } = useContext(Context);
   const { id } = useParams();
   const access_token = useAppSelector(state => state.main.access_token);
   const { data } = useSWR('getPlaylist', () => getPlaylist(access_token, id));
   const [menu, setMenu] = useState({ first: false, second: false });
   const currFav = (() => {
     const dTracks: { [key: string]: boolean } = {}, dPlaylist: { [key: string]: boolean } = {};
-    if (id && playlist.includes(id)) dPlaylist[id] = true;
-    data?.items.forEach((el) => (tracks.includes(el.href) ? dTracks[href] = true : null))
+    if (id && Playlist.includes(id)) dPlaylist[id] = true;
+    data?.items.forEach((el) => (Tracks.includes(el.href) ? dTracks[href] = true : null))
     //search for playlist in playlist array
     return { dTracks, dPlaylist }
   })();
@@ -47,7 +47,7 @@ const Playlist = () => {
                 </div> : <Image src={data.image} alt='Playlist cover photo' width={100} height={100} /> }
           <div className='flex flex-col justify-around items-center'>
             <small>playlist</small>
-            <h3 className='capitalize'>{id !== 'likedSongs' ? data.name : 'liked Songs '} &bull; {id=== 'likedSongs' && tracks.length +' songs'}</h3>
+            <h3 className='capitalize'>{id !== 'likedSongs' ? data.name : 'liked Songs '} &bull; {id=== 'likedSongs' && Tracks.length +' songs'}</h3>
             <p>
               {data?.description}</p>
             <p>
@@ -61,7 +61,7 @@ const Playlist = () => {
               {id !== 'likedSongs' ? <><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" onClick={(() => (setFavorite(prev => ({
                 ...prev, dPlaylist: {
                   ...prev.dPlaylist,
-                  [id || '']: prev.dPlaylist[id || ''] === undefined ? true : !prev.dPlaylist[id || '']
+                  [id]: prev.dPlaylist[id] == undefined ? data : null
                 }
               }))))} viewBox="0 0 24 24"><path fill={favorite ? "#1db954" : 'none'} d="M12 20.325q-.35 0-.713-.125t-.637-.4l-1.725-1.575q-2.65-2.425-4.788-4.813T2 8.15Q2 5.8 3.575 4.225T7.5 2.65q1.325 0 2.5.562t2 1.538q.825-.975 2-1.538t2.5-.562q2.35 0 3.925 1.575T22 8.15q0 2.875-2.125 5.275T15.05 18.25l-1.7 1.55q-.275.275-.637.4t-.713.125Z" /></svg>
               <SlOptions onClick={() => setMenu((prev) => ({ ...prev, first: !prev.first }))} /></>: null} </tr>
@@ -81,11 +81,11 @@ const Playlist = () => {
             <tr className='capitalize'><td>#</td> <td>name</td> <td>Album </td><td><LuClock3 /></td></tr>
             {
 
-              (id=== 'likedSongs' ? tracks : data.items).map(
-                ({ image, href, name, album, artists, duration_ms }, index, arr) => {
+              (id=== 'likedSongs' ? Tracks : data.items).map(
+                ({ image, href, name, album, artists, duration_ms }, index) => {
                   return (
                     <tr key={name} className='group text-gray-600 hover:bg-gray-400 '>
-                      <td onClick={() => { setNowPlaying(data[index]); setCurrPlaylist(arr) }}>
+                      <td onClick={() => { setNowPlaying(data?.items[index]); setCurrPlaylist(data.items) }}>
                         <span className='group-hover:hidden'>{index + 1}</span>
                         <BsPlayCircle className='hidden group-hover:block' />
                       </td>
@@ -107,7 +107,7 @@ const Playlist = () => {
                         <svg xmlns="http://www.w3.org/2000/svg" className='hidden group-hover:block' width="32" height="32" onClick={(() => (setFavorite(prev => ({
                           ...prev, dTracks: {
                             ...prev.dTracks,
-                            [data.href]: prev.dTracks[data.href] === undefined ? true : !prev.dTracks[data.href]
+                            [href]: prev.dTracks[href] == undefined ? data.items[index] : null
                           }
                         }))))} viewBox="0 0 24 24"><path fill={favorite ? "#1db954" : 'none'} d="M12 20.325q-.35 0-.713-.125t-.637-.4l-1.725-1.575q-2.65-2.425-4.788-4.813T2 8.15Q2 5.8 3.575 4.225T7.5 2.65q1.325 0 2.5.562t2 1.538q.825-.975 2-1.538t2.5-.562q2.35 0 3.925 1.575T22 8.15q0 2.875-2.125 5.275T15.05 18.25l-1.7 1.55q-.275.275-.637.4t-.713.125Z" /></svg>
                       </td>
@@ -121,7 +121,7 @@ const Playlist = () => {
                             <ul className='absolute group-active/menu:block hidden'>
                               {ownPlaylist.map(({ name, image }, indx) => (<li key={name} onClick={() => { ownPlaylist[indx].items.push(data.items[index]) }}>{name}</li>))}
                             </ul></li>
-                          <li onClick={() => setFavorite(prev => ({ ...prev, dTracks: { ...prev.dTracks, [data.href]: true } }))}>saved to your liked song</li>
+                          <li onClick={() => setFavorite(prev => ({ ...prev, dTracks: { ...prev.dTracks, [href]: prev.dTracks[href] == undefined ? data.items[index] : null } }))}>saved to your liked song</li>
                           <li className='group/share'><IoShareOutline />share</li>
                           <ul className='absolute group-active/share:block hidden'>
                             <li><ShareSocial

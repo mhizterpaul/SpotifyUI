@@ -3,7 +3,7 @@ import { BsPlayCircle, BsPauseCircle } from 'react-icons/bs'
 import { IoPlaySkipForwardOutline, IoPlaySkipBackOutline } from 'react-icons/io5'
 import { RxShuffle } from 'react-icons/rx'
 import { BiRepeat } from 'react-icons/bi'
-
+import Volume from './volume'
 import Audios from '../../static/audio/index'
 import {random} from '../../utils/'
 import { Context } from "../main/withProvider";
@@ -43,6 +43,7 @@ const Player: React.FC<PlayerProps> = () => {
     };
 
     return (
+        <>
         <div className={`w-[50vw] min-w-[150px] max-w-[350px]`}>
             <audio
                 ref={audioRef}
@@ -69,7 +70,8 @@ const Player: React.FC<PlayerProps> = () => {
                     <span id="duration" className="pl-2">{audio?.duration}</span></div>
             </section>
         </div>
-
+        <Volume audio={audioRef} />
+        </>
     );
 };
 

@@ -18,8 +18,8 @@ type T = {
 } | {}
 
 type V = {
-    playlist: string[],
-    tracks: string[],
+    Playlist: string[],
+    Tracks: string[],
     nowPlaying: T,
     currentPlaylist: T[],
     ownPlaylist: any[],
@@ -31,10 +31,10 @@ type V = {
 }
 
 const value: V = {
-    playlist:[
+    Playlist:[
 
     ],
-    tracks: [
+    Tracks: [
 
     ],
     nowPlaying: {
@@ -57,8 +57,8 @@ const value: V = {
    setMedia: (medias: {dTracks:{[key: string]: boolean}, dPlaylist: {[key:string]: boolean}}) => {
     for(const media in medias){
         for(const item in media){
-            if(media[item] === true && !value[media].contains(media[item])){
-                media === 'playlist' ? value.playlist.push(item) : value.likedSongs.push(item);
+            if( !value[media.substring(1)].contains(media[item])){
+                media === 'dPlaylist' ? value.Playlist.push(item) : value.Tracks.push(item);
             }
         }
     }

@@ -7,8 +7,12 @@ import {HiOutlineSpeakerWave, HiOutlineSpeakerXMark} from 'react-icons/hi2'
 import {useRef} from 'react'
 
 
-const Volume = () => {
+const Volume = ({audio}) => {
     const volumeRef = useRef<HTMLInputElement>(null)
+    const handleVolumeChange = ()=> {
+        if(audio.current && volumeRef.current) audio.current.volume = Number(volumeRef.current.value)/10;
+    }
+    
     return (
         <div className='flex flex-row text-[3vw] gap-x-2 max-w-[30vw]'>
             <AiOutlinePlaySquare />
@@ -20,7 +24,7 @@ const Volume = () => {
             {volumeRef.current && (Number(volumeRef.current.value) <= 50 ?  <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 7.5S21 9 21 11.5s-1.5 4-1.5 4"/><path d="M2 13.857v-3.714a2 2 0 0 1 2-2h2.9a1 1 0 0 0 .55-.165l6-3.956a1 1 0 0 1 1.55.835v14.286a1 1 0 0 1-1.55.835l-6-3.956a1 1 0 0 0-.55-.165H4a2 2 0 0 1-2-2Z"/></g></svg> : 
             Number(volumeRef.current.value) === 0 ? <HiOutlineSpeakerXMark/> : <HiOutlineSpeakerWave />)}
 
-            <input type='range' className={'w-2/6 slider'} ref={volumeRef} min={0} max={100} />
+            <input type='range' onChange={handleVolumeChange} className={'w-2/6 slider'} ref={volumeRef} min={0} max={100} />
             <BsPip />
         </div>
     )

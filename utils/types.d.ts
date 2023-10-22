@@ -25,3 +25,5 @@ export type Category = {
     id: string,
     name: string
 }
+
+declare module 'react-share-social';

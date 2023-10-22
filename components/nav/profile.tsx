@@ -17,7 +17,8 @@ const Profile = () => {
                         objectFit: "contain",
                         aspectRatio: '1.5',
                         clipPath: 'circle(35%)',
-                        marginLeft: '-0.9rem'
+                        marginLeft: '-0.9rem',
+                        zIndex: 10
                     }
                 }/>
                 <span className={`-translate-x-5`}>Angel</span>
