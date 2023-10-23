@@ -1,7 +1,7 @@
 
 function PageNotFound() {
   return (
-    <div className = 'container m-auto'>404 page not found</div>
+    <div className = 'container w-full'><div className='mx-auto'>404 page not found</div></div>
   )
 }
 

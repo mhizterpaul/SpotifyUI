@@ -17,7 +17,7 @@ const Footer = () => {
     const nowPlayingView = useAppSelector(state => state.main.nowPlayingView);
 
 
-    return (<footer className={`${nowPlaying.image ? '':'inactive'}`+' footer bg-[#181818] w-full flex items-center justify-between z-10 whitespace-nowrap pb-2 min-w-[540px] min-h-[85px] h-[14vh] overflow-hidden'}>
+    return (<footer className={`${nowPlaying.image ? '':'inactive'}`+' footer bg-[#181818] w-full relative flex items-center justify-between z-10 whitespace-nowrap pb-6 -mt-14 sm:min-w-[540px] min-h-[120px] h-[14vh] overflow-visible'}>
 
                 <div className={`${nowPlaying.image? 'flex': 'invisible'}`+' flex-row items-center max-w-[30vw]'}>
                     <Image src={nowPlaying.image} className={'group relative w-2/6'} alt="album art" />

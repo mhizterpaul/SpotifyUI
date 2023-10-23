@@ -13,7 +13,7 @@ const Recommendations = ({ recommendations }: Props) => {
                 Shows you might like
                 <span className='uppercase inline-block text-xs' >see all</span>
             </h3>
-            <div className='flex flex-row justify-between flex-wrap align-center gap-y-4'>
+            <div className='flex flex-row justify-between flex-wrap align-center gap-8'>
                 {recommendations.map((el, id) => (
                     <Card {...el} type='recommendations' key={id} />
                 ))}

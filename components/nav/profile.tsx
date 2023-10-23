@@ -1,7 +1,7 @@
 import {useState } from 'react'
 import Image from 'next/image'
 
-const Profile = () => {
+const Profile = ({className}) => {
 
     const [state, setState] = useState({ isOpen: 'rotate-180', display: 'hidden' }),
         handleClick = () => setState(curr => ({
@@ -9,8 +9,7 @@ const Profile = () => {
             display: curr.display === 'hidden' ? 'visible' : 'hidden'
         }));
     return (
-        <>
-            <button className={'w-36 h-10 relative flex flex-row items-center justify-between bg-black rounded-2xl sm:mr-0 mr-16'}
+            <button className={className + 'max-w-36 w-1/4 h-10 relative flex flex-row items-center justify-between bg-black rounded-2xl sm:mr-0 mr-16'}
                 onClick={handleClick}>
                 <Image src='/avatar.jpg' width ={65} height={65} alt="profile picture" style={
                     {
@@ -30,7 +29,6 @@ const Profile = () => {
                     <li className='pb-2'>Log out</li>
                 </ul>
             </button>
-        </>
     )
 }
 

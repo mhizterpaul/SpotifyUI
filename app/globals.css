@@ -68,13 +68,12 @@
 
 .main > div:first-child > div:first-child{
   scrollbar-width: none;
-};
+}
 
-
-inactive {
+.inactive {
   pointer-events: none;
-   cursor: none;
-   color: gray;
+  cursor: none;
+  color: gray;
 }
 
 .sidebar ul>li {
@@ -131,8 +130,12 @@ input[type=range]::-webkit-slider-thumb {
 }
 
 input[type=range]::-webkit-slider-thumb, input[type=range]::-moz-range-thumb, input[type=range]::-ms-thumb {
-background: transparent;
-}  
+  background: transparent;
+} 
+
+input[type=range]::-webkit-slider-thumb:hover, input[type=range]::-moz-range-thumb:hover, input[type=range]::-ms-thumb:hover {
+  background: whitesmoke;
+}
 
 input[type=range]::-webkit-slider-runnable-track {
   height: 0.25rem;
@@ -140,10 +143,18 @@ input[type=range]::-webkit-slider-runnable-track {
   border-radius: 1rem;
 }
 
+input[type=range]::-webkit-slider-runnable-track:hover {
+  background: rgba(18, 218, 18, 0.521);
+}
+
 input[type=range]::-moz-range-track {
   height: 0.25rem;
   background: white;
   border-radius: 1rem;
+}
+
+input[type=range]::-moz-range-track:hover {
+  background: rgba(18, 218, 18, 0.521);
 }
 
 input[type=range]::-ms-fill-upper, input[type=range]::-ms-fill-lower {

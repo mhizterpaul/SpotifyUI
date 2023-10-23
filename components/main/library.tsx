@@ -16,9 +16,8 @@ const Library = () => {
   const inputRef = useRef<HTMLInputElement>(null);
 
 
-  if((searchParams.get('new') === '') && (closeForm === null)) return <section><input ref={inputRef} type='text' size={25} placeholder='playlist name' />
-  <button onClick={()=> {inputRef.current && ownPlaylist.push({name: inputRef.current.value, image: <RiMusic2Line/>, items: [] }); setCloseForm(true) }}>submit</button></section>;
-
+  if((searchParams.get('new') === '') && (closeForm === null)) return <section className='w-full flex flex-col items-center justify=center'><input type="text" ref={inputRef} className="mt-1 px-3 py-2 bg-[whitesmoke] placeholder:italic border shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-sky-500 block rounded-md sm:text-sm focus:ring-1" placeholder="... enter playlist name" />
+  <button type={'submit'} onClick={()=> {inputRef.current && ownPlaylist.push({name: inputRef.current.value, image: <RiMusic2Line/>, items: [] }); setCloseForm(true) }}>submit</button></section>;
 
   return playlistsInLibrary.length || ownPlaylist.length ? <>
       <FeaturedPlaylists defaultData={[...playlistsInLibrary, ...ownPlaylist]}/> 

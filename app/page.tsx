@@ -53,7 +53,7 @@ function Home() {
   if ((pathname !== main.href)&&(pathname !== main.href.split('?')[0]) ) return <Loader status='PENDING' meta='NAVIGATION' />
   return (
 
-    <main className={`main ${main.nowPlayingView ? 'main-children' : ''} xl:pr-2 sm:col-start-2 ${main.open ? 'col-start-2' : 'col-start-1'} w-full row-start-2 row-end-4 col-end-4 h-[50vh] min-h-[31rem] pl-2 sm:pl-0 max-h-[620px]`}>
+    <main className={`main ${main.nowPlayingView ? 'main-children' : ''} xl:pr-2 sm:col-start-2 ${main.open ? 'col-start-2' : 'col-start-1'} w-full row-start-2 row-end-4 col-end-4  min-h-[31rem] pl-2 sm:pl-0 max-h-[914px]`}>
       <Scrollbars thumbSize={100} renderThumbHorizontal={renderThumb} renderThumbVertical={renderThumb}>
       <div className='main-firstChild w-full'>
         {/*accessToken.access_token == null ? <Loader status={status} meta='Access Token' /> :*/}

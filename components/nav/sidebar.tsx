@@ -15,8 +15,8 @@ const Sidebar = (params: { isOpen?: boolean }) => {
     const dispatch = useAppDispatch();
     const {ownPlaylist, playlistsInLibrary} = useContext(Context);
 
-    return (<aside className={/*my-auto */ [`bg-black sidebar hidden sm:flex flex-col h-[55vh] min-h-[560px] items-center max-h-[680px] justify-around
-         text-lg mr-8 p-1 font-medium w-[15rem]`, params.isOpen == null ? '' : params.isOpen === true ? 'translateOut' : 'translateIn'].join(' ')}>
+    return (<aside className={/*my-auto */ [`bg-black sidebar hidden sm:flex flex-col h-[90vh] min-h-[560px] items-center max-h-[914px] justify-around
+         text-lg mr-8 px-2 font-medium w-[15rem]`, params.isOpen == null ? '' : params.isOpen === true ? 'translateOut' : 'translateIn'].join(' ')}>
         <h2 className='text-3xl mt-6 -mb-9 '>
             <ul className='list-none'>
             <li onClick={() => dispatch(pushRef('/'))}>

@@ -65,7 +65,7 @@ function NavbarContainer({ href, end, curr, dispatch }: Props) {
 
 
     if (currUrl.startsWith('?')) {
-      if (!routes.includes(currUrl.split('?')[1])) return window.location.href = 'http://localhost:3000/404';
+      if (!routes.some((el)=> currUrl.split('?')[1].includes(el))) return window.location.href = 'http://localhost:3000/404';
       dispatch(setHref(`/${currUrl.slice(1)}`));
     }
 

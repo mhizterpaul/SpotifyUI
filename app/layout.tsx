@@ -4,7 +4,6 @@ import RootRouterProvider from './rootRouterProvider';
 import Nav from '@/containers/navbarContainer';
 import Footer from '@/components/footer/footer';
 import { Metadata } from 'next';
-import PageNotFound from './404/page';
 import { headers } from "next/headers";
 
 
@@ -26,20 +25,19 @@ export default function RootLayout({
 
 }) {
 
-  const headersList = headers();
-  const pathname = headersList.get("x-invoke-path") || "";
+  //const headersList = headers();
+  //const pathname = headersList.get("x-invoke-path") || "";
 
-  if (pathname === '/404') return < PageNotFound />
   return (
     <html lang="en">
-      <body className={inter.className}>
-      <section className='main-container sm:p-x-4 relative max-h-[650px] h-screen overflow-hidden'>
+      <body className={inter.className}>>
+          <section className='main-container sm:p-x-4 relative max-h-[914px] h-screen'>
             <RootRouterProvider>
-                < Nav />
-                {children}
-                < Footer />
+              < Nav />
+              {children}
+              < Footer />
             </RootRouterProvider>
-        </section>
+          </section>
       </body>
     </html>
   )

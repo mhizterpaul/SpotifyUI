@@ -11,7 +11,7 @@ import { useParams } from 'react-router-dom'
 import { getPlaylist } from "@/utils/api";
 import { useAppSelector } from "@/store/hooks";
 import useSWR from "swr/immutable";
-import Loader from "../network_request";
+import Library from './library'
 import {ShareSocial} from 'react-share-social'
 import { likedStyles } from "../nav/sidebar";
 
@@ -35,11 +35,13 @@ const Playlist = () => {
   //fetch playlist using id on url params/react router api
 
   useEffect(() => {
-    setMedia(favorite);
+    if(Object.values(favorite.dPlaylist).length||Object.values(favorite.dTracks).length) setMedia(favorite);
+    
   }, [favorite, setMedia]);
 
+
   return (
-    data || id === 'likedSongs' ?
+    data || (id === 'likedSongs'&& Tracks.length) ?
       <section onClick={() => setMenu({ first: false, second: false })}>
         <h2 className='flex items-center justify-around'>
           {id === 'likedSongs' ? <div className='inline-block mr-4' style={likedStyles}>
@@ -70,7 +72,7 @@ const Playlist = () => {
               <li className='group/shareAlbum'><IoShareOutline /> share</li>
               <ul className='absolute group-active/shareAlbum:block hidden'>
                             <li><ShareSocial
-                              url={data.href + ' ' + data.name}
+                              url={data?.href + ' ' + data?.name}
                               socialTypes={['facebook', 'twitter', 'reddit', 'linkedin']}
                             /></li>
                           </ul>
@@ -140,7 +142,7 @@ const Playlist = () => {
 
           </tbody>
         </table>
-      </section> : <Loader meta="playlist" status='PENDING' />
+      </section> : <Library />
   )
 }
 
