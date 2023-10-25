@@ -19,9 +19,11 @@ const imgStyle = {
   background: 'linear-gradient(180deg, rgba(0, 0, 0, 0.65) 0%, rgba(0, 0, 0, 0.23) 26.44%), lightgray 50% / cover no-repeat',
 }
 
+
+
 const card = (props: { type: string } & Recommendation) => {
   if (props.type === 'recommendations') return (
-    <div className='flex flex-col items-center justify-center overflow-hidden text-ellipsis whitespace-nowrap' style={style}>
+    <div className='img-container flex flex-col items-center justify-center overflow-hidden text-ellipsis whitespace-nowrap' style={style}>
       <Image src={image || props.src} alt={`image illustrating ${props.title}`} height={100} width={100} loading={'lazy'} style = {imgStyle}/>
       <h4>{props.title}</h4>
       <p>{props.author}</p>

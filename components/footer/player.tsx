@@ -65,9 +65,9 @@ const Player: React.FC<PlayerProps> = () => {
                     </button>
                     <BiRepeat />
                 </div>
-                <div className='w-full flex justify-center gap-x-2 items-center'><span id="current-time" className="pr-2">{currentTime}</span>
+                <div className='w-full flex justify-center gap-x-2 items-center'><span id="current-time" className="pr-2 text-xs">{currentTime/60 || '-'+ ' : ' + (currentTime%60 || '- -')}</span>
                     <input type='range' className={'w-5/6 slider'} ref={sliderRef} min={0} max={audio?.duration} onChange={(seek)}/>
-                    <span id="duration" className="pl-2">{audio?.duration}</span></div>
+                    <span id="duration" className="pl-2 text-xs">{audio?.duration/60 || '-' + ' : ' + (audio?.duration%60||'- -')}</span></div>
             </section>
         </div>
         <Volume audio={audioRef} />

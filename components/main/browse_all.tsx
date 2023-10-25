@@ -2,12 +2,12 @@ import { RootState } from "@/store";
 import { ApiStatus } from "@/store/reducers/main_slice";
 import { connect } from "react-redux";
 import Loader from "../network_request";
-import { getSeveralCategories, test } from "@/utils/api";
 import { Component } from "react";
 import Image from "next/image";
 import { Category } from "@/utils/types";
 import image from '@/static/images/test.jpeg'
 import {random} from '@/utils'
+import { getAudioBooks, getFeaturedPlaylists, getNewAlbumReleases, getSeveralArtists, getSeveralCategories, getSeveralEpisodes } from "@/utils/api";
 
 
 type Props = {
@@ -47,11 +47,10 @@ class BrowseAll extends Component<Props, { categories: any }>{
 
   componentDidMount(): void {
     //if (this.props.access_token == null) 
-    return this.setState(state => ({ ...state, categories: test }));
-
-    getSeveralCategories(this.props.access_token).then(
-      data => this.setState(state => ({ ...state, categories: data }))
+    getSeveralCategories(this.props.access_token||'', '0').then(
+      data => this.setState(state => ({ ...state, Albums: data }))
     )
+   
 
   }
 
@@ -63,7 +62,7 @@ class BrowseAll extends Component<Props, { categories: any }>{
           {this.state.categories.map((cateogry: Category) => {
             const myStyle = {...style, background: random(bgColors)};
 
-            return (<figure key={cateogry.id} style={myStyle}><Image src={image || cateogry.image} width={100} height={100} fill={false} alt={cateogry.name} style={imgStyle} />
+            return (<figure key={cateogry.id} className={'img-container '} style={myStyle}><Image src={image || cateogry.image} width={100} height={100} fill={false} alt={cateogry.name} style={imgStyle} />
             <figcaption className = 'top-4 left-4 absolute text-lg font-black'>{cateogry.name}</figcaption></figure>)
           })}
         </div>

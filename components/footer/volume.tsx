@@ -18,8 +18,8 @@ const Volume = ({audio}) => {
 
     return (
         <>
-        <div className={`${isMobile ? 'block peer': 'hidden'}`}>
-
+        <div className={`${isMobile ? 'block w-14 p-2 peer': 'hidden'}`}>
+        &sdot; &sdot; &sdot;
         </div>
         <div className={ `${isMobile ? 'flex-col hidden peer-hover:flex peer-active:flex absolute bottom-[150%] right-1/4 z-10' : ''}`+ ' flex text-[3vw] gap-x-2 max-w-[30vw]'}>
             <AiOutlinePlaySquare className={styles}/>

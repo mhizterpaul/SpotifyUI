@@ -24,7 +24,7 @@ export default function RootLayout({
 
   return (
     <html lang="en">
-      <body className={inter.className}  >
+      <body className={inter.className} >
         <section className='main-container sm:p-x-4 relative my-auto max-h-[914px] h-screen overflow-hidden'>
                 {children}
         </section>

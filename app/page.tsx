@@ -11,6 +11,7 @@ import { fetchAccessToken } from '@/store/reducers/main_slice';
 import Playlist from '@/components/main/playlist';
 import Scrollbars from '@/components/scrollbars/'
 import NowPlaying from '@/components/footer/nowPlaying';
+import HomeWithInfiniteScroll from '../components/main/home'
 
 
 const Library = lazy(() => import('../components/main/library'));
@@ -36,10 +37,8 @@ function Home() {
     );
 
     };
-    
    
  
-
   useEffect(() => {
 
     if (main.fetchAccessTokenStatus === 'IDLE') {
@@ -51,6 +50,7 @@ function Home() {
   }, [dispatch, main.fetchAccessTokenStatus])
 
   if ((pathname !== main.href)&&(pathname !== main.href.split('?')[0]) ) return <Loader status='PENDING' meta='NAVIGATION' />
+  
   return (
 
     <main className={`main ${main.nowPlayingView ? 'main-children' : ''} xl:pr-2 sm:col-start-2 ${main.open ? 'col-start-2' : 'col-start-1'} w-full row-start-2 row-end-4 col-end-4  min-h-[31rem] pl-2 sm:pl-0 max-h-[914px]`}>
@@ -71,10 +71,7 @@ function Home() {
           <Route path='/library' element={<Library />} />
 
           <Route path='/' element={
-            <>
-                <FeaturedPlaylists />
-                <Recommendations />
-            </>
+            <HomeWithInfiniteScroll />
           }
           />
         </Routes>

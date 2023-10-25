@@ -8,10 +8,10 @@ import { RootState} from "@/store"
 
 //get props directly from redux
 const RecommendationsContainer = ({ access_token }: {access_token: string | null}) => {
-  const data = useData({callBack: () => getSeveralShows(access_token || '')})
+  const data = useData({callBack: () => getSeveralShows(access_token || '', '0', '20')})
   useEffect(()=>{}, [data]);
   
-  return data.data === null ? <Recommendations recommendations = { test }/> :  (
+  return data.data === null ? <Loader status={data.status} meta={'recommendataions'}/> :  (
     <Recommendations recommendations = { data.data }/>
   );
 }

@@ -9,10 +9,102 @@ export function getAccessToken(){
     );
 }
 
+function search (type: string, access_token: string, offset: string, limit?: string){
+    return axios.get(`https://api.spotify.com/v1/search?q=a%20e%20&type=${type}&market=US&limit=${limit||'6'}`, {
+        headers: {
+            'Authorization': 'Bearer ' + access_token
+        }})
+}
 
-export function getFeaturedPlaylists(access_token: string, country: string){
+export function getNewAlbumReleases (access_token: string, offset:string){
+    return axios.get(`https://api.spotify.com/v1/browse/new-releases?offset=${offset}&limit=6`, {
+        headers: {
+            'Authorization': 'Bearer ' + access_token
+        }}).then(({data}) => ({
+            href: data.albums.href,
+            items: data.albums.items.map((album) => ({
+                href: album.href,
+                image: album.images[0].url,
+                name: album.name,
+                id: album.id,
+                release_date: album.release_date,
+                artists: album.artists.map(artist => ({ name: artist.name}) )
+            }))
+        }));
+}
+export function getSeveralArtists (access_token: string, offset: string){
+    return search('artist',access_token, offset).then(({data}) => data.artists.items.map(artist => ({
+        id: artist.id,
+        image: artist.images[0].url,
+        name: artist.name,
+
+    })))
+}
+export function getAudioBooks(access_token: string, offset: string){
+   return search('artist',access_token, offset).then(({data}) => data.audiobooks.items.map(audiobook => ({
+        id: audiobook.id,
+        image: audiobook.images[0].url,
+        name: audiobook.name,
+        authors: audiobook.authors.map( author => author.name),
+        description: audiobook.description,
+        edition: audiobook.edition,
+        publisher: audiobook.publisher,
+        total_chapters: audiobook.total_chapters,
+        
+    })))
+
+}
+export function getSeveralEpisodes (access_token: string, offset: string){
+   return  search('artist',access_token, offset).then(({data}) => data.episodes.items.map(episode => ({
+        audio_preview_url: episode.audio_preview_url,
+        description: episode.description,
+        duration_ms: episode.duration_ms,
+        id: episode.id,
+        image: episode.image[0].url,
+        release_date: episode.release_date,
+        name: episode.name
+    })))
+}
+export function getcategoryplaylist(access_token:string, category: string, offset: string){
+    return axios.get(`https://api.spotify.com/v1/browse/categories/${category}/playlists?offset=${offset}&limit=6`, {
+        headers: {
+            'Authorization': 'Bearer ' + access_token
+        }}).then(({data}) => ({
+            name: category,
+            items: data.playlists.map(playlist => ({
+                id: playlist.id,
+                name: playlist.name,
+                image: playlist.images[0].url,
+            }))
+        }))
+}
+
+export function getSeveralAlbums(access_token: string, ids: string[]){
+    return axios.get(`https://api.spotify.com/v1/albums?${ids.join('%')}`, {
+        headers: {
+            'Authorization': 'Bearer ' + access_token
+        }}).then(({data}) => ({
+              href: data.href,
+              id: data.id,
+              image: data.images[0].url,
+              name: data.name,
+              release_date: data.release_date,
+              artists: data.artists.map(artist => artist.name),
+              tracks: data.tracks.items.map((track) => ({
+                id: track.id,
+                name: track.name,
+                disc_number: track.disc_number,
+                duration_ms: track.duration_ms,
+                artist: track.artist.map(artist => artist.name)
+              }))
+        }))
+}
+//TO DO
+//implement next for each api get return data
+
+export function getFeaturedPlaylists(access_token: string, country: string, offset:string, limit:string){
    
-        return  axios.get(`https://api.spotify.com/v1/browse/featured-playlists?country=${country}&limit=5`, {
+        return  axios.get(`https://api.spotify.com/v1/browse/featured-playlists?country=${country}&offset=${offset}&limit=${limit}`, {
             headers: {
                 'Authorization': 'Bearer ' + access_token
             }
@@ -58,12 +150,9 @@ export function getPlaylist(access_token:string, id: string){
 
 }
 
-export function getSeveralShows(access_token: string){
+export function getSeveralShows(access_token: string, offset: string, limit: string){
 
-    return axios.get(`https://api.spotify.com/v1/search?q=a%20e%20&type=show&market=US&limit=30`, {
-        headers: {
-            'Authorization': 'Bearer ' + access_token
-        }}).then(({data}) : Recommendation[] => {
+    return search('show', access_token, offset, limit).then(({data}) : Recommendation[] => {
 
             return data.shows.items.map((el: GenericPayload) => ({
                 src: el.images[0].url,
@@ -76,9 +165,9 @@ export function getSeveralShows(access_token: string){
 
 }
 
-export function getSeveralCategories(access_token:string){
+export function getSeveralCategories(access_token:string, offset: string){
     
-    return axios.get(`https://api.spotify.com/v1/browse/categories?country=US&limit=40`, {
+    return axios.get(`https://api.spotify.com/v1/browse/categories?country=US&offset=${offset}limit=6`, {
             headers: {
                 'Authorization': 'Bearer ' + access_token
             }

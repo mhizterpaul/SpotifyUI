@@ -79,8 +79,7 @@ class TopGenres extends Component<Props, { genres: any, updatedWithCarousel: boo
     componentDidMount(): void {
         //if (this.props.access_token == null) 
         window.addEventListener('resize', this.debouncedRecalcBoundingRect.bind(this));
-        return this.setState(state => ({ ...state, genres: test }));
-        getTopGenres(this.props.access_token).then(
+        getTopGenres(this.props.access_token||'').then(
             data => this.setState(state => ({ ...state, genres: data }))
         )
 
@@ -116,7 +115,7 @@ class TopGenres extends Component<Props, { genres: any, updatedWithCarousel: boo
                                                     {
                                                         innerImgs.map((genre: Category) => {
                                                             const myStyle = { ...style, background: random(color) }
-                                                            return (<figure key={genre.id} style={myStyle} ><Image src={image || genre.image} width={100} height={100} alt={genre.name} style={imgStyle} /><figcaption className='top-4 left-4 absolute text-xl font-black'>{genre.name}</figcaption></figure>);
+                                                            return (<figure key={genre.id} className={'img-container '} style={myStyle} ><Image src={image || genre.image} width={100} height={100} alt={genre.name} style={imgStyle} /><figcaption className='top-4 left-4 absolute text-xl font-black'>{genre.name}</figcaption></figure>);
                                                         })
                                                     }
                                                 </div>
