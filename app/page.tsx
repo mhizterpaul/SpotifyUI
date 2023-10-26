@@ -1,7 +1,5 @@
 
 'use client'
-import FeaturedPlaylists from '@/components/main/featured_playlists';
-import Recommendations from '@/containers/recommendations';
 import { lazy, useEffect, useState } from 'react';
 import withProvider from '@/store/with_provider';
 import { Route, Routes, useLocation } from 'react-router-dom';
@@ -15,8 +13,7 @@ import HomeWithInfiniteScroll from '../components/main/home'
 
 
 const Library = lazy(() => import('../components/main/library'));
-const TopGenres = lazy(() => import('../components/main/top_genres'));
-const BrowseAll = lazy(() => import('../components/main/browse_all'));
+const Search = lazy(() => import('../components/main/search'));
 
 function Home() {
 
@@ -59,13 +56,7 @@ function Home() {
         {/*accessToken.access_token == null ? <Loader status={status} meta='Access Token' /> :*/}
 
         <Routes>
-          <Route path='/search' element={
-            <>
-              <TopGenres />
-              <BrowseAll />
-            </>
-          }
-          />
+          <Route path='/search' element={<Search /> }/>
           <Route path={'/playlist/:id'} element={<Playlist />} />
           <Route path='/library/playlist/' element={<Library />} />
           <Route path='/library' element={<Library />} />

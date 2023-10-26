@@ -11,15 +11,21 @@ import { useParams } from 'react-router-dom'
 import { getPlaylist } from "@/utils/api";
 import { useAppSelector } from "@/store/hooks";
 import useSWR from "swr/immutable";
-import Library from './library'
 import {ShareSocial} from 'react-share-social'
 import { likedStyles } from "../nav/sidebar";
 
-const Playlist = () => {
+
+//component requirements:
+//it should list playlists available on context;
+//render playlist passed to it as props
+//render playlist passed to it as params
+
+const Playlist = ({defaultData}) => {
+
   const { Playlist, ownPlaylist, addPlaylistToLibrary, setNowPlaying, setCurrPlaylist, Tracks, setMedia } = useContext(Context);
   const { id } = useParams();
   const access_token = useAppSelector(state => state.main.access_token);
-  const { data } = useSWR('getPlaylist', () => getPlaylist(access_token, id));
+  const { data } = id ? useSWR('getPlaylist', () => getPlaylist(access_token, id)) : {data: null};
   const [menu, setMenu] = useState({ first: false, second: false });
   const currFav = (() => {
     const dTracks: { [key: string]: boolean } = {}, dPlaylist: { [key: string]: boolean } = {};
@@ -41,7 +47,7 @@ const Playlist = () => {
 
 
   return (
-    data || (id === 'likedSongs'&& Tracks.length) ?
+    defaultData || data || (id === 'likedSongs'&& Tracks.length)?
       <section className={' '} onClick={() => setMenu({ first: false, second: false })}>
         <h2 className=' flex items-center justify-around'>
           {id === 'likedSongs' ? <div className='inline-block mr-4' style={likedStyles}>
@@ -142,8 +148,9 @@ const Playlist = () => {
 
           </tbody>
         </table>
-      </section> : <Library />
+      </section> : <div className='my-auto text-center'> something went wrong </div>
   )
+
 }
 
 export default withProvider(Playlist);

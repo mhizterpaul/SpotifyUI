@@ -23,11 +23,9 @@ type V = {
     nowPlaying: T,
     currentPlaylist: T[],
     ownPlaylist: any[],
-    playlistsInLibrary: {[key: string]: any, items:T[]}[],
-    addPlaylistToLibrary: (playlist: {[key: string]: any, items:T[]})=> void,
+    Episodes: Object,
     setCurrPlaylist : (playlist: T[])=>void,
     setNowPlaying: (track:T)=>void,
-    setMedia: (medias: {dTracks:{[key: string]: boolean}, dPlaylist: {[key:string]: boolean}})=>void
 }
 
 const value: V = {
@@ -40,31 +38,18 @@ const value: V = {
     nowPlaying: {
 
     },
-    currentPlaylist: [
-
-    ],
+    currentPlaylist: [],
     ownPlaylist: [],
-    playlistsInLibrary: [],
-    addPlaylistToLibrary:(playlist: {[key: string]: any, items:T[]})=>{
-        value.playlistsInLibrary.push(playlist);
-    },
+    Episodes: {},
     setCurrPlaylist: (playlist: T[])=> {
         value.currentPlaylist = playlist;
     },
     setNowPlaying: (track: T)=> {
         value.nowPlaying = track;
-    },
-   setMedia: (medias: {dTracks:{[key: string]: boolean}, dPlaylist: {[key:string]: boolean}}) => {
-    for(const media in medias){
-        for(const item in media){
-            if( !value[media?.substring(1)]?.contains(media[item])){
-                media === 'dPlaylist' ? value.Playlist.push(item) : value.Tracks.push(item);
-            }
-        }
     }
-   }
 
 };
+
 export const Context = createContext(value);
 
 const withProvider = (Component : React.FC) => {

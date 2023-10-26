@@ -34,13 +34,13 @@ const loaded: boolean[] = [], data: { [key: string]: any }[] & { [key: string]: 
 const calcItemSize = (index: number) => {
   if (index === 0) return 210;
   if (index === 1 && sectionEnd) return 16;
-  return 17.5625 * 16 / 1.5;
+  return 18.5625 * 16 / 1.5;
 
 }
 
 const isItemLoaded = (index: number) => loaded[index];
 
-const loadMoreItems = (startIndex, stopIndex) => {
+const loadMoreItems = (startIndex: number, stopIndex: number) => {
 
   const access_token = store.getState().main.access_token;
 
@@ -130,14 +130,14 @@ const Row = ({ index, style }: { index: number, style: React.CSSProperties }) =>
   const ImageRow = () => (
     <div className='flex gap-x-2 flex-wrap items-center overflow-hidden h-48' style={style}>
       {
-        (typeof (data) === 'object' ? data.items : data).map((el) => <Card {...el} type='recommendations' key={el.id} />)
+        (typeof (data) === 'object' ? data[index].items : data[index]).map((el) => <Card {...el} type='recommendations' key={el.id} />)
       }
     </div>
   )
 
 
-  if (!data.length) return (
-    <div className='italic text-center align-center my-auto'>...loading</div>
+  if (!data[index].length) return (
+    <div className='italic text-center align-center h-[18.5625rem/1.5] my-auto'>...loading</div>
   )
 
   if (index === 0) {
@@ -169,7 +169,7 @@ const Row = ({ index, style }: { index: number, style: React.CSSProperties }) =>
     return <ImageRow />
   }
 
-  return (<div className='text-center py-auto'>
+  return (<div className='text-center h-[18.5625rem/1.5] py-auto'>
     something went wrong
   </div>)
 }

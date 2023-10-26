@@ -11,7 +11,7 @@ const res : {data: any, status: ApiStatus} = {
   status: 'IDLE'
 } 
 
-function useData(params: { callBack : () => any }) {
+function useData(params: { callBack : () => Promise<any> }) {
 
   const [data, setData] = useState(res);
   

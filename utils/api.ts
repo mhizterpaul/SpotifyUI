@@ -65,6 +65,15 @@ export function getSeveralEpisodes (access_token: string, offset: string){
         name: episode.name
     })))
 }
+export function getEpisode(access_token: string, id: string){
+    return axios.get(`https://api.spotify.com/v1/episodes/${id}`, {
+        headers: {
+            'Authorization': 'Bearer ' + access_token
+        }}).then(
+            ({data}) => ({publisher: data.show.publisher, total: data.show.total_episodes})
+        )
+}
+
 export function getcategoryplaylist(access_token:string, category: string, offset: string){
     return axios.get(`https://api.spotify.com/v1/browse/categories/${category}/playlists?offset=${offset}&limit=6`, {
         headers: {

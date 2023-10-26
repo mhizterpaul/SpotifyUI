@@ -1,5 +1,0 @@
-.test::before {
-    content: 'hello from css';
-    text-transform: uppercase;
-    color: red;
-}
