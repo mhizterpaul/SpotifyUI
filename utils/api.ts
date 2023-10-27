@@ -41,7 +41,7 @@ export function getSeveralArtists (access_token: string, offset: string){
     })))
 }
 export function getAudioBooks(access_token: string, offset: string){
-   return search('artist',access_token, offset).then(({data}) => data.audiobooks.items.map(audiobook => ({
+   return search('audiobook',access_token, offset).then(({data}) => data.audiobooks.items.map(audiobook => ({
         id: audiobook.id,
         image: audiobook.images[0].url,
         name: audiobook.name,
@@ -55,7 +55,7 @@ export function getAudioBooks(access_token: string, offset: string){
 
 }
 export function getSeveralEpisodes (access_token: string, offset: string){
-   return  search('artist',access_token, offset).then(({data}) => data.episodes.items.map(episode => ({
+   return  search('episode',access_token, offset).then(({data}) => data.episodes.items.map(episode => ({
         audio_preview_url: episode.audio_preview_url,
         description: episode.description,
         duration_ms: episode.duration_ms,
@@ -141,6 +141,7 @@ export function getPlaylist(access_token:string, id: string){
                 followers: data.followers.total,
                 description: data.description,
                 total: data.tracks.total,
+                owner: data.owner.display_name,
 
                 items: data.tracks.items.map((item: GenericPayload) => ({
             added_at: item.added_at,

@@ -3,8 +3,12 @@ import {VariableSizeList as List} from 'react-window'
 import InfiniteLoader from 'react-window-infinite-loader';
 import Card from './card';
 
-type CallBack = (...params: string[]) => Promise<any>;
+type CallBack = (param: string) => Promise<any>;
 let data:any[]&{ items: any[]};
+
+//any clicked media that need to be fetched again 
+//at destination should be cached
+
 const Row  = ({title, style, index}: {style: React.CSSProperties, index: number, title: string}) => {
     const Title = () => (
         <h3>{title}</h3>
@@ -27,7 +31,7 @@ const calcItemSize = (index: number) => (index===0? 16: 18.5625*16/1.5)
 
 const loadMoreItems = (startIndex:number, stopIndex: number, callBack: CallBack)=> {
     for(let index=startIndex; index<= stopIndex; index++){
-        callBack().then(
+        callBack(String(index)).then(
             (res) => {data[index]=res; loaded[index]=true}
         )
     }

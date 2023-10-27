@@ -11,6 +11,9 @@ import TopGenres from './top_genres';
 const data: Category[][] = [], loaded: boolean[] = [];
 
 
+//any clicked media that need to be fetched again 
+//at destination should be cached
+
 const Search = () => {
 
 

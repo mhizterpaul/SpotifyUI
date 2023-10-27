@@ -31,7 +31,7 @@ const Nav = ({search, isMobile, route, next, prev} : Props) => {
                     <button className={`${btn} rotate-180`} onClick={() => route('next')} disabled={next}>
                     </button>
                 </div>
-                {search && <Search className={`${isOpen && isMobile ? 'hidden ': ' '}`}/>}
+                {search && <Search style={{}} className={`${isOpen && isMobile ? 'hidden ': ' '}`}/>}
                 <Profile  className={`${isOpen && isMobile ? 'hidden ': ' '}`}/>
                 
                 {!isOpen && <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" className='sm:hidden absolute right-0 text-gray-600' onClick={() => {setIsOpen(true); dispatch(setOpen(true))}} viewBox="0 0 72 72"><path fill="none" stroke="#ccc" strokeLinecap="round" strokeLinejoin="round" strokeMiterlimit="10" strokeWidth="2" d="M16 26h40M16 36h40M16 46h40" /></svg>}

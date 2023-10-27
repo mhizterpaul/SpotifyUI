@@ -18,29 +18,35 @@ type T = {
 } | {}
 
 type V = {
-    Playlist: {[key: string]:any, items:T[]}[],
-    Tracks: T[],
+    Playlist: Object,
+    Tracks: Object,
     nowPlaying: T,
     currentPlaylist: T[],
     ownPlaylist: any[],
-    Episodes: Object,
+    Episodes: Object[],
+    Cache: Object, 
     setCurrPlaylist : (playlist: T[])=>void,
     setNowPlaying: (track:T)=>void,
 }
 
 const value: V = {
-    Playlist:[
+    Playlist:{
 
-    ],
-    Tracks: [
+    },
+    Tracks: {
 
-    ],
+    },
     nowPlaying: {
 
     },
     currentPlaylist: [],
     ownPlaylist: [],
-    Episodes: {},
+    Episodes: {
+
+    },
+    Cache: {
+
+    },
     setCurrPlaylist: (playlist: T[])=> {
         value.currentPlaylist = playlist;
     },

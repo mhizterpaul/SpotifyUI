@@ -38,6 +38,9 @@ const calcItemSize = (index: number) => {
 
 }
 
+//any clicked media that need to be fetched again 
+//at destination should be cached
+
 const isItemLoaded = (index: number) => loaded[index];
 
 const loadMoreItems = (startIndex: number, stopIndex: number) => {
@@ -136,7 +139,7 @@ const Row = ({ index, style }: { index: number, style: React.CSSProperties }) =>
   )
 
 
-  if (!data[index].length) return (
+  if (!data[index]) return (
     <div className='italic text-center align-center h-[18.5625rem/1.5] my-auto'>...loading</div>
   )
 
