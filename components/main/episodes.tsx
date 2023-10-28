@@ -1,8 +1,9 @@
 import { useContext, useEffect, useState } from "react";
-import { useLocation, useParams } from "react-router-dom"
+import { useLocation, useNavigate, useParams } from "react-router-dom"
 import { Context } from "./withProvider";
 import Image from 'next/image'
 import useData from "../data_hook";
+import {RiErrorWarningLine} from 'react-icons/ri'
 import { getEpisode, getSeveralEpisodes } from "@/utils/api";
 import { useAppSelector } from "@/store/hooks";
 import { BsPlayCircle } from "react-icons/bs";
@@ -25,11 +26,12 @@ const Episodes = () => {
     const { Cache } = useContext(Context);
     const episodeData = id ? Cache[id] : null;
     const { data } = episodeData && access_token ? useData({ callBack: () => getEpisode(access_token, episodeData.id) }) : { data: null };
+    const navigate = useNavigate();
     useEffect(() => {
 
     }, [data])
 
-    if (!episodeData || (!access_token && pathname === '/episodes')) return <div className='text-center my-auto'>something went wrong</div>;
+    if (!episodeData || (!access_token && pathname === '/episodes')) return <div className='text-center my-auto text-xl'><div className='text-2xl'><RiErrorWarningLine/></div>something went wrong </div>;
 
     if (pathname === '/episodes' && !Object.keys(Episodes).length) return <SeeAll title={'Episodes'} callBack={(index: string) => getSeveralEpisodes(access_token, index).then(
         (data) => data.map(async (el) => {
@@ -119,3 +121,5 @@ const Episodes = () => {
         </section>
     )
 }
+
+export default Episodes

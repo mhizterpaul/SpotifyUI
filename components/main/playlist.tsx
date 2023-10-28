@@ -15,6 +15,7 @@ import { pushRef } from "@/store/reducers/main_slice";
 import { useAppDispatch } from "@/store/hooks";
 import { SiSpotify } from "react-icons/si";
 import { LiaTimesSolid } from "react-icons/lia";
+import { RiErrorWarningLine } from "react-icons/ri";
 
 
 //this component requires you to set /playlist/id and have id in Cache
@@ -37,7 +38,7 @@ const Playlist = () => {
         resizeObserver.observe(containerRef.current, { box: 'content-box' })
     }, [containerRef.current])
 
-    if (!Cache[id]) return <div className='text-center my-auto'>something went wrong</div>;
+    if (!Cache[id]||!id) return <div className='text-center my-auto text-xl font-extrabold'><div className='text-2xl'><RiErrorWarningLine/></div>Couldn't find that playlist <br/> <span className='text-sm font-semibold'>search for something else?</span> </div>;
 
 
 
@@ -124,7 +125,7 @@ const Playlist = () => {
                         <div className='w-full flex flex-col items-center gap-y-4'>
                             <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M16 3h-2v10.56a3.96 3.96 0 0 0-2-.56a4 4 0 1 0 4 4V3m-4 16a2 2 0 1 1 2-2a2 2 0 0 1-2 2Z"/></svg>
                             <h4>Songs you like will appear here</h4>
-                            <p>Save songs by tapping the hear icon.</p>
+                            <p>Save songs by tapping the heart icon.</p>
                             <button onClick={() => dispatch(pushRef('/search'))} className='hover:scale-130 bg-white text-xl active:bg-gray-600 underline text-black'>Find songs</button>
                         </div>
                     )

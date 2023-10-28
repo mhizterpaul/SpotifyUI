@@ -1,6 +1,6 @@
 import { SeeAll } from './see-all'
 import { getSeveralCategories } from '@/utils/api';
-import { Category } from '@/utils/types';
+import { Categories } from '@/utils/types';
 import Image from 'next/image'
 import { store } from '../../store/index'
 import { random } from '@/utils';
@@ -8,7 +8,7 @@ import TopGenres from './top_genres';
 
 
 
-const data: Category[][] = [], loaded: boolean[] = [];
+const data: Categories[] = [], loaded: boolean[] = [];
 
 
 //any clicked media that need to be fetched again 
@@ -65,7 +65,7 @@ const Search = () => {
 
         const imageRow = (
             <div>
-                {data[index].map((cateogry: Category) => {
+                {data[index].map((cateogry) => {
                     const myStyle = { ...style, ImgContainerstyle, background: random(bgColors) };
 
                     return (<figure key={cateogry.id} className={'img-container '} style={myStyle}><Image src={cateogry.image} width={100} height={100} fill={false} alt={cateogry.name} style={imgStyle} />

@@ -1,14 +1,39 @@
 
 import { VariableSizeList as List } from "react-window";
 import InfiniteLoader from 'react-window-infinite-loader';
-import React from 'react'
+import React, { useContext } from 'react'
 import { pushRef } from "@/store/reducers/main_slice";
 import { greet } from "@/utils";
 import Card from "./card";
 import { store } from '../../store/index'
 import { useAppDispatch } from "@/store/hooks";
 import Image from "next/image";
-import { getFeaturedPlaylists, getNewAlbumReleases, getSeveralArtists, getSeveralEpisodes, getSeveralShows } from "@/utils/api";
+import { getAudioBooks, getFeaturedPlaylists, getNewAlbumReleases, getSeveralArtists, getSeveralEpisodes, getSeveralShows } from "@/utils/api";
+import { Context } from "./withProvider";
+
+
+
+ interface BasicData {
+  id: string;
+  title?:string;
+  name?:string;
+  author?:string;
+  artists?:string[];
+  authors?: string[];
+  publisher?: string;
+};
+
+interface BasicDataWithImage extends BasicData{
+  src?: never;
+  image: string;
+}
+
+interface BasicDataWithSrc extends BasicData{
+  src: string;
+  image?: never;
+}
+
+type Data = BasicDataWithImage | BasicDataWithSrc;
 
 
 
@@ -28,8 +53,8 @@ const imgStyle = {
   borderRadius: '0.25rem 0rem 0rem 0.25rem'
 }
 
-let sectionEnd: boolean; 
-const loaded: boolean[] = [], data: { [key: string]: any }[] & { [key: string]: any }[][] = [];
+let sectionEnd: boolean;
+const loaded: boolean[] = [], data: Data[][]= []; 
 
 const calcItemSize = (index: number) => {
   if (index === 0) return 210;
@@ -37,6 +62,8 @@ const calcItemSize = (index: number) => {
   return 18.5625 * 16 / 1.5;
 
 }
+
+
 
 //any clicked media that need to be fetched again 
 //at destination should be cached
@@ -73,7 +100,6 @@ const loadMoreItems = (startIndex: number, stopIndex: number) => {
         case (3 * 3) - 1:
         case (3 * 3): {
           getNewAlbumReleases(access_token, String(index))
-          //@ts-ignore
             .then(res => { data[index] = res; loaded[index] = true; })
           break
         }
@@ -87,6 +113,12 @@ const loadMoreItems = (startIndex: number, stopIndex: number) => {
         case (3 * 5): {
           getSeveralArtists(access_token, String(index))
             .then(res => { data[index] = res; loaded[index] = true; })
+            break;
+        }
+        case (3*6) - 1: 
+        case (3*6): {
+          getAudioBooks(access_token, String(index))
+          .then(res => { data[index] = res; loaded[index] = true; })
         }
       }
 
@@ -97,17 +129,20 @@ const loadMoreItems = (startIndex: number, stopIndex: number) => {
 
 const Row = ({ index, style }: { index: number, style: React.CSSProperties }) => {
 
+  //do not render item based on index
+  //this component
   const dispatch = useAppDispatch();
 
+  const {Cache} = useContext(Context)
   const FirstRow = () => (
     <>
       <section className={`flex flex-col gap-y-4 h-1/2 max-h-[210px] overflow-hidden mt-4 `} style={style}>
         <h3>{greet()}</h3>
         <div className='flex flex-row w-full items-center justify-between gap-x-8 gap-y-4 flex-wrap'>
-          {data[index].map((el: any, id: number) =>
+          {data[index].map((el, id: number) =>
           (
-            (<div key={el.id} className={'img-container ' + [(id === 4 && 'md:mr-[36%]')].join(' ')} style={styles} onClick={() => dispatch(pushRef(el.href))}>
-              <Image src={el.image} alt={el.name} height={100} width={100} style={imgStyle} />
+            (<div key={el.id} className={'img-container ' + [(id === 4 && 'md:mr-[36%]')].join(' ')} style={styles} onClick={() => {Cache[el.id] = el ; dispatch(pushRef('/playlist/'+el.id))}}>
+              <Image src={el.image||''} alt={el.name||''} height={100} width={100} style={imgStyle} />
               <span className='inline-block absolute top-[30%] right-[40%] text-white'>{el.name}</span>
             </div>)
           ))
@@ -133,12 +168,12 @@ const Row = ({ index, style }: { index: number, style: React.CSSProperties }) =>
   const ImageRow = () => (
     <div className='flex gap-x-2 flex-wrap items-center overflow-hidden h-48' style={style}>
       {
-        (typeof (data) === 'object' ? data[index].items : data[index]).map((el) => <Card {...el} type='recommendations' key={el.id} />)
+        data[index].map((el) => <Card {...el} key={el.id} />)
       }
     </div>
   )
 
-
+  console.log(index);
   if (!data[index]) return (
     <div className='italic text-center align-center h-[18.5625rem/1.5] my-auto'>...loading</div>
   )
@@ -164,6 +199,9 @@ const Row = ({ index, style }: { index: number, style: React.CSSProperties }) =>
       case 1 + (3 * 4): {
         return <TitleRow title={'Popular artists'} />
       }
+      case 1 + (3*5): {
+        return <TitleRow title={'Audiobooks for you'} />
+      }
     }
   }
 
@@ -172,7 +210,7 @@ const Row = ({ index, style }: { index: number, style: React.CSSProperties }) =>
     return <ImageRow />
   }
 
-  return (<div className='text-center h-[18.5625rem/1.5] py-auto'>
+  return (<div className='text-center h-[18.5625rem/1.5] py-auto'>   
     something went wrong
   </div>)
 }
@@ -182,7 +220,7 @@ const Home = () => {
   return (
     <InfiniteLoader
       isItemLoaded={isItemLoaded}
-      itemCount={15}
+      itemCount={18}
       loadMoreItems={loadMoreItems}
     >
       {({ onItemsRendered, ref }) => (
@@ -190,7 +228,7 @@ const Home = () => {
         <List
           className=""
           height={0.72 * window.innerHeight}
-          itemCount={15}
+          itemCount={18}
           itemSize={calcItemSize}
           onItemsRendered={onItemsRendered}
           ref={ref}

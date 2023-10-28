@@ -1,25 +1,12 @@
 
 import { createContext } from 'react'
+import {Playlist, Episode} from '../../utils/types'
+ 
 
-
-
-type T = {
-    added_at: string,
-    href: string,
-    image: string,
-    name: string,
-    popularity: string,
-    artists: any[],
-    duration_ms: number,
-    description: string,
-    album: string,
-    total: number
-
-} | {}
 
 type V = {
-    Playlist: Object,
-    Tracks: Object,
+    Playlist: {[key: string]: Playlist},
+    Tracks: {[key: string]: },
     nowPlaying: T,
     currentPlaylist: T[],
     ownPlaylist: any[],

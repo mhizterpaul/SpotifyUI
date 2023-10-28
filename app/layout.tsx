@@ -4,7 +4,6 @@ import RootRouterProvider from './rootRouterProvider';
 import Nav from '@/containers/navbarContainer';
 import Footer from '@/components/footer/footer';
 import { Metadata } from 'next';
-import { headers } from "next/headers";
 
 
 export const metadata: Metadata = {

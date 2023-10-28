@@ -1,7 +1,8 @@
 import React from 'react'
 import Image from 'next/image'
-import { Recommendation } from '@/utils/types'
+import {Category} from '@/utils/types'
 import image from '@/static/images/test.jpeg'
+import { Data } from './home'
 
 const style = {
   width: 14.4375/1.5 + 'rem',
@@ -21,12 +22,12 @@ const imgStyle = {
 
 
 
-const card = (props: { type: string } & Recommendation) => {
-  if (props.type === 'recommendations') return (
+const card = (props: { type?: string } & Data) => {
+  return  (
     <div className='img-container flex flex-col items-center justify-center overflow-hidden text-ellipsis whitespace-nowrap' style={style}>
-      <Image src={image || props.src} alt={`image illustrating ${props.title}`} height={100} width={100} loading={'lazy'} style = {imgStyle}/>
-      <h4>{props.title}</h4>
-      <p>{props.author}</p>
+      <Image src={props.src||props.image} alt={`image illustrating ${props.title||props.name}`} height={100} width={100} loading={'lazy'} style = {props.type === 'recommendations' ? imgStyle : {}}/>
+      <h4>{props.title||props.name}</h4>
+      <p>{props.author||props.artists?.join(', ')||props.authors?.join(', ')||props.publisher}</p>
     </div>
   )
 }
