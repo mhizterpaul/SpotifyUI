@@ -43,7 +43,7 @@ export function getAudioBooks(access_token: string, offset: string){
         id: audiobook.id,
         image: audiobook.images[0].url,
         name: audiobook.name,
-        authors: audiobook.authors.map( author => author.name),
+        authors: audiobook.authors.map( (author) => author.name),
         description: audiobook.description,
         edition: audiobook.edition,
         publisher: audiobook.publisher,
@@ -76,7 +76,7 @@ export function getcategoryplaylist(access_token:string, category: string, offse
     return axios.get(`https://api.spotify.com/v1/browse/categories/${category}/playlists?offset=${offset}&limit=6`, {
         headers: {
             'Authorization': 'Bearer ' + access_token
-        }}).then(({data}): CategoryPlaylist[] =>  data.playlists.map(playlist => ({
+        }}).then(({data}): CategoryPlaylist[] =>  data.playlists.map((playlist: SpotifyApi.PlaylistObjectSimplified) => ({
                 id: playlist.id,
                 name: playlist.name,
                 image: playlist.images[0].url,
@@ -85,29 +85,31 @@ export function getcategoryplaylist(access_token:string, category: string, offse
         )
 }
 
-export function getSeveralAlbums(access_token: string, ids: string[]){
-    return axios.get(`https://api.spotify.com/v1/albums?ids=${ids.join(',')}`, {
+export function getAlbum(access_token: string, id:string){
+    return axios.get(`https://api.spotify.com/v1/albums/${id}`, {
         headers: {
             'Authorization': 'Bearer ' + access_token
-        }}).then(({data}:{data: SpotifyApi.MultipleAlbumsResponse}) => data.albums.map(album => (
+        }}).then(({data}:{data: SpotifyApi.SingleAlbumResponse}) => (
             {
-                id: album.id,
-                image: album.images[0].url,
-                name: album.name,
-                release_date: album.release_date,
-                popularity: album.popularity,
-                label: album.label,
-                album_type: album.album_type,
-                artists: album.artists.map(artist => artist.name),
-                tracks: album.tracks.items.map((track) => ({
+                id: data.id,
+                image: data.images[0].url,
+                name: data.name,
+                release_date: data.release_date,
+                popularity: data.popularity,
+                label: data.label,
+                album_type: data.album_type,
+                artists: data.artists.map(artist => artist.name),
+                tracks: data.tracks.items.map((track) => ({
                   id: track.id,
                   name: track.name,
-                  disc_number: track.disc_number,
+                  preview_url: track.preview_url,
+                  track_number: track.track_number,
                   duration_ms: track.duration_ms,
-                  artist: track.artists.map(artist => artist.name)
-                }))
-            }
-        )))
+                  artists: track.artists.map(artist => artist.name)
+                }
+
+        ))}
+        ))
 }
 
 
@@ -141,23 +143,55 @@ export function getPlaylist(access_token:string, id: string){
                 description: data.description,
                 total: data.tracks.total,
                 owner: data.owner.display_name,
-
                 items: data.tracks.items.map((item) => ({
             added_at: item.added_at,
-            id: item.id,
-            image: item.images[0].url,
-            name: item.track.name,
-            popularity: item.popularity,
-            artists: item.artists.map((artist) => ({name: artist.name, image: artist.images[0].url, followers: artist.followers.total, popularity: artist.popularity})),
-            duration_ms: item.duration_ms,
-            description: item.description,
-            album: item.album.name,
-            total: item.tracks.total
-        }))}
-    }
-            )
+            track: item.track.map((track) => {
+                return track.type === 'track'? {
+                    album:{
+                        album_type: track.album_type,
+                        total_tracks: track.album.total_tracks,
+                        id: track.album.id,
+                        image: track.album.images[0].url,
+                        name: track.album.name,
+                        release_date: track.album.release_date,
+                        artists: track.artists.map((artist: SpotifyApi.ArtistObjectSimplified) => artist.name)
+                    },
+                    artists: track.artists.map((artist: SpotifyApi.ArtistObjectFull)=> ({
+                        id: artist.id,
+                        image: artist.images[0].url,
+                        name: artist.name,
+                        popularity: artist.popularity,
 
-}
+                    })),
+                    duration_ms: track.duration_ms,
+                    id: track.id,
+                    name: track.name,
+                    popularity: track.popularity,
+                    preview_url: track.preview_url,
+                    track_number: track.track_number,
+                    type: track.type
+                }: {
+                    audio_preview_url: track.audio_preview_url,
+                    description: track.description,
+                    duration_ms: track.duration_ms,
+                    id: track.id,
+                    image: track.images[0].url,
+                    name: track.name,
+                    release_date: track.release_date,
+                    type: track.type,
+                    show: {
+                        description: track.show.description,
+                        id: track.show.id,
+                        image: track.show.images[0].url,
+                        name: track.show.name,
+                        publisher: track.show.publisher,
+                        type: track.show.type,
+                        total_episodes: track.show.total_episodes
+                    }
+                }})
+        }))}
+    })}
+
 
 export function getSeveralShows(access_token: string, offset: string, limit: string){
 

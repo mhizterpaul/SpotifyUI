@@ -56,39 +56,72 @@ export type CategoryPlaylist ={
     tracks: {
         id: string,
         name: string,
-        disc_number: number,
+        track_number: number,
+        preview_url: string,
         duration_ms: number,
         artist: string[]
     }[]
  }//checked
 
  export type Playlist = {
-        name: string,
-        image: string,
-        followers: number,
-        description: string,
-        id: string,
-        total: number,
-        owner: string,
-        items: {
-            added_at: string,
-            id: string,
-            image: string,
-            name: string,
-            popularity: number,
-            artists: {
-                name: string,
-                image: string,
-                followers: number,
-                popularity: number
-            }[],
-            duration_ms: number,
-            description: string,
-            album: string,
-            total: number
-        }[]
+    name: string,
+    image: string,
+    id: string,
+    followers: integer,
+    description: string,
+    total: integer,
+    owner: string,
+    items: {
+added_at: string,
+track: Track | EpisodeFull 
+    }
  }//checked
 
+ export type EpisodeFull = {
+    audio_preview_url: string,
+    description: string,
+    duration_ms: integer,
+    id: string,
+    image: string,
+    name: string,
+    release_date: string,
+    type: string,
+    show: {
+        description: string,
+        id: string,
+        image: string,
+        name: string,
+        publisher: string,
+        type: string,
+        total_episodes: integer
+    }
+}
+
+export type Track = {
+    album:{
+        album_type: string,
+        total_tracks: integer,
+        id: string,
+        image: string,
+        name: string,
+        release_date: string,
+        artists: string[],
+    },
+    artists: {
+        id: string,
+        image: string,
+        name: string,
+        popularity: integer,
+
+    }[],
+    duration_ms: integer,
+    id: string,
+    name: string,
+    popularity: integer,
+    preview_url: string,
+    track_number: integer,
+    type: string
+}
  export type Show = {
     id: string,
     src: string,
