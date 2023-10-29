@@ -1,32 +1,35 @@
 import { SeeAll } from './see-all'
 import { getSeveralCategories } from '@/utils/api';
-import { Categories } from '@/utils/types';
+import { Category, Countries } from '@/utils/types';
 import Image from 'next/image'
 import { store } from '../../store/index'
 import { random } from '@/utils';
 import TopGenres from './top_genres';
+import { useState, useMemo } from 'react';
 
 
 
-const data: Categories[] = [], loaded: boolean[] = [];
+const data: Category[][] = [], loaded: boolean[] = [];
 
 
-//any clicked media that need to be fetched again 
-//at destination should be cached
+//please remember to render images once they are loaded
 
 const Search = () => {
 
 
     const loadMoreItems = (startIndex: number, stopIndex: number) => {
         const access_token = store.getState().main.access_token;
+        if (!access_token) return;
+        const countries: Countries = ['US', 'NG', 'GB', 'ZA', 'JM', 'CA', 'GH']
         for (let index = startIndex; index <= stopIndex; index++) {
-            if(index === 0 || index === 1){
+            if (index === 0 || index === 1) {
                 loaded[index] = true;
                 continue;
             }
+            if (loaded[index] === false || loaded[index]) continue;
             loaded[index] = false;
             if (access_token == null) return;
-            getSeveralCategories(access_token, String(index))
+            getSeveralCategories(access_token, random(countries), String(index))
                 .then(
                     (res) => { data.push(res); loaded[index] = true }
                 )
@@ -34,11 +37,15 @@ const Search = () => {
 
 
     },
-        calcItemSize = (index: number) => !index ? 16 : (index === 1 ? 18.1875: 14.4375) * 16 / 1.5,
+        calcItemSize = (index: number) => !index ? 16 : (index === 1 ? 18.1875 : 14.4375) * 16 / 1.5,
         isItemLoaded = (index: number) => loaded[index];
 
     const Row = ({ style, index }: { style: React.CSSProperties, index: number }) => {
+        const [loadedState, setLoadedState] = useState(loaded[index]);
 
+        const init = useMemo(() => {
+            const setLoadedInterval = setInterval(() => loaded[index] && (() => { setLoadedState(true); clearInterval(setLoadedInterval) })(), 1000)
+        }, []);
         const bgColors = ['#27856A', '#8D67AB', '#1E3264', '#E8115B']
 
         const ImgContainerstyle: React.CSSProperties = {
@@ -65,7 +72,7 @@ const Search = () => {
 
         const imageRow = (
             <div>
-                {data[index].map((cateogry) => {
+                {data[index].map((cateogry: Category) => {
                     const myStyle = { ...style, ImgContainerstyle, background: random(bgColors) };
 
                     return (<figure key={cateogry.id} className={'img-container '} style={myStyle}><Image src={cateogry.image} width={100} height={100} fill={false} alt={cateogry.name} style={imgStyle} />
@@ -77,7 +84,7 @@ const Search = () => {
         if (!data[index].length && !!index) return <div style={style} className={`h-[14.44rem] text-center my-auto italic`}>...loading</div>
 
         if (!index) return { TopGenres }
-        if(index === 1) return {titleRow}
+        if (index === 1) return { titleRow }
 
         return { imageRow }
     }

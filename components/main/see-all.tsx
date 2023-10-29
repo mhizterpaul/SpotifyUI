@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo, useState } from 'react';
 import {VariableSizeList as List} from 'react-window'
 import InfiniteLoader from 'react-window-infinite-loader';
 import Card from './card';
@@ -6,10 +6,14 @@ import Card from './card';
 type CallBack = (param: string) => Promise<any>;
 let data:any[]&{ items: any[]};
 
-//any clicked media that need to be fetched again 
-//at destination should be cached
+//please remember to render images once they are loaded
 
 const Row  = ({title, style, index}: {style: React.CSSProperties, index: number, title: string}) => {
+  const [loadedState, setLoadedState] = useState(loaded[index]);
+
+  const init = useMemo(()=> {
+    const setLoadedInterval = setInterval(()=> loaded[index]&&(()=>{setLoadedState(true);clearInterval(setLoadedInterval)})() , 1000)
+  },[]);
     const Title = () => (
         <h3>{title}</h3>
     );
@@ -30,7 +34,10 @@ const loaded: any = []
 const calcItemSize = (index: number) => (index===0? 16: 18.5625*16/1.5)
 
 const loadMoreItems = (startIndex:number, stopIndex: number, callBack: CallBack)=> {
+  
     for(let index=startIndex; index<= stopIndex; index++){
+      if(loaded[index] === false || loaded[index]) continue;
+      loaded[index] = false;
         callBack(String(index)).then(
             (res) => {data[index]=res; loaded[index]=true}
         )

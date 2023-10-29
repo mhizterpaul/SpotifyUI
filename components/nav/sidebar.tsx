@@ -13,11 +13,11 @@ export const likedStyles = {
 
 const Sidebar = (params: { isOpen?: boolean }) => {
     const dispatch = useAppDispatch();
-    const {ownPlaylist, Playlist, Tracks, Episodes} = useContext(Context);
+    const {Playlist, Tracks, Episodes} = useContext(Context);
     const MediaCount = ({type}:{type: string}) => {
-        let plural: boolean|'s'|'' = type === 'playlist' ? !!(Playlist.length + ownPlaylist.length) : type === 'song' ? !!Tracks.length : !!Episodes.length;
+        let plural: boolean|'s'|'' = type === 'playlist' ? !!(Object(Playlist).values.length) : type === 'song' ? !!Object(Tracks).values.length : !!Episodes.length;
         plural = plural ? 's' : '';
-        return <span className='text-[A7A7A7] normal-case text-xs'><BsPinAngleFill className='text-[1ED760] '/> {type === 'playlist' ? Playlist.length + ownPlaylist.length : type === 'song' ? Tracks.length : Episodes.length} {`${type + plural}`}</span>
+        return <span className='text-[A7A7A7] normal-case text-xs'><BsPinAngleFill className='text-[1ED760] '/> {type === 'playlist' ? Object(Playlist).values.length : type === 'song' ? Tracks.length : Episodes.length} {`${type + plural}`}</span>
     }
 
 
@@ -40,7 +40,7 @@ const Sidebar = (params: { isOpen?: boolean }) => {
             <li onClick={() => dispatch(pushRef('/search'))}>
                 <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 256 256"><path fill="currentColor" d="m229.66 218.34l-50.07-50.06a88.11 88.11 0 1 0-11.31 11.31l50.06 50.07a8 8 0 0 0 11.32-11.32ZM40 112a72 72 0 1 1 72 72a72.08 72.08 0 0 1-72-72Z" /></svg> Search
             </li>
-            <li onClick={() => dispatch(pushRef('/library'))}><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M7 3h2v18H7zM4 3h2v18H4zm6 0h2v18h-2zm9.062 17.792l-6.223-16.89l1.877-.692l6.223 16.89z" /></svg><div className='flex flex-col justify-start items-center font-bold capitalize'> Your library {Playlist.length || ownPlaylist.length ? <MediaCount type={'playlist'} />: null}</div></li>
+            <li onClick={() => dispatch(pushRef('/library'))}><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M7 3h2v18H7zM4 3h2v18H4zm6 0h2v18h-2zm9.062 17.792l-6.223-16.89l1.877-.692l6.223 16.89z" /></svg><div className='flex flex-col justify-start items-center font-bold capitalize'> Your library {Object(Playlist).values.length ? <MediaCount type={'playlist'} />: null}</div></li>
         </ul>
         <ul className='self-start'>
             <li className={'--big-svg'} onClick={() => dispatch(pushRef('/library/playlist?new=true'))}><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" className='--big-svg' viewBox="0 0 16 16"><path fill="currentColor" fillRule="evenodd" d="M4 2a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H4Zm4 9a.75.75 0 0 1-.75-.75v-1.5h-1.5a.75.75 0 0 1 0-1.5h1.5v-1.5a.75.75 0 0 1 1.5 0v1.5h1.5a.75.75 0 0 1 0 1.5h-1.5v1.5A.75.75 0 0 1 8 11Z" clipRule="evenodd" /></svg> Create Playlist</li>

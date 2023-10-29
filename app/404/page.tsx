@@ -1,7 +1,9 @@
+import Image from 'next/image'
+
 
 function PageNotFound() {
   return (
-    <div className = 'container w-full'><div className='mx-auto'>404 page not found</div></div>
+    <div className='h-full col-span-3 row-span-4 w-full flex flex-col items-center justify-center'><div>404 page not found</div></div>
   )
 }
 

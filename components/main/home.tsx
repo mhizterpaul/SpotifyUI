@@ -1,15 +1,15 @@
 
 import { VariableSizeList as List } from "react-window";
 import InfiniteLoader from 'react-window-infinite-loader';
-import React, { useContext } from 'react'
+import React, { useContext, useMemo, useState } from 'react'
 import { pushRef } from "@/store/reducers/main_slice";
-import { greet } from "@/utils";
+import { greet, random } from "@/utils";
 import Card from "./card";
-import { store } from '../../store/index'
-import { useAppDispatch } from "@/store/hooks";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import Image from "next/image";
 import { getAudioBooks, getFeaturedPlaylists, getNewAlbumReleases, getSeveralArtists, getSeveralEpisodes, getSeveralShows } from "@/utils/api";
 import { Context } from "./withProvider";
+import { Countries, AudioBookCountries } from "@/utils/types";
 
 
 
@@ -17,10 +17,15 @@ import { Context } from "./withProvider";
   id: string;
   title?:string;
   name?:string;
+  description?: string,
   author?:string;
+  duration_ms?:string
   artists?:string[];
   authors?: string[];
   publisher?: string;
+  type: string,
+  release_date?: string,
+  release_description?: string,
 };
 
 interface BasicDataWithImage extends BasicData{
@@ -33,7 +38,7 @@ interface BasicDataWithSrc extends BasicData{
   image?: never;
 }
 
-type Data = BasicDataWithImage | BasicDataWithSrc;
+export type Data = BasicDataWithImage | BasicDataWithSrc;
 
 
 
@@ -53,12 +58,14 @@ const imgStyle = {
   borderRadius: '0.25rem 0rem 0rem 0.25rem'
 }
 
-let sectionEnd: boolean;
-const loaded: boolean[] = [], data: Data[][]= []; 
 
+const loaded: boolean[] = [], data: Data[][]= []; 
+const countries: Countries = ['US','NG','GB','ZA', 'JM', 'CA', 'GH']
+const audioBookCountries:AudioBookCountries = ['US','GB','IE','NZ','AU'];
+let access_token: string|null;
 const calcItemSize = (index: number) => {
   if (index === 0) return 210;
-  if (index === 1 && sectionEnd) return 16;
+  if (index % 3 === 1) return 16;
   return 18.5625 * 16 / 1.5;
 
 }
@@ -67,18 +74,17 @@ const calcItemSize = (index: number) => {
 
 //any clicked media that need to be fetched again 
 //at destination should be cached
+//dont forget to change countries for loadmore function
 
 const isItemLoaded = (index: number) => loaded[index];
-
 const loadMoreItems = (startIndex: number, stopIndex: number) => {
-
-  const access_token = store.getState().main.access_token;
-
+  if (!access_token) return
   for (let index = startIndex; index <= stopIndex; index++) {
-    loaded.push(false);
-    if (index === 0 && access_token) {
-      getFeaturedPlaylists(access_token, 'US', String(index), '5')
-        .then(res => { data[index] = res; loaded[index] = true; });
+    if(loaded[index] === false || loaded[index]) continue;
+    loaded[index]= false;
+    if (index === 0) {
+      getFeaturedPlaylists(access_token, random(countries), String(index), '5')
+        .then(res => { data[index] = res; loaded[index] = true; })
     }
     if (index % 3 === 1) {
       loaded[index] = true;
@@ -87,37 +93,37 @@ const loadMoreItems = (startIndex: number, stopIndex: number) => {
       switch (index) {
         case 2:
         case 3: {
-          getFeaturedPlaylists(access_token, 'US', String(index), '6')
+          getFeaturedPlaylists(access_token, random(countries), String(index), '6')
             .then(res => { data[index] = res; loaded[index] = true; })
           break;
         }
         case 3 * 2 - 1:
         case 3 * 2: {
-          getSeveralEpisodes(access_token, String(index))
+          getSeveralEpisodes(access_token, String(index), random(countries))
             .then(res => { data[index] = res; loaded[index] = true; })
           break;
         }
         case (3 * 3) - 1:
         case (3 * 3): {
-          getNewAlbumReleases(access_token, String(index))
+          getNewAlbumReleases(access_token, String(index), random(countries))
             .then(res => { data[index] = res; loaded[index] = true; })
           break
         }
         case (3 * 4) - 1:
         case (3 * 4): {
-          getSeveralShows(access_token, String(index), '6')
+          getSeveralShows(access_token, String(index), '6', random(countries))
             .then(res => { data[index] = res; loaded[index] = true; })
           break;
         }
         case (3 * 5) - 1:
         case (3 * 5): {
-          getSeveralArtists(access_token, String(index))
+          getSeveralArtists(access_token, String(index), random(countries))
             .then(res => { data[index] = res; loaded[index] = true; })
             break;
         }
         case (3*6) - 1: 
         case (3*6): {
-          getAudioBooks(access_token, String(index))
+          getAudioBooks(access_token, String(index), random(audioBookCountries))
           .then(res => { data[index] = res; loaded[index] = true; })
         }
       }
@@ -129,11 +135,16 @@ const loadMoreItems = (startIndex: number, stopIndex: number) => {
 
 const Row = ({ index, style }: { index: number, style: React.CSSProperties }) => {
 
-  //do not render item based on index
-  //this component
+  //please load initial data on Load
   const dispatch = useAppDispatch();
+  const {Cache} = useContext(Context);
+  const [loadedState, setLoadedState] = useState(loaded[index]);
+  access_token = useAppSelector(state => state.main.access_token);
 
-  const {Cache} = useContext(Context)
+  const init = useMemo(()=> {
+    const setLoadedInterval = setInterval(()=> loaded[index]&&(()=>{setLoadedState(true);clearInterval(setLoadedInterval)})() , 1000)
+  },[]);
+
   const FirstRow = () => (
     <>
       <section className={`flex flex-col gap-y-4 h-1/2 max-h-[210px] overflow-hidden mt-4 `} style={style}>
@@ -149,7 +160,6 @@ const Row = ({ index, style }: { index: number, style: React.CSSProperties }) =>
           }
         </div>
       </section>
-      {sectionEnd = true}
     </>
   );
 
@@ -160,8 +170,8 @@ const Row = ({ index, style }: { index: number, style: React.CSSProperties }) =>
           {title}
           <span className='uppercase inline-block text-xs' >see all</span>
         </h3>
-        {sectionEnd = false}
       </>
+      
     )
   };
 
@@ -173,10 +183,11 @@ const Row = ({ index, style }: { index: number, style: React.CSSProperties }) =>
     </div>
   )
 
-  console.log(index);
-  if (!data[index]) return (
-    <div className='italic text-center align-center h-[18.5625rem/1.5] my-auto'>...loading</div>
+
+  if (!loaded[index]) return (
+    <div className='italic text-center align-center h-[calc(18.5625rem/1.5)] my-auto'>...loading</div>
   )
+
 
   if (index === 0) {
     return <FirstRow />;
@@ -194,7 +205,7 @@ const Row = ({ index, style }: { index: number, style: React.CSSProperties }) =>
         return <TitleRow title={'Popular new releases'} />
       }
       case 1 + (3 * 3): {
-        return <TitleRow title={'Shows you might like'} />
+        return <TitleRow title={'Shows to try'} />
       }
       case 1 + (3 * 4): {
         return <TitleRow title={'Popular artists'} />
@@ -205,10 +216,8 @@ const Row = ({ index, style }: { index: number, style: React.CSSProperties }) =>
     }
   }
 
-  if (index % 3 === 2 || ((index % 3 === 0) && index !== 0)) {
-    index % 3 === 0 && (sectionEnd = true);
-    return <ImageRow />
-  }
+
+  if (index % 3 === 2 || index % 3 === 0) return <ImageRow />
 
   return (<div className='text-center h-[18.5625rem/1.5] py-auto'>   
     something went wrong
@@ -220,7 +229,7 @@ const Home = () => {
   return (
     <InfiniteLoader
       isItemLoaded={isItemLoaded}
-      itemCount={18}
+      itemCount={19}
       loadMoreItems={loadMoreItems}
     >
       {({ onItemsRendered, ref }) => (
@@ -228,17 +237,17 @@ const Home = () => {
         <List
           className=""
           height={0.72 * window.innerHeight}
-          itemCount={18}
+          itemCount={19}
           itemSize={calcItemSize}
           onItemsRendered={onItemsRendered}
           ref={ref}
           width={'100%'}
         >
-          {Row}
+          {React.memo(Row)}
         </List>
       )}
     </InfiniteLoader>
   )
 }
 
-export default Home
+export default React.memo(Home)

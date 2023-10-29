@@ -16,17 +16,16 @@ const Footer = () => {
     const dispatch = useAppDispatch();
     const nowPlayingView = useAppSelector(state => state.main.nowPlayingView);
 
+    return (<footer className={`${nowPlaying?.artists[0].image ? '':'inactive'}`+' footer bg-[#181818] w-full relative flex items-center justify-between z-10 whitespace-nowrap pb-6 -mt-14 sm:min-w-[540px] min-h-[120px] h-[14vh] overflow-visible'}>
 
-    return (<footer className={`${nowPlaying.image ? '':'inactive'}`+' footer bg-[#181818] w-full relative flex items-center justify-between z-10 whitespace-nowrap pb-6 -mt-14 sm:min-w-[540px] min-h-[120px] h-[14vh] overflow-visible'}>
-
-                <div className={`${nowPlaying.image? 'flex': 'invisible'}`+' flex-row items-center max-w-[30vw]'}>
-                    <Image src={nowPlaying.image} className={'group relative w-2/6'} alt="album art" />
+                <div className={`${nowPlaying?.artists[0].image? 'flex': 'invisible'}`+' flex-row items-center max-w-[30vw]'}>
+                    <Image src={nowPlaying?.artists[0].image} className={'group relative w-2/6'} alt="album art" />
                     { !nowPlayingView ? <IoIosArrowDropupCircle onClick={()=>{dispatch(setNowPlayingView(true))}} className='group-hover:block hidden absolute top-1/2 left-1/2'/>
                      : <IoIosArrowDropdownCircle onClick={dispatch(setNowPlayingView(false))}  className={'group-hover:block hidden absolute top-1/2 left-1/2'}/>}
                     <span className='inline-block mx-2 leading-4 w-1/2'>
-                        <span onClick={dispatch(pushRef(`playlist/${nowPlaying.href}`))}>{nowPlaying.name}</span> <br />
+                        <span onClick={() => dispatch(pushRef(`playlist/${nowPlaying.id}`))}>{nowPlaying?.name}</span> <br />
                         <span className='hover:underline'>
-                            {nowPlaying.artists}
+                            {nowPlaying?.artists.map(artist => artist.name).join(', ')}
                         </span>
                     </span>
                     <span className='w-1/6 bg-red-600'>

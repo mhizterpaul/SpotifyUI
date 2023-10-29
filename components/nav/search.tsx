@@ -2,7 +2,7 @@ import React from 'react'
 
 type Props = {
   className: string,
-  style: React.CSSProperties
+  style?: React.CSSProperties
 };
 
 const Search = ({className, style}: Props) => {

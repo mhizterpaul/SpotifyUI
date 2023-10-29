@@ -15,7 +15,7 @@ const Player: React.FC<PlayerProps> = () => {
     const [isPlaying, setIsPlaying] = useState(false);
     const [currentTime, setCurrentTime] = useState(0);
     const {nowPlaying, currentPlaylist, setNowPlaying} = useContext(Context)
-    const [audio, setAudio] = useState(nowPlaying.name? random(Audios.items): null)
+    const [audio, setAudio] = useState(nowPlaying?.name? random(Audios.items): null)
     const audioRef = useRef<HTMLAudioElement>(null);
     const sliderRef = useRef<HTMLInputElement>(null);
     const togglePlay = () => {

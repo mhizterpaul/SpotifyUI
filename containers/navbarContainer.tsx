@@ -17,8 +17,7 @@ type Props = {
 
 
 function NavbarContainer({ href, end, curr, dispatch }: Props) {
-  //useRouter
-  //check store for any routes
+
   const routes = ['playlist', 'library', 'search']
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 666),
     [nav, setNav] = useState({ prev: true, next: false }),
@@ -26,12 +25,9 @@ function NavbarContainer({ href, end, curr, dispatch }: Props) {
     location = useLocation(),
     pathname = location.pathname,
     navigate = useNavigate(),
+    
     route = (option?: 'previous' | 'next') => {
-      //wrap every set state in a conditional 
-      //invoke function in this component
-      //buttons should be enabled if there are items
-      //in the history arr
-      //the corresponding button should be closed when the user reaches the end of the arr
+      
       if ((curr != null) && curr > 0) {
         setNav((state) => ({ ...state, prev: false }));
         if (!end) setNav((state) => ({ ...state, next: false }));

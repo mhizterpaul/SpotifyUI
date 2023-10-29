@@ -1,9 +1,12 @@
+import { countries } from "."
+
 export type NewAlbumRelease = {
  
         image: string,
         name: string,
         id: string,
         release_date: string,
+        type: string,
         artists: string[]
     } //checked
 
@@ -11,6 +14,8 @@ export type Artist = {
         id: string,
         image: string,
         name: string,
+        popularity: number,
+        type: string,
     }//checked
 
 export type AudioBook = {
@@ -18,6 +23,7 @@ export type AudioBook = {
         image: string,
         name: string,
         authors: string[],
+        type: string,
         description: string,
         edition: string,
         publisher: string,
@@ -30,6 +36,7 @@ export type Episode =  {
         description: string,
         duration_ms: number,
         id: string,
+        type: string,
         image: string,
         release_date: string,
         name: string,
@@ -40,6 +47,7 @@ export type Episode =  {
 export type CategoryPlaylist ={
         id: string,
         name: string,
+        type: string,
         image: string,
         owner: string
     }//checked
@@ -52,12 +60,14 @@ export type CategoryPlaylist ={
     label: string,
     album_type: string,
     release_date: string,
+    type: string,
     artists: string[],
     tracks: {
         id: string,
         name: string,
         track_number: number,
         preview_url: string,
+        type: string,
         duration_ms: number,
         artist: string[]
     }[]
@@ -67,20 +77,22 @@ export type CategoryPlaylist ={
     name: string,
     image: string,
     id: string,
-    followers: integer,
+    followers: number,
     description: string,
-    total: integer,
+    total: number,
+    type: string,
     owner: string,
     items: {
 added_at: string,
-track: Track | EpisodeFull 
+track: Track[] | EpisodeFull[],
+type: string,
     }
  }//checked
 
  export type EpisodeFull = {
     audio_preview_url: string,
     description: string,
-    duration_ms: integer,
+    duration_ms: number,
     id: string,
     image: string,
     name: string,
@@ -93,16 +105,17 @@ track: Track | EpisodeFull
         name: string,
         publisher: string,
         type: string,
-        total_episodes: integer
+        total_episodes: number
     }
 }
 
 export type Track = {
     album:{
         album_type: string,
-        total_tracks: integer,
+        total_tracks: number,
         id: string,
         image: string,
+        type: string,
         name: string,
         release_date: string,
         artists: string[],
@@ -111,15 +124,16 @@ export type Track = {
         id: string,
         image: string,
         name: string,
-        popularity: integer,
+        popularity: number,
+        type: string,
 
     }[],
-    duration_ms: integer,
+    duration_ms: number,
     id: string,
     name: string,
-    popularity: integer,
+    popularity: number,
     preview_url: string,
-    track_number: integer,
+    track_number: number,
     type: string
 }
  export type Show = {
@@ -128,6 +142,7 @@ export type Track = {
     title: string,
     author: string,
     description: string,
+    type: string,
 } //checked
 
  export type FeaturedPlaylist = {
@@ -135,6 +150,7 @@ export type Track = {
     name: string,
     id: string,
     image: string,
+    type: string,
     
 }//checked
 
@@ -143,7 +159,14 @@ export type Track = {
     href: string,
     id: string,
     icons: SpotifyApi.ImageObject[]
-    name: string
+    name: string,
 }//checked
 
+const countries = ['US','NG','GB','ZA', 'JM', 'CA', 'GH'] as const
+export type Country = typeof countries[number];
 
+export type AudioBookCountry = 'US'|'GB'|'IE'|'NZ'|'AU';
+
+export type AudioBookCountries = ['US','GB','IE','NZ','AU'];
+
+export type Countries = ['US','NG','GB','ZA', 'JM', 'CA', 'GH'];
