@@ -84,7 +84,7 @@ export type CategoryPlaylist ={
     owner: string,
     items: {
 added_at: string,
-track: Track[] | EpisodeFull[],
+track: Track[],
 type: string,
     }
  }//checked
@@ -151,6 +151,8 @@ export type Track = {
     id: string,
     image: string,
     type: string,
+    description: string,
+    owner: string
     
 }//checked
 

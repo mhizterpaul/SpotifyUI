@@ -1,62 +1,77 @@
 
 import { createContext } from 'react'
-import {Playlist, Episode, Track} from '../../utils/types'
- 
+import { Playlist, Episode, Track } from '../../utils/types'
+
 export type OwnPlaylist = {
     name: string,
-    id: number, 
+    id: number | string,
+    owner: string,
+    followers: number,
+    total: number,
     description: String,
-    image: string|undefined,
-    items: Track[]
+    image: string | undefined,
+    items: {
+        added_at: string,
+        track: Track[]
+    }
 }
+type Media = Episode | Playlist | Track | OwnPlaylist;
 type V = {
-    Playlist: {[key: string]: Playlist}&{[key:string]: OwnPlaylist},
-    Tracks: {[key: string]: Track },
-    nowPlaying: Track|null,
-    currentPlaylist: Playlist|null,
-    Episodes: Episode[],
-    Cache: {[key:string]: Playlist}&{[key:string]: Episode}, 
-    setCurrPlaylist : (playlist: Playlist)=>void,
-    removeMedia: (type: string, id: string) => void,
-    setNowPlaying: (track: Track)=>void,
+    Playlist: { [key: string]: Playlist } & { [key: string]: OwnPlaylist },
+    Tracks: { [key: string]: Track },
+    nowPlaying: Track | null,
+    currentPlaylist: Playlist | null,
+    Episodes: {
+        [key: string]: Episode
+    },
+    BgColor: string,
+    Cache: { [key: string]: Playlist } & { [key: string]: Episode },
+    removeMedia: (type: string, id: string | number) => void,
+    addMedia: (type: string, id: string | number, media: Media) => void,
+    setProp: (type: string, value: String | Media) => void,
 }
 
-const value: V = {
-    Playlist:{
+export let context: V = {
+    Playlist: {
 
     },
     Tracks: {
 
     },
+    BgColor: '',
     nowPlaying: null,
     currentPlaylist: null,
-    Episodes: [],
+    Episodes: {
+
+    },
     Cache: {
 
     },
     removeMedia: (type, id) => {
-        value[type] = Object.fromEntries(Object.entries(value[type]).filter(media => media[0] === id));
+        context = {
+            ...context,
+            [type]: Object.fromEntries(Object.entries(context[type]).filter(media => media[0] === id))
+        }
 
     },
-    setCurrPlaylist: (playlist)=> {
-        value.currentPlaylist = playlist;
+    addMedia: (type, id, media) => {
+        context = {
+            ...context,
+            [type]: {
+                ...context[type],
+                [id]: media
+            }
+        }
     },
-    setNowPlaying: (track)=> {
-        value.nowPlaying = track;
-    }
+    setProp: (type, value) => {
+        context = {
+            ...context,
+            [type]: value
+        }
+    },
 
 };
 
-export const Context = createContext(value);
+export const Context = createContext(context);
 
-const withProvider = (Component : React.FC) => {
-    return function EnhancedComponent(){
-        return (
-        <Context.Provider value = {value}>
-            <Component />
-        </Context.Provider>
-        )
-    }
-  }
 
-  export default withProvider;

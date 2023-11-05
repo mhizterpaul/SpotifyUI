@@ -18,16 +18,16 @@ type Props = {
 
 function NavbarContainer({ href, end, curr, dispatch }: Props) {
 
-  const routes = ['playlist', 'library', 'search']
+  const routes = ['playlist', 'library', 'search', 'episode', 'see-all']
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 666),
     [nav, setNav] = useState({ prev: true, next: false }),
     currUrl = window.location.href.split('3000/')[1],
     location = useLocation(),
     pathname = location.pathname,
     navigate = useNavigate(),
-    
+
     route = (option?: 'previous' | 'next') => {
-      
+
       if ((curr != null) && curr > 0) {
         setNav((state) => ({ ...state, prev: false }));
         if (!end) setNav((state) => ({ ...state, next: false }));
@@ -61,12 +61,12 @@ function NavbarContainer({ href, end, curr, dispatch }: Props) {
 
 
     if (currUrl.startsWith('?')) {
-      if (!routes.some((el)=> currUrl.split('?')[1].includes(el))) return window.location.href = 'http://localhost:3000/404';
+      if (!routes.some((el) => currUrl.split('?')[1].includes(el))) return window.location.href = 'http://localhost:3000/404';
       dispatch(setHref(`/${currUrl.slice(1)}`));
     }
 
     if (href !== pathname) {
-        navigate(href);
+      navigate(href);
     }
 
   }, [href])

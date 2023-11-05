@@ -1,15 +1,20 @@
 import './globals.css'
+import 'react-tooltip/dist/react-tooltip.css'
 import { Inter } from 'next/font/google'
-import RootRouterProvider from './rootRouterProvider';
+import RootRouterProvider from './rootProvider';
 import Nav from '@/containers/navbarContainer';
 import Footer from '@/components/footer/footer';
 import { Metadata } from 'next';
+//import Favicon from './favicon.ico'
 
 
 export const metadata: Metadata = {
   title: 'Spotify Clone',
   description: 'spotify clone',
+
 }
+
+//icons: [{ rel: 'icon', url: Favicon.src }]
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -30,13 +35,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-          <section className='main-container sm:p-x-4 relative max-h-[914px] h-screen'>
-            <RootRouterProvider>
-              < Nav />
-              {children}
-              < Footer />
-            </RootRouterProvider>
-          </section>
+        <section className='main-container sm:p-x-4 relative max-h-[914px] h-screen'>
+          <RootRouterProvider>
+            < Nav />
+            {children}
+            < Footer />
+          </RootRouterProvider>
+        </section>
       </body>
     </html>
   )

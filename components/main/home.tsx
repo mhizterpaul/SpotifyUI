@@ -8,19 +8,19 @@ import Card from "./card";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import Image from "next/image";
 import { getAudioBooks, getFeaturedPlaylists, getNewAlbumReleases, getSeveralArtists, getSeveralEpisodes, getSeveralShows } from "@/utils/api";
-import { Context } from "./withProvider";
 import { Countries, AudioBookCountries } from "@/utils/types";
+import { store } from '../../store/index'
+import PlayIcon from '../common/play'
+import style from './main.list.module.css'
 
-
-
- interface BasicData {
+interface BasicData {
   id: string;
-  title?:string;
-  name?:string;
-  description?: string,
-  author?:string;
-  duration_ms?:string
-  artists?:string[];
+  title?: string;
+  name?: string;
+  description?: string | null,
+  author?: string;
+  duration_ms?: number,
+  artists?: string[];
   authors?: string[];
   publisher?: string;
   type: string,
@@ -28,12 +28,12 @@ import { Countries, AudioBookCountries } from "@/utils/types";
   release_description?: string,
 };
 
-interface BasicDataWithImage extends BasicData{
+interface BasicDataWithImage extends BasicData {
   src?: never;
-  image: string;
+  image: string | null;
 }
 
-interface BasicDataWithSrc extends BasicData{
+interface BasicDataWithSrc extends BasicData {
   src: string;
   image?: never;
 }
@@ -59,29 +59,28 @@ const imgStyle = {
 }
 
 
-const loaded: boolean[] = [], data: Data[][]= []; 
-const countries: Countries = ['US','NG','GB','ZA', 'JM', 'CA', 'GH']
-const audioBookCountries:AudioBookCountries = ['US','GB','IE','NZ','AU'];
-let access_token: string|null;
+const loaded: boolean[] = [], data: Data[][] = [];
+const countries: Countries = ['US', 'NG', 'GB', 'ZA', 'JM', 'CA', 'GH']
+const audioBookCountries: AudioBookCountries = ['US', 'GB', 'IE', 'NZ', 'AU'];
 const calcItemSize = (index: number) => {
-  if (index === 0) return 210;
-  if (index % 3 === 1) return 16;
-  return 18.5625 * 16 / 1.5;
+  if (index === 0) return 234;
+  if (index % 3 === 1) return 120;
+  return 22.5625 * 16 / 1.5;
 
 }
 
 
 
-//any clicked media that need to be fetched again 
-//at destination should be cached
-//dont forget to change countries for loadmore function
+
+//images wont load invalid access token on first loaditem
 
 const isItemLoaded = (index: number) => loaded[index];
 const loadMoreItems = (startIndex: number, stopIndex: number) => {
-  if (!access_token) return
+  const access_token = store.getState().main.access_token;
+  if (!access_token) return;
   for (let index = startIndex; index <= stopIndex; index++) {
-    if(loaded[index] === false || loaded[index]) continue;
-    loaded[index]= false;
+    if (loaded[index] === false || loaded[index]) continue;
+    loaded[index] = false;
     if (index === 0) {
       getFeaturedPlaylists(access_token, random(countries), String(index), '5')
         .then(res => { data[index] = res; loaded[index] = true; })
@@ -119,12 +118,12 @@ const loadMoreItems = (startIndex: number, stopIndex: number) => {
         case (3 * 5): {
           getSeveralArtists(access_token, String(index), random(countries))
             .then(res => { data[index] = res; loaded[index] = true; })
-            break;
+          break;
         }
-        case (3*6) - 1: 
-        case (3*6): {
+        case (3 * 6) - 1:
+        case (3 * 6): {
           getAudioBooks(access_token, String(index), random(audioBookCountries))
-          .then(res => { data[index] = res; loaded[index] = true; })
+            .then(res => { data[index] = res; loaded[index] = true; })
         }
       }
 
@@ -135,56 +134,56 @@ const loadMoreItems = (startIndex: number, stopIndex: number) => {
 
 const Row = ({ index, style }: { index: number, style: React.CSSProperties }) => {
 
-  //please load initial data on Load
   const dispatch = useAppDispatch();
-  const {Cache} = useContext(Context);
   const [loadedState, setLoadedState] = useState(loaded[index]);
-  access_token = useAppSelector(state => state.main.access_token);
+  const access_token = useAppSelector(store => store.main.access_token);
+  const init = useMemo(() => {
+    if (!access_token) return;
+    loadMoreItems(0, 19);
+    const setLoadedInterval = setInterval(() => loaded[index] && (() => { setLoadedState(true); clearInterval(setLoadedInterval) })(), 1000)
+  }, [access_token]);
 
-  const init = useMemo(()=> {
-    const setLoadedInterval = setInterval(()=> loaded[index]&&(()=>{setLoadedState(true);clearInterval(setLoadedInterval)})() , 1000)
-  },[]);
+  const FirstRow = useMemo(() => () => (
 
-  const FirstRow = () => (
-    <>
-      <section className={`flex flex-col gap-y-4 h-1/2 max-h-[210px] overflow-hidden mt-4 `} style={style}>
-        <h3>{greet()}</h3>
-        <div className='flex flex-row w-full items-center justify-between gap-x-8 gap-y-4 flex-wrap'>
-          {data[index].map((el, id: number) =>
-          (
-            (<div key={el.id} className={'img-container ' + [(id === 4 && 'md:mr-[36%]')].join(' ')} style={styles} onClick={() => {Cache[el.id] = el ; dispatch(pushRef('/playlist/'+el.id))}}>
-              <Image src={el.image||''} alt={el.name||''} height={100} width={100} style={imgStyle} />
-              <span className='inline-block absolute top-[30%] right-[40%] text-white'>{el.name}</span>
-            </div>)
-          ))
-          }
-        </div>
-      </section>
-    </>
-  );
+    <section className={`flex flex-col content-start gap-y-4 h-1/2 max-h-[210px] overflow-hidden mt-4 `} style={style}>
+      <h3 className=" text-3xl ">{greet()}</h3>
+      <div className='flex flex-row w-full items-center justify-start content-start gap-x-8 gap-y-6 flex-wrap'>
+        {data[index].map((el, id: number) =>
+        (
+          (<div key={el.id} style={styles} className=' group ' onClick={() => dispatch(pushRef('/playlist/' + el.id))} >
+            <Image src={el.image || ''} alt={el.name || ''} height={100} width={100} style={imgStyle} />
+            <span className='inline-block absolute top-[40%] left-[85px] text-white w-[calc((22.56269rem-6.25rem)/1.5)] truncate '>{el.name}</span>
+            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" className={`hidden h-1/3 w-auto text-[#1ed760] z-10 absolute bottom-[2%] right-[5%] group-hover:block shadow rounded-full 
+             bg-gradient-to-r from-white to-white bg-no-repeat bg-center `} style={{ backgroundSize: '40% 40%' }} viewBox="0 0 24 24">
+              <path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10s10-4.48 10-10S17.52 2 12 2zM9.5 16.5v-9l7 4.5l-7 4.5z" /></svg>
+          </div>)
+        ))
+        }
+      </div>
+    </section>
+  ), [loaded[index]]);
 
   const TitleRow = ({ title }: { title: string }) => {
     return (
       <>
-        <h3 className='flex flex-row justify-between items-center' style={style}>
+        <h3 className='flex flex-row justify-between mt-12 items-start mb-auto' style={style}>
           {title}
-          <span className='uppercase inline-block text-xs' >see all</span>
+          <span className='inline-block text-gray-600 font-semibold text-xs hover:underline' >Show all</span>
         </h3>
       </>
-      
+
     )
   };
 
-  const ImageRow = () => (
-    <div className='flex gap-x-2 flex-wrap items-center overflow-hidden h-48' style={style}>
+  const ImageRow = useMemo(() => () => (
+    <div className='flex justify-between gap-8 flex-wrap items-center overflow-hidden h-[14rem] ' style={style}>
       {
         data[index].map((el) => <Card {...el} key={el.id} />)
       }
     </div>
-  )
+  ), [loaded[index]])
 
-
-  if (!loaded[index]) return (
+  if (!loadedState) return (
     <div className='italic text-center align-center h-[calc(18.5625rem/1.5)] my-auto'>...loading</div>
   )
 
@@ -210,7 +209,7 @@ const Row = ({ index, style }: { index: number, style: React.CSSProperties }) =>
       case 1 + (3 * 4): {
         return <TitleRow title={'Popular artists'} />
       }
-      case 1 + (3*5): {
+      case 1 + (3 * 5): {
         return <TitleRow title={'Audiobooks for you'} />
       }
     }
@@ -219,7 +218,7 @@ const Row = ({ index, style }: { index: number, style: React.CSSProperties }) =>
 
   if (index % 3 === 2 || index % 3 === 0) return <ImageRow />
 
-  return (<div className='text-center h-[18.5625rem/1.5] py-auto'>   
+  return (<div className='text-center h-[18.5625rem/1.5] py-auto'>
     something went wrong
   </div>)
 }
@@ -235,7 +234,7 @@ const Home = () => {
       {({ onItemsRendered, ref }) => (
 
         <List
-          className=""
+          className={style.list}
           height={0.72 * window.innerHeight}
           itemCount={19}
           itemSize={calcItemSize}
@@ -243,11 +242,11 @@ const Home = () => {
           ref={ref}
           width={'100%'}
         >
-          {React.memo(Row)}
+          {Row}
         </List>
       )}
     </InfiniteLoader>
   )
 }
 
-export default React.memo(Home)
+export default Home

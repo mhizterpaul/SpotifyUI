@@ -21,7 +21,7 @@ module.exports = {
         protocol: 'https',
         hostname: '*.scdn.co',
         port: '',
-        pathname: '/image/**',
+        pathname: '/**',
       },
     ],
   }

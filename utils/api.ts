@@ -129,6 +129,8 @@ export function getFeaturedPlaylists(access_token: string, country: string, offs
         }).then(({data}:{data: SpotifyApi. ListOfFeaturedPlaylistsResponse}) => data.playlists.items.map((el)=> ({
             id: el.id,
             image: el.images[0].url,
+            description: el.description,
+            owner: el.owner.display_name,
             name: el.name,
             type: el.type,
         })));
@@ -235,28 +237,4 @@ export function getSeveralCategories(access_token:string,country: Country ,offse
         })
 }
 
-export function getTopGenres(access_token: string){
-
-       return axios.get('https://api.spotify.com/v1/recommendations/available-genre-seeds', {
-            headers: {
-                'Authorization': 'Bearer ' + access_token
-            }
-        }).then(
-            ({data}:{data:SpotifyApi.AvailableGenreSeedsResponse}) => Promise.allSettled(
-                data.genres.map((id: string) => {
-
-                    return axios.get(`https://api.spotify.com/v1/browse/categories/${id}`, {
-                        headers: {
-                            'Authorization': 'Bearer ' + access_token
-                        }
-                    }).then(({data}:{data: SpotifyApi.SingleCategoryResponse}) => ({
-                        ...data,
-                        image: data.icons[0].url
-                    }))
-                })
-                //@ts-ignore
-            ).then((values) => values.filter(({status}) => status === 'fulfilled').map(({value}) => value)
-        ))
-
-}
 
