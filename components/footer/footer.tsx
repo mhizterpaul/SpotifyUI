@@ -2,17 +2,15 @@
 import Image from "next/image"
 import Player from "./player"
 import { useState } from 'react'
-import { Context } from '../main/withProvider'
-import { useContext } from 'react';
 import { IoIosArrowDropupCircle, IoIosArrowDropdownCircle } from 'react-icons/io'
 import { useAppDispatch, useAppSelector } from "@/store/hooks"
 import { pushRef, setNowPlayingView } from "@/store/reducers/main_slice"
 import withStoreProvider from "@/store/with_provider"
+import { V } from "@/app/rootProvider"
 
 
-const Footer = () => {
+const Footer = ({ nowPlaying }: V) => {
     const [favorite, setFavorite] = useState(false);
-    const { nowPlaying } = useContext(Context);
     const dispatch = useAppDispatch();
     const nowPlayingView = useAppSelector(state => state.main.nowPlayingView);
 

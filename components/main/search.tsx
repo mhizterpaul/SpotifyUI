@@ -40,7 +40,10 @@ const Search = () => {
 
     const Row = ({ style, index }: { style: React.CSSProperties, index: number }) => {
         const [loadedState, setLoadedState] = useState(loaded[index]);
-        if (loaded[itemCount]) itemCount = 15;
+        if (loaded[itemCount]) {
+            itemCount = 16;
+            loadMoreItems(9, 16);
+        }
         const init = useMemo(() => {
             const setLoadedInterval = setInterval(() => loaded[index] && (() => { setLoadedState(true); clearInterval(setLoadedInterval) })(), 1000)
         }, []);

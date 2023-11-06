@@ -7,16 +7,18 @@ import withProvider from "@/store/with_provider";
 import { Dispatch } from "@reduxjs/toolkit";
 import { goBack, goForward, pushRef, setHref } from "@/store/reducers/main_slice";
 import { useNavigate, useLocation } from 'react-router-dom'
+import { V } from "@/app/rootProvider";
 
 type Props = {
   href: string,
   curr: number | null,
   end: boolean | undefined,
   dispatch: Dispatch,
+  BgColor: string
 }
 
 
-function NavbarContainer({ href, end, curr, dispatch }: Props) {
+function NavbarContainer({ href, end, curr, dispatch, BgColor }: Props) {
 
   const routes = ['playlist', 'library', 'search', 'episode', 'see-all']
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 666),
@@ -98,17 +100,18 @@ function NavbarContainer({ href, end, curr, dispatch }: Props) {
   }, []);
 
   return (
-    <Nav next={nav.next} prev={nav.prev} route={route} isMobile={isMobile} search={pathname === '/search'} />
+    <Nav next={nav.next} prev={nav.prev} route={route} BgColor={BgColor} isMobile={isMobile} search={pathname === '/search'} />
   )
 }
 
 
 
-const mapStateToProps = (state: RootState) => ({
+const mapStateToProps = (state: RootState, ownProps: V) => ({
   href: state.main.href,
   curr: state.main.curr,
-  end: state.main.end
+  end: state.main.end,
+  BgColor: ownProps.BgColor
 });
-
+//@ts-ignore
 export default withProvider(connect(mapStateToProps)(NavbarContainer))
 

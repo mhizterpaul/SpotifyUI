@@ -1,10 +1,8 @@
 import { pushRef } from '@/store/reducers/main_slice';
 import { useAppDispatch } from '@/store/hooks';
 import { BiHomeAlt } from 'react-icons/bi'
-import { Context } from '../main/withProvider';
-import { useContext } from 'react';
 import { BsPinAngleFill } from 'react-icons/bs';
-import { useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import { V } from '@/app/rootProvider';
 
 
 export const likedStyles = {
@@ -12,10 +10,8 @@ export const likedStyles = {
 
 }
 
-const Sidebar = (props: { isOpen?: boolean }) => {
+const Sidebar = ({ Playlist, Tracks, Episodes, isOpen }: V & { isOpen?: boolean }) => {
     const dispatch = useAppDispatch();
-    const [searchParams] = useSearchParams();
-    const { Playlist, Tracks, Episodes } = useContext(Context);
     const MediaCount = ({ type }: { type: string }) => {
         let plural: boolean | 's' | '' = type === 'playlist' ? !!(Object.keys(Playlist).length) : type === 'song' ? !!Object.keys(Tracks).length : !!Object.keys(Episodes).length;
         plural = plural ? 's' : '';
@@ -25,7 +21,7 @@ const Sidebar = (props: { isOpen?: boolean }) => {
 
 
     return (<aside className={/*my-auto */[`bg-black sidebar hidden sm:flex flex-col h-[90vh] min-h-[560px] items-center max-h-[914px] justify-around
-         text-lg mr-8 px-2 pb-14 first-letter:font-medium w-[15rem]`, props.isOpen == null ? '' : props.isOpen === true ? 'translateOut' : 'translateIn'].join(' ')}>
+         text-lg mr-8 px-2 pb-14 first-letter:font-medium w-[15rem]`, isOpen == null ? '' : isOpen === true ? 'translateOut' : 'translateIn'].join(' ')}>
         <h2 className='text-3xl mt-2 '>
             <ul className='list-none'>
                 <li onClick={() => dispatch(pushRef('/'))}>

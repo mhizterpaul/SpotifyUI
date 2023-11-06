@@ -2,10 +2,9 @@
 import Sidebar from './sidebar';
 import Profile from './profile';
 import Search from './search';
-import { useContext, useState } from 'react';
+import { useState } from 'react';
 import { useAppDispatch } from '@/store/hooks';
 import { setOpen } from '@/store/reducers/main_slice';
-import { Context } from '../main/withProvider';
 import { useLocation } from 'react-router-dom';
 
 
@@ -15,16 +14,16 @@ type Props = {
     route: (arg: 'previous' | 'next') => any,
     next: boolean,
     prev: boolean
+    BgColor: string,
 }
 
 export const btn = `bg-[url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxZW0iIGhlaWdodD0iMWVtIiB2aWV3Qm94PSIwIDAgMjQgMjQiPjxwYXRoIGZpbGw9IiNmZmZmZmYiIGQ9Im0xMy4zIDE3LjNsLTQuNi00LjZxLS4xNS0uMTUtLjIxMi0uMzI1VDguNDI1IDEycTAtLjIuMDYzLS4zNzVUOC43IDExLjNsNC42LTQuNnEuMjc1LS4yNzUuNy0uMjc1dC43LjI3NXEuMjc1LjI3NS4yNzUuN3QtLjI3NS43TDEwLjggMTJsMy45IDMuOXEuMjc1LjI3NS4yNzUuN3QtLjI3NS43cS0uMjc1LjI3NS0uNy4yNzV0LS43LS4yNzVaIi8+PC9zdmc+")]
 bg-no-repeat bg-center bg-[length:70%] align-middle bg-[#181818] rounded-full focus:ring h-8 w-8`
 
-const Nav = ({ search, isMobile, route, next, prev }: Props) => {
+const Nav = ({ search, isMobile, route, next, prev, BgColor }: Props) => {
 
     const [isOpen, setIsOpen] = useState(false);
     const dispatch = useAppDispatch();
-    const { BgColor } = useContext(Context);
     const pathname = useLocation().pathname;
 
     return (

@@ -1,14 +1,13 @@
 import { BsPlayCircle } from "react-icons/bs"
 import { SlHeart, SlOptions } from 'react-icons/sl'
-import { LuClock3 } from 'react-icons/lu'
+import { LuClock3, LuPlusCircle } from 'react-icons/lu'
 import { IoShareOutline } from 'react-icons/io5'
-import { useState, useContext, useEffect, useRef } from "react";
+import { useState } from "react";
 import Image from 'next/image'
 import { useParams } from 'react-router-dom'
 import { ShareSocial } from 'react-share-social'
 import BgColorDetector from './imageBackgroundDetector'
 import { FaHeart } from 'react-icons/fa6'
-import { LuPlusCircle } from "react-icons/lu";
 import { BiPlay } from "react-icons/bi";
 import Search from '../nav/search'
 import { pushRef } from "@/store/reducers/main_slice";
@@ -16,19 +15,19 @@ import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { SiSpotify } from "react-icons/si";
 import { LiaTimesSolid } from "react-icons/lia";
 import { RiErrorWarningLine } from "react-icons/ri";
-import { Context, OwnPlaylist } from "./withProvider";
-import { Playlist as Play } from '../../utils/types'
+import { OwnPlaylist } from "@/app/rootProvider";
+import { Playlist as Play, Track } from '../../utils/types'
 import { getPlaylist } from "@/utils/api";
 import Loader from "../network_request";
 import { likedStyles } from "../nav/sidebar";
 import { hexToHSL } from "@/utils";
+import { V } from '../../app/rootProvider'
 
 //please load playlist yourself by making a network request
 
-const Playlist = () => {
+const Playlist = ({ removeMedia, addMedia, Tracks, Playlist, setProp }: V) => {
     const { id } = useParams();
     const [bgColor, setBgColor] = useState('');
-    const { removeMedia, addMedia, Tracks, Playlist, setProp } = useContext(Context);
     const access_token = useAppSelector((state) => state.main.access_token) || '';
     const dispatch = useAppDispatch();
     const containerRef = useRef<HTMLDivElement>(null);
@@ -46,11 +45,10 @@ const Playlist = () => {
         resizeObserver.observe(containerRef.current, { box: 'content-box' })
     }, [containerRef.current])
 
-    const ownPlaylist: { [key: string]: OwnPlaylist } = Object.fromEntries(Object.entries(Playlist).filter((value) => typeof Number(value[0]) === 'number'));
-
+    const ownPlaylist = Object.fromEntries(Object.entries(Playlist).filter((value) => typeof Number(value[0]) === 'number')) as { [key: string]: OwnPlaylist };
     if (!id) return <div className='text-center my-auto text-xl font-extrabold'><div className='text-2xl'><RiErrorWarningLine /></div>Couldn't find that playlist <br /> <span className='text-sm font-semibold'>search for something else?</span> </div>;
 
-    if (id !== 'songs' && Number.isNaN(Number(id))) {
+    if (id !== 'songs' && isNaN(Number(id))) {
         getPlaylist(access_token, id).then(
             (data) => setFetchedPlaylist(data)
         )
@@ -97,7 +95,7 @@ const Playlist = () => {
                 </h2>
                 <p className=' ' >
                     <h3 className={' flex justify-start items-center gap-x-4 '}>
-                        {!isNaN(Number(id)) ? null : <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" className={`h-14 w-14 text-[#1ed760] rounded-full 
+                        {!isNaN(Number(id)) ? null : <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" className={`h-16 w-16 text-[#1ed760] rounded-full 
                     bg-gradient-to-r from-black to-black bg-no-repeat bg-center `} style={{ backgroundSize: '40% 40%' }} viewBox="0 0 24 24">
                             <path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10s10-4.48 10-10S17.52 2 12 2zM9.5 16.5v-9l7 4.5l-7 4.5z" /></svg>}
                         {isNaN(Number(id)) && id !== 'songs' ? (!Playlist[id] ? < SlHeart className='hover:text-white ' onClick={() => { addMedia('Playlist', data.id, data) }} /> : <FaHeart className={'text-[#1ed760]'} onClick={() => { removeMedia('Playlist', id) }} />) : null}
@@ -114,7 +112,9 @@ const Playlist = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {data.items.track.length && data.items.track.map((track, index: number) => (() => {
+                            <hr />
+                            {/*@ts-ignore*/}
+                            {data.items.track.length && data.items.track.map((track: Track, index: number) => (() => {
                                 const [menu, setMenu] = useState(false);
                                 const [hover, setHover] = useState(false);
                                 const trRef = useRef<HTMLTableRowElement>(null);

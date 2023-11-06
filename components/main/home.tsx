@@ -1,7 +1,7 @@
 
 import { VariableSizeList as List } from "react-window";
 import InfiniteLoader from 'react-window-infinite-loader';
-import React, { useContext, useMemo, useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import { pushRef } from "@/store/reducers/main_slice";
 import { greet, random } from "@/utils";
 import Card from "./card";

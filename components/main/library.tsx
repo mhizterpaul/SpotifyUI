@@ -1,4 +1,4 @@
-import { useContext, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Context, OwnPlaylist } from './withProvider';
 import { pushRef } from '@/store/reducers/main_slice';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
@@ -11,11 +11,12 @@ import { LiaTimesSolid } from 'react-icons/lia';
 import { TbDots } from 'react-icons/tb';
 import { AiOutlineDelete } from 'react-icons/ai';
 import { Playlist } from '@/utils/types';
+import { useParams } from 'next/navigation';
+import { V } from '@/app/rootProvider';
 
 
-const Library = () => {
+const Library = ({ Playlist, Tracks, Episodes, addMedia }: V) => {
   //props.match.params.id or useParams
-  const { Playlist, Tracks, Episodes, addMedia } = useContext(Context);
   const dispatch = useAppDispatch();
   const [hover, setHover] = useState(false);
   const [searchParams] = useSearchParams();
@@ -26,7 +27,7 @@ const Library = () => {
   const imageRef = useRef<HTMLInputElement>(null);
   const fileRef = useRef<HTMLInputElement>(null);
   const search = useLocation().search;
-  const navigate = useNavigate();
+  const { id } = useParams();
   const [seeAll, setSeeAll] = useState(false);
   const [activeInput, setActiveInput] = useState(false);
   const [closeForm, setCloseForm] = useState(searchParams.get('new') === 'true' ? false : true);
@@ -49,7 +50,10 @@ const Library = () => {
   }
   const save = (e: React.ChangeEvent<HTMLFormElement>) => {
     e.preventDefault();
-
+    if (!inputRef.current || !descriptionRef.current) return;
+    res.name = inputRef.current.value;
+    res.description = descriptionRef.current.value;
+    res.items.added_at = (() => { const date = new Date; return (date.getMonth() + 1) + '/' + date.getDate() + '/' + date.getFullYear() })();
     addMedia('Playlist', String(Object.keys(ownPlaylist).length), res);
     setCloseForm(true)
 
@@ -83,8 +87,6 @@ const Library = () => {
 
   //fix button and button link
   //create playlist click does nothing
-
-
   if ((searchParams.get('new') === 'true') || (search === '?new=true') && !closeForm) {
     return (
       <section className='w-full relative -mt-[2rem] h-full flex items-center justify-center'>
@@ -134,7 +136,9 @@ const Library = () => {
   }
 
 
-  if (!(Object.values(Playlist).length + Object.keys(Tracks).length + Object.keys(Episodes).length)) return (
+
+
+  if (!(Object.keys(Playlist).length + Object.keys(Tracks).length + Object.keys(Episodes).length)) return (
     <section className='flex items-center -mt-[3.6rem] flex-col w-full h-full justify-center '>
       <div className='min-w-fit flex flex-col items-start justify-center'>
         <div className='text-sm mb-12 flex flex-col items-start justify-center gap-y-4'>
@@ -157,7 +161,7 @@ const Library = () => {
 
   return <>
     {
-      (Object.values(Playlist).length && (window.location.href.split('library').length === 1 || searchParams.get('new') === 'true')) && <section>
+      (Object.values(Playlist).length && !id) && <section>
         <h2 className='flex justify-between items-center'>Playlists <span className={`mr-2 ${!seeAll || (Object.values(Playlist).length < 6) ? ' hidden ' : ' inline-block '}`} onClick={() => setSeeAll(false)}>See all</span><LiaTimesSolid className={`mr-2 ${seeAll ? 'inline-block' : 'hidden'}`} onClick={() => setSeeAll(true)} /></h2>
         {Playlist.length && (seeAll ? Object.values(Playlist) : Object.values(Playlist).slice(0, 6)).map((playlist: Playlist) => <p className='flex gap-x-4 justify-start items-center h-14'>
           <Image src={playlist.image} className={'rounded-xl'} alt={playlist.name} height={100} width={100} />
@@ -167,22 +171,16 @@ const Library = () => {
           </span>
         </p>)
         }
-        {Playlist && (seeAll ? Object.values(Playlist) : Object.values(Playlist).slice(0, 6)).map((playlist: Playlist) => <p className='flex gap-x-4 justify-start items-center h-14'>
-          <Image src={playlist.image} className={'rounded-xl'} alt={playlist.name} height={100} width={100} />
-          {playlist.description}
-          <span className='font-bold text-sm text-gray-600'>
-            {playlist.total} &bull; {playlist.owner}
-          </span>
-        </p>)
-        }
       </section>
     }
-    {(Tracks.length && window.location.href.split('library').length === 1) && <div onClick={() => dispatch(pushRef('/playlist/songs'))} className='text-2xl mr-4'>
 
-      <span className='text-2xl hover:scale-[130] font-bold bg-blue-900'><BiLike /><RxDividerVertical className={'mx-2'} />{Object.keys(Tracks).length}</span> <span className={'text-zinc-600'} >See all <SlOptions /></span>
+    {(Object.keys(Tracks).length && !id) && <div onClick={() => dispatch(pushRef('/playlist/songs'))} className='text-2xl mr-4'>
+
+      <span className='text-2xl hover:scale-[130] font-bold bg-blue-900'><BiLike /><RxDividerVertical className={'mx-2'} />{Object.keys(Tracks).length} liked Songs</span> <span className={'text-zinc-600'} >See all <SlOptions /></span>
     </div>}
+
     {
-      (Object.keys(Episodes).length && window.location.href.split('library').length === 1) && <section>
+      (Object.keys(Episodes).length && !id) && <section>
         <h2 className='flex justify-between items-center'>Episodes <span className={`mr-2w`} onClick={() => dispatch(pushRef('/episodes'))}>See all</span></h2>
         {Object.keys(Episodes).length && Object.values(Episodes).slice(0, 6).map((episode) => <p className='flex gap-x-4 justify-start items-center h-14'>
           <Image src={episode.image} className={'rounded-xl'} alt={episode.name} height={100} width={100} />
@@ -198,8 +196,6 @@ const Library = () => {
       (!(Object.values(Playlist).length) && searchParams.get('playlists') === '') && <div className='w-full h-full'><div className='w-5/6 text-center mx-auto pt-8'>you do not have any playlist </div></div>
     }
   </>
-
-
 
 }
 
