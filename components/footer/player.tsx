@@ -1,15 +1,16 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useContext } from "react";
 import { BsPlayCircle, BsPauseCircle } from 'react-icons/bs'
 import { IoPlaySkipForwardOutline, IoPlaySkipBackOutline } from 'react-icons/io5'
 import { RxShuffle } from 'react-icons/rx'
 import { BiRepeat } from 'react-icons/bi'
 import Volume from './volume'
-import { V } from "@/app/rootProvider";
+import { Context, V } from "@/app/rootProvider";
 
 
-const Player: React.FC<V> = ({ nowPlaying, currentPlaylist, setProp }) => {
+const Player: React.FC<{}> = () => {
     const [isPlaying, setIsPlaying] = useState(false);
     const [currentTime, setCurrentTime] = useState(0);
+    const { nowPlaying, currentPlaylist, setProp } = useContext(Context)
     const audioRef = useRef<HTMLAudioElement>(null);
     const sliderRef = useRef<HTMLInputElement>(null);
     const togglePlay = () => {

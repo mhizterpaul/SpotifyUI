@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom"
 import Image from 'next/image'
 import { RiErrorWarningLine } from 'react-icons/ri'
@@ -12,10 +12,10 @@ import { SiSpotify } from 'react-icons/si'
 import BgColorDetector from '../main/imageBackgroundDetector'
 import { pushRef } from "@/store/reducers/main_slice";
 import { Episode } from "@/utils/types";
-import { V } from "@/app/rootProvider";
+import { Context, V } from "@/app/rootProvider";
 
 
-const Episodes = ({ Episodes, Cache, removeMedia }: V) => {
+const Episodes = () => {
 
     const { id } = useParams();
     const location = useLocation();
@@ -23,6 +23,7 @@ const Episodes = ({ Episodes, Cache, removeMedia }: V) => {
     const pathname = location.pathname;
     const [bgColor, setBgColor] = useState('')
     const access_token = useAppSelector((state) => state.main.access_token) || '';
+    const { Episodes, Cache, removeMedia } = useContext(Context)
     const episodeData = id ? Cache[id] : null;
     const navigate = useNavigate();
     const [episodeSubMenu, setEpisodeSubMenu] = useState(false);

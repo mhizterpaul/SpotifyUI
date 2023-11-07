@@ -1,5 +1,5 @@
-import { useEffect, useRef, useState } from 'react';
-import { Context, OwnPlaylist } from './withProvider';
+import { useContext, useEffect, useRef, useState } from 'react';
+import { Context, OwnPlaylist } from '../../app/rootProvider';
 import { pushRef } from '@/store/reducers/main_slice';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
@@ -12,15 +12,15 @@ import { TbDots } from 'react-icons/tb';
 import { AiOutlineDelete } from 'react-icons/ai';
 import { Playlist } from '@/utils/types';
 import { useParams } from 'next/navigation';
-import { V } from '@/app/rootProvider';
 
 
-const Library = ({ Playlist, Tracks, Episodes, addMedia }: V) => {
+const Library = () => {
   //props.match.params.id or useParams
   const dispatch = useAppDispatch();
   const [hover, setHover] = useState(false);
   const [searchParams] = useSearchParams();
   const access_token = useAppSelector(state => state.main.access_token);
+  const { Playlist, Tracks, Episodes, addMedia } = useContext(Context)
   const ownPlaylist: OwnPlaylist[] = Object.values(Playlist).filter(value => typeof (value.id) === 'number')
   const inputRef = useRef<HTMLInputElement>(null);
   const descriptionRef = useRef<HTMLTextAreaElement>(null);
@@ -79,7 +79,7 @@ const Library = ({ Playlist, Tracks, Episodes, addMedia }: V) => {
 
       //@ts-ignore
       res.image = src;
-      imageRef.current.style.backgroundImage = `url(${src})`;
+      if (imageRef.current) imageRef.current.style.backgroundImage = `url(${src})`;
     };
     reader.readAsDataURL(file);
   }
@@ -110,7 +110,7 @@ const Library = ({ Playlist, Tracks, Episodes, addMedia }: V) => {
               <input ref={imageRef} id='image' type='image' className={'bg-[rgb(40,40,40)] bg-contain bg-no-repeat bg-center p-16 relative shadow-lg'} width={175} height={175} alt={'Playlist Image'} src={activeInput ? editIcon : defaultSrc} onMouseEnter={() => setActiveInput(true)} onMouseLeave={() => setActiveInput(false)} onClick={(e) => { e.preventDefault(); fileRef?.current?.click() }} />
               <TbDots className={'absolute  text-3xl right-2 top-2 text-[whitesmoke] bg-zinc-900 rounded-full p-1 hover:text-white ' + (hover ? ' block ' : ' hidden ')} onClick={() => setInputSubMenu(state => !state)} />
               <ul className={'absolute -right-24 top-12 rounded-md bg-[#282828] list-none p-2 text-xs shadow-lg z-10 ' + (inputSubMenu ? ' ' : ' hidden ')}>
-                <li className='hover:bg-stone-600 p-2 ' onClick={() => { setInputSubMenu(false); res.image = defaultSrc; imageRef.current.style.backgroundImage = '' }}><AiOutlineDelete className={'mr-1 text-[#A7A7A7] font-bold text-xl inline-block align-middle '} />Remove photo</li>
+                <li className='hover:bg-stone-600 p-2 ' onClick={() => { setInputSubMenu(false); res.image = defaultSrc; if (imageRef.current) imageRef.current.style.backgroundImage = '' }}><AiOutlineDelete className={'mr-1 text-[#A7A7A7] font-bold text-xl inline-block align-middle '} />Remove photo</li>
               </ul>
             </div>
 
@@ -167,20 +167,20 @@ const Library = ({ Playlist, Tracks, Episodes, addMedia }: V) => {
           <Image src={playlist.image} className={'rounded-xl'} alt={playlist.name} height={100} width={100} />
           {playlist.description}
           <span className='font-bold text-sm text-gray-600'>
-            {playlist.total} &bull; {playlist.followers}
+            {playlist.total} items on this playlist &bull; {playlist.followers} followers
           </span>
         </p>)
         }
       </section>
     }
 
-    {(Object.keys(Tracks).length && !id) && <div onClick={() => dispatch(pushRef('/playlist/songs'))} className='text-2xl mr-4'>
+    {(Object.keys(Tracks).length && !id) ? <div onClick={() => dispatch(pushRef('/playlist/songs'))} className='text-2xl mr-4'>
 
       <span className='text-2xl hover:scale-[130] font-bold bg-blue-900'><BiLike /><RxDividerVertical className={'mx-2'} />{Object.keys(Tracks).length} liked Songs</span> <span className={'text-zinc-600'} >See all <SlOptions /></span>
-    </div>}
+    </div> : null}
 
     {
-      (Object.keys(Episodes).length && !id) && <section>
+      (Object.keys(Episodes).length && !id) ? <section>
         <h2 className='flex justify-between items-center'>Episodes <span className={`mr-2w`} onClick={() => dispatch(pushRef('/episodes'))}>See all</span></h2>
         {Object.keys(Episodes).length && Object.values(Episodes).slice(0, 6).map((episode) => <p className='flex gap-x-4 justify-start items-center h-14'>
           <Image src={episode.image} className={'rounded-xl'} alt={episode.name} height={100} width={100} />
@@ -190,11 +190,7 @@ const Library = ({ Playlist, Tracks, Episodes, addMedia }: V) => {
           </span>
         </p>)
         }
-      </section>
-    }
-    {
-      (!(Object.values(Playlist).length) && searchParams.get('playlists') === '') && <div className='w-full h-full'><div className='w-5/6 text-center mx-auto pt-8'>you do not have any playlist </div></div>
-    }
+      </section> : null}
   </>
 
 }

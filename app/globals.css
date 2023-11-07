@@ -158,13 +158,13 @@ input[type=range]::-moz-range-track:hover {
 input[type=range]::-ms-fill-upper, input[type=range]::-ms-fill-lower {
   background: white;
 }
-.sidebar svg {
+.sidebar svg:not(.media-count) {
   width: 2rem;
   height: 2rem;
   display: inline-block;
 }
 
-.sidebar .small-svg{
+.sidebar svg.small-svg{
   width: 1.5rem;
   height: 1.5rem;
 }

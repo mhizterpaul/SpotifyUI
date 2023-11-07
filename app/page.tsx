@@ -46,6 +46,7 @@ function Home() {
       <Routes>
         <Route path='/search' element={<Search />} />
         <Route path={'/playlist/:id'} element={<Playlist />} />
+        <Route path={'/playlist'} element={<Playlist />} />
         <Route path='/library/playlist' element={<Library />} />
         <Route path='/library' element={<Library />} />
         <Route path='/episodes' element={<Episodes />} />

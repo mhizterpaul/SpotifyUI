@@ -14,11 +14,10 @@ type Props = {
   curr: number | null,
   end: boolean | undefined,
   dispatch: Dispatch,
-  BgColor: string
 }
 
 
-function NavbarContainer({ href, end, curr, dispatch, BgColor }: Props) {
+function NavbarContainer({ href, end, curr, dispatch }: Props) {
 
   const routes = ['playlist', 'library', 'search', 'episode', 'see-all']
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 666),
@@ -100,18 +99,17 @@ function NavbarContainer({ href, end, curr, dispatch, BgColor }: Props) {
   }, []);
 
   return (
-    <Nav next={nav.next} prev={nav.prev} route={route} BgColor={BgColor} isMobile={isMobile} search={pathname === '/search'} />
+    <Nav next={nav.next} prev={nav.prev} route={route} isMobile={isMobile} search={pathname === '/search'} />
   )
 }
 
 
 
-const mapStateToProps = (state: RootState, ownProps: V) => ({
+const mapStateToProps = (state: RootState) => ({
   href: state.main.href,
   curr: state.main.curr,
   end: state.main.end,
-  BgColor: ownProps.BgColor
 });
-//@ts-ignore
+
 export default withProvider(connect(mapStateToProps)(NavbarContainer))
 

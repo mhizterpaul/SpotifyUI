@@ -6,11 +6,13 @@ import { SlOptions } from 'react-icons/sl';
 
 import { useAppDispatch } from '@/store/hooks';
 import { setNowPlayingView } from '../../store/reducers/main_slice'
-import { V } from '@/app/rootProvider';
+import { Context } from '@/app/rootProvider';
 import Image from 'next/image'
+import { useContext } from 'react';
 
-const NowPlaying = ({ nowPlaying, currentPlaylist, Tracks, removeMedia, addMedia }: V) => {
+const NowPlaying = () => {
     const dispatch = useAppDispatch();
+    const { nowPlaying, currentPlaylist, Tracks, removeMedia, addMedia } = useContext(Context)
     if (!currentPlaylist || !nowPlaying) return null;
     const queue = currentPlaylist.items.track;
     const nextInQueue = queue[queue.indexOf(nowPlaying) + 1];

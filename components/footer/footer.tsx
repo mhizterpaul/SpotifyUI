@@ -1,18 +1,19 @@
 'use client'
 import Image from "next/image"
 import Player from "./player"
-import { useState } from 'react'
+import { useContext, useState } from 'react'
 import { IoIosArrowDropupCircle, IoIosArrowDropdownCircle } from 'react-icons/io'
 import { useAppDispatch, useAppSelector } from "@/store/hooks"
 import { pushRef, setNowPlayingView } from "@/store/reducers/main_slice"
 import withStoreProvider from "@/store/with_provider"
-import { V } from "@/app/rootProvider"
+import { Context } from "@/app/rootProvider"
 
 
-const Footer = ({ nowPlaying }: V) => {
+const Footer = () => {
     const [favorite, setFavorite] = useState(false);
     const dispatch = useAppDispatch();
     const nowPlayingView = useAppSelector(state => state.main.nowPlayingView);
+    const { nowPlaying } = useContext(Context);
 
     return (<footer className={`${nowPlaying?.artists[0].image ? '' : 'inactive'}` + ' footer bg-[#181818] w-full relative flex items-center justify-between z-10 whitespace-nowrap pb-6 -mt-14 sm:min-w-[540px] min-h-[120px] h-[14vh] overflow-visible'}>
 

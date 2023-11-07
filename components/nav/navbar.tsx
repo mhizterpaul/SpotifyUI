@@ -2,10 +2,11 @@
 import Sidebar from './sidebar';
 import Profile from './profile';
 import Search from './search';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { useAppDispatch } from '@/store/hooks';
 import { setOpen } from '@/store/reducers/main_slice';
 import { useLocation } from 'react-router-dom';
+import { Context } from '@/app/rootProvider';
 
 
 type Props = {
@@ -14,21 +15,21 @@ type Props = {
     route: (arg: 'previous' | 'next') => any,
     next: boolean,
     prev: boolean
-    BgColor: string,
 }
 
 export const btn = `bg-[url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxZW0iIGhlaWdodD0iMWVtIiB2aWV3Qm94PSIwIDAgMjQgMjQiPjxwYXRoIGZpbGw9IiNmZmZmZmYiIGQ9Im0xMy4zIDE3LjNsLTQuNi00LjZxLS4xNS0uMTUtLjIxMi0uMzI1VDguNDI1IDEycTAtLjIuMDYzLS4zNzVUOC43IDExLjNsNC42LTQuNnEuMjc1LS4yNzUuNy0uMjc1dC43LjI3NXEuMjc1LjI3NS4yNzUuN3QtLjI3NS43TDEwLjggMTJsMy45IDMuOXEuMjc1LjI3NS4yNzUuN3QtLjI3NS43cS0uMjc1LjI3NS0uNy4yNzV0LS43LS4yNzVaIi8+PC9zdmc+")]
 bg-no-repeat bg-center bg-[length:70%] align-middle bg-[#181818] rounded-full focus:ring h-8 w-8`
 
-const Nav = ({ search, isMobile, route, next, prev, BgColor }: Props) => {
+const Nav = ({ search, isMobile, route, next, prev }: Props) => {
 
     const [isOpen, setIsOpen] = useState(false);
     const dispatch = useAppDispatch();
     const pathname = useLocation().pathname;
+    const { BgColor } = useContext(Context)
 
     return (
         <>
-            <nav className={` nav flex relative sm:col-start-2 ${isOpen ? 'col-start-2' : 'col-start-1'} col-end-4 w-full row-start-1 row-end-2 pl-4 sm:pl-0 flex-row nav items-center justify-between py-2 `} style={{ backgroundColor: BgColor }}>
+            <nav className={` nav flex relative sm:col-start-2 ${isOpen ? 'col-start-2' : 'col-start-1'} col-end-4 w-full row-start-1 row-end-2 pl-4 sm:pl-0 flex-row items-center justify-between py-2 bg-transparent `} >
                 <div className='whitespace-nowrap'>
                     <button className={`${btn} mr-4 sm:ml-8`} onClick={() => route('previous')} disabled={prev}>
                     </button>
