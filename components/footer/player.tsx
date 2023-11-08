@@ -64,7 +64,7 @@ const Player: React.FC<{}> = () => {
                     </div>
                     <div className='w-full flex justify-center gap-x-2 items-center'><span id="current-time" className="pr-2 text-xs">{currentTime / 60 || '-' + ' : ' + (currentTime % 60 || '- -')}</span>
                         <input type='range' className={'w-5/6 slider'} ref={sliderRef} min={0} max={nowPlaying?.duration_ms} onChange={(seek)} />
-                        <span id="duration" className="pl-2 text-xs">{(audioRef.current ? audioRef.current.currentTime / 60 : '-') + ' : ' + (nowPlaying ? nowPlaying.duration_ms % 60 : '- -')}</span></div>
+                        <span id="duration" className="pl-2 text-xs">{(nowPlaying ? nowPlaying.duration_ms / 60 : '-') + ' : ' + (nowPlaying ? nowPlaying.duration_ms % 60 : '- -')}</span></div>
                 </section>
             </div>
             <Volume audio={audioRef} />

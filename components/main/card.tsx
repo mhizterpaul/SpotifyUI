@@ -23,9 +23,11 @@ const imgStyle = {
 
 
 const Card = (props: Data) => {
-  return ((props.image || props.src) &&
+  return ((props.image || props.src) ?
     <div className={` flex flex-col 
-     bg-gray-500 items-start justify-start gap-y-2 overflow-hidden p-4 rounded-[0.9rem] [&_small]:text-gray-500 [&_small]:text-xs [&_small]:h-[0.75rem] [&_small]:align-top [&_small]:w-[calc(11.9375rem/1.5)] [&_small]:truncate [&_small]:inline-block `} style={style}>
+     bg-gray-500 items-start justify-start gap-y-2 overflow-hidden p-4 rounded-[0.9rem] [&_small]:text-gray-500 [&_small]:text-xs [&_small]:h-[0.75rem] [&_small]:align-top [&_small]:w-[calc(11.9375rem/1.5)] [&_small]:truncate [&_small]:inline-block `}
+      onClick={props.onClick}
+      style={style}>
       {props.type === 'episode' || props.type === 'show' ?
         <Image className={' rounded-xl '} src={props.src || props.image || ''} alt={props.title || props.name || ''} height={100} width={100} loading={'lazy'} style={imgStyle} />
         : <PlayIcon>
@@ -49,7 +51,7 @@ const Card = (props: Data) => {
       {
         props.type === 'audiobook' && <small>{props.authors?.join(', ')}</small>
       }
-    </div>
+    </div> : null
   )
 }
 

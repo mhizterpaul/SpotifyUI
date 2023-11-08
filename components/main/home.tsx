@@ -24,6 +24,7 @@ interface BasicData {
   authors?: string[];
   publisher?: string;
   type: string,
+  onClick?: () => any,
   release_date?: string,
   release_description?: string,
 };
@@ -175,10 +176,23 @@ const Row = ({ index, style }: { index: number, style: React.CSSProperties }) =>
     )
   };
 
+
   const ImageRow = useMemo(() => () => (
     <div className='flex justify-between gap-8 flex-wrap items-center overflow-hidden h-[14rem] ' style={style}>
       {
-        data[index].map((el) => <Card {...el} key={el.id} />)
+        data[index].map((el) => {
+          return el.type === 'episode' ||
+            el.type === 'show' ||
+            el.type === 'album' ||
+            el.type === 'playlist' ?
+            {
+              ...el, onClick: () => {
+                if(el.type === 'episode' || el.type === 'playlist') dispatch(pushRef('/' + el.type + '/' + el.id));
+                if(el.type === 'album') dispatch(pushRef('/playlist?album='+ el.id ));
+                if(el.type === 'show') dispatch(pushRef('/episode?show=' + el.id));
+              }
+            } : el
+        }).map((el) => <Card {...el} key={el.id} />)
       }
     </div>
   ), [loaded[index]])

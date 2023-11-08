@@ -7,7 +7,8 @@ import { Data } from './home';
 import { random } from '@/utils';
 import { getSeveralEpisodes, getEpisode, getSeveralShows } from '@/utils/api';
 import { useParams } from 'react-router-dom';
-import { useAppSelector } from '@/store/hooks';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
+import { pushRef } from '@/store/reducers/main_slice';
 
 type CallBack = (param: string) => Promise<any>;
 let data: Data[][] = [];
@@ -93,7 +94,20 @@ export default () => {
     const ImageRow = () => (
       <div className='flex gap-x-4 gap-y-8 flex-wrap items-center overflow-hidden mb-4 h-52' style={style}>
         {
-          data[index].map((el) => (() => useMemo(() => <Card {...el} key={el.id} />, []))())
+          data[index].map((el) => {
+            const dispatch = useAppDispatch();
+            return el.type === 'episode' ||
+              el.type === 'show' ||
+              el.type === 'album' ||
+              el.type === 'playlist' ?
+              {
+                ...el, onClick: () => {
+                  if (el.type === 'episode' || el.type === 'playlist') dispatch(pushRef('/' + el.type + '/' + el.id));
+                  if (el.type === 'album') dispatch(pushRef('/playlist?album=' + el.id));
+                  if (el.type === 'show') dispatch(pushRef('/episode?show=' + el.id));
+                }
+              } : el
+          }).map((el) => (() => useMemo(() => <Card {...el} key={el.id} />, []))())
         }
       </div>
     )

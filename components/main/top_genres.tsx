@@ -1,15 +1,17 @@
 import { RootState } from "@/store";
-import { ApiStatus } from "@/store/reducers/main_slice";
+import { ApiStatus, pushRef } from "@/store/reducers/main_slice";
 import { connect } from "react-redux";
 import Loader from "../network_request";
 import { getSeveralCategories } from "@/utils/api";
-import { Component } from "react";
+import { Component, useContext } from "react";
 import React from 'react'
 import Image from "next/image";
 import { Category } from "@/utils/types";
 import { random } from '@/utils'
 import Carousel from 'nuka-carousel'
 import { PiCaretRightBold, PiCaretLeftBold } from 'react-icons/pi'
+import { useAppDispatch } from "@/store/hooks";
+import { Context } from "@/app/rootProvider";
 
 type Props = {
     access_token: string | null,
@@ -113,10 +115,18 @@ class TopGenres extends Component<Props, { genres: any, updatedWithCarousel: boo
                                             return (
                                                 <div key={id} className={`w-full h-[calc(17.1875rem/1.5)] flex flex-nowrap ${((id + Number(innerImgCount)) >= (arr.length - 1)) ? 'justify-start gap-x-4' : Number(innerImgCount) < 3 ? 'justify-around' : 'justify-between'}`}>
                                                     {
-                                                        innerImgs.map((genre: Category) => {
-                                                            const bgColor = random(color);
-                                                            const myStyle = { ...style, background: bgColor }
-                                                            return (<figure key={genre.id} className={''} style={myStyle} ><Image src={genre.image} width={100} height={100} alt={genre.name} style={imgStyle} /><figcaption className='top-4 left-4 absolute text-xl font-black'>{genre.name}</figcaption></figure>);
+                                                        innerImgs.map((genre: Category, index) => {
+                                                            return (() => {
+                                                                const bgColor = random(color);
+                                                                const myStyle = { ...style, background: bgColor }
+                                                                const dispatch = useAppDispatch();
+                                                                const { setProp } = useContext(Context);
+                                                                const onClick = () => {
+                                                                    setProp('currentPlaylist', genre);
+                                                                    dispatch(pushRef('/playlist?category=' + genre.id));
+                                                                }
+                                                                return (<figure key={genre.id} className={''} onClick={onClick} style={myStyle} ><Image src={genre.image} width={100} height={100} alt={genre.name} style={imgStyle} /><figcaption className='top-4 left-4 absolute text-xl font-black'>{genre.name}</figcaption></figure>);
+                                                            })()
                                                         })
                                                     }
                                                 </div>

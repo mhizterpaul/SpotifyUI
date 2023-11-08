@@ -1,7 +1,7 @@
 'use client'
 import { BrowserRouter } from 'react-router-dom'
 import { createContext, useState } from 'react'
-import { Playlist, Episode, Track } from '../utils/types'
+import { Playlist, Episode, Track, Album, Show } from '../utils/types'
 
 export type OwnPlaylist = {
     name: string,
@@ -23,13 +23,12 @@ type Media = Episode | Playlist | Track | OwnPlaylist;
 export interface V {
     Playlist: { [key: string]: Playlist } & { [key: string]: OwnPlaylist },
     Tracks: { [key: string]: Track },
-    nowPlaying: Track | null,
-    currentPlaylist: Playlist | null,
+    nowPlaying: Episode | Track | null,
+    currentPlaylist: Show | Album | { [key: string]: Episode } | OwnPlaylist | Playlist | null,
     Episodes: {
         [key: string]: Episode
     },
     BgColor: string,
-    Cache: { [key: string]: Playlist } & { [key: string]: Episode },
     setProp: (type: T, value: string | Playlist | Track) => void,
     addMedia: (type: T, id: T, media: Media) => void,
     removeMedia: (type: T, id: T) => void
@@ -48,9 +47,6 @@ const context = {
     Episodes: {
 
     },
-    Cache: {
-
-    }
 
 } as V;
 export const Context = createContext(context);
@@ -74,7 +70,7 @@ function RootRouter({ children }: { children: React.ReactNode }) {
             }
         }))
     }
-    const setProp = (type: T, value: string | Playlist | Track) => {
+    const setProp = (type: T, value: string | Episode | Album | Show | OwnPlaylist | Playlist | Track | { [key: string]: Episode }) => {
         setState(prev => ({
             ...prev,
             [type]: value

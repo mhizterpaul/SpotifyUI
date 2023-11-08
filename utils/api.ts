@@ -72,23 +72,28 @@ export function getEpisode(access_token: string, id: string){
         headers: {
             'Authorization': 'Bearer ' + access_token
         }}).then(
-            ({data}:{data: SpotifyApi.EpisodeObject}) => ({publisher: data.show.publisher, total: data.show.total_episodes})
+            ({data}:{data: SpotifyApi.EpisodeObject}) => ({
+                audio_preview_url: data.audio_preview_url,
+                description: data.description,
+                duration_ms: data.duration_ms,
+                id: data.id,
+                type: data.type,
+                image: data.images[0].url,
+                release_date: data.release_date,
+                name: data.name,
+                show: {
+                    description: data.show.description,
+                    id: data.show.id,
+                    image: data.show.images[0].url,
+                    name: data.show.name,
+                    publisher: data.show.publisher,
+                    type: data.show.type,
+                    total_episodes: data.show.total_episodes
+                }
+            })
         )
 }
 
-export function getcategoryplaylist(access_token:string, category: string, offset: string, country: Country) {
-    return axios.get(`https://api.spotify.com/v1/browse/categories/${category}/playlists?country=${country}&offset=${offset}&limit=6`, {
-        headers: {
-            'Authorization': 'Bearer ' + access_token
-        }}).then(({data}): CategoryPlaylist[] =>  data.playlists.map((playlist: SpotifyApi.PlaylistObjectSimplified) => ({
-                id: playlist.id,
-                name: playlist.name,
-                type: playlist.type,
-                image: playlist.images[0].url,
-                owner: playlist.owner.display_name
-            }))
-        )
-}
 
 export function getAlbum(access_token: string, id:string){
     return axios.get(`https://api.spotify.com/v1/albums/${id}`, {
@@ -237,4 +242,58 @@ export function getSeveralCategories(access_token:string,country: Country ,offse
         })
 }
 
-
+export function getCategoyPlaylist (access_token: string, id:string, country:Country){
+    return  axios.get(`https://api.spotify.com/v1/search?q=${id}&type=track&market=${country}&limit=25`, {
+        headers: {
+            'Authorization': 'Bearer ' + access_token
+        }}).then(({data}:{data: SpotifyApi.TrackSearchResponse}) => data.tracks.items.map(track => ({
+         album: {
+            album_type: track.album.album_type,
+            id: track.album.id,
+            image: track.album.images[0].url,
+            name: track.album.name,
+            release_date: track.album.release_date,
+            artists: track.album.artists.map(artist => artist.name),
+            type: track.album.type
+         },
+         artists: track.artists.map(artist => ({
+            id: artist.id,
+            followers: artist.followers.total,
+            image: artist.images[0].url,
+            name: artist.name,
+            popularity: artist.popularity,
+            type: artist.type,
+         })),
+         duration_ms: track.duration_ms,
+         id: track.id,
+         name: track.name,
+         popularity: track.popularity,
+         preview_url: track.preview_url,
+         track_number: track.track_number,
+         type: track.type,
+     })))
+ }
+ export function getShow (access_token:string, id:string){
+    return  axios.get(`https://api.spotify.com/v1/shows/${id}`, {
+        headers: {
+            'Authorization': 'Bearer ' + access_token
+        }}).then(({data}:{data: SpotifyApi.ShowObjectFull})=> ({
+            description: data.description,
+            id: data.id,
+            image: data.images[0].url,
+            name: data.name,
+            type: data.type,
+            media_type: data.media_type,
+            publisher: data.publisher,
+            episodes: data.episodes.items.map(episode => ({
+                audio_preview_url: episode.audio_preview_url,
+                description: episode.description,
+                duration_ms: episode.duration_ms,
+                id: episode.id,
+                type: episode.type,
+                image: episode.images[0].url,
+                release_date: episode.release_date,
+                name: episode.name
+            }))
+        }))
+ }

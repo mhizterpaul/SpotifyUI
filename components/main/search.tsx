@@ -5,7 +5,10 @@ import Image from 'next/image'
 import { store } from '../../store/index'
 import { random } from '@/utils';
 import TopGenres from './top_genres';
-import { useState, useMemo, memo } from 'react';
+import { useState, useMemo, memo, useContext } from 'react';
+import { pushRef } from '@/store/reducers/main_slice';
+import { useAppDispatch } from '@/store/hooks';
+import { Context } from '@/app/rootProvider';
 
 
 
@@ -14,7 +17,8 @@ const Search = () => {
 
     const data: Category[][] = [], loaded: boolean[] = [];
     let itemCount = 8;
-
+    const dispatch = useAppDispatch()
+    const { setProp } = useContext(Context);
     const loadMoreItems = (startIndex: number, stopIndex: number) => {
         const access_token = store.getState().main.access_token;
         if (!access_token) return;
@@ -69,12 +73,16 @@ const Search = () => {
 
         const ImageRow = () => (
             <div className={' flex justify-between items-center flex-wrap w-full gap-y-12 overflow-hidden '} style={style}>
-                {data[index] && data[index].map((cateogry: Category) => {
+                {data[index] && data[index].map((category: Category) => {
                     return (() => useMemo(() => {
                         const bgColors = random(['#27856A', '#8D67AB', '#1E3264', '#E8115B']);
                         const myStyle = { ...ImgContainerstyle, backgroundColor: bgColors }
-                        return (<figure key={cateogry.id} className={''} style={myStyle}><Image src={cateogry.image} width={100} height={100} fill={false} alt={cateogry.name} style={imgStyle} />
-                            <figcaption className='top-4 left-4 absolute text-lg font-black'>{cateogry.name}</figcaption></figure>)
+                        const onClick = () => {
+                            setProp('currentPlaylist', category);
+                            dispatch(pushRef('/playlist?category=' + category.id));
+                        }
+                        return (<figure key={category.id} onClick={onClick} className={''} style={myStyle}><Image src={category.image} width={100} height={100} fill={false} alt={category.name} style={imgStyle} />
+                            <figcaption className='top-4 left-4 absolute text-lg font-black'>{category.name}</figcaption></figure>)
                     }, []))()
                 })}
             </div>
