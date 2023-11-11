@@ -2,7 +2,7 @@ import { BsPlayCircle } from "react-icons/bs"
 import { SlHeart, SlOptions } from 'react-icons/sl'
 import { LuClock3, LuPlusCircle } from 'react-icons/lu'
 import { IoShareOutline } from 'react-icons/io5'
-import { useContext, useEffect, useRef, useState } from "react";
+import { useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import Image from 'next/image'
 import { useParams, useSearchParams } from 'react-router-dom'
 import { ShareSocial } from 'react-share-social'
@@ -24,7 +24,6 @@ import { hexToHSL, random } from "@/utils";
 import styles from './main.list.module.css'
 import { AxiosError } from "axios";
 
-//please load playlist yourself by making a network request
 
 const Playlist = () => {
     const { id } = useParams();
@@ -36,11 +35,11 @@ const Playlist = () => {
     const { removeMedia, currentPlaylist, addMedia, Tracks, Playlist, setProp } = useContext(Context)
     const [error, setError] = useState<AxiosError | {}>({});
     const containerRef = useRef<HTMLDivElement>(null);
-    const [fetchedPlaylist, setFetchedPlaylist] = useState<Play | Play & { tracks: Track[] } | Album | { [key: string]: any }>({});
+    const [fetchedPlaylist, setFetchedPlaylist] = useState<Play | Play & { tracks: Track[] } | Album | {}>({});
     const [miniTable, setMiniTable] = useState((window.innerWidth - 300) <= 620 ? true : false);
     const defaultSrc = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxZW0iIGhlaWdodD0iMWVtIiB2aWV3Qm94PSIwIDAgMjQgMjQiPjxwYXRoIGZpbGw9ImN1cnJlbnRDb2xvciIgZD0iTTIwIDN2MTRhNCA0IDAgMSAxLTItMy40NjVWNUg5djEyYTQgNCAwIDEgMS0yLTMuNDY1VjNoMTNaTTUgMTlhMiAyIDAgMSAwIDAtNGEyIDIgMCAwIDAgMCA0Wm0xMSAwYTIgMiAwIDEgMCAwLTRhMiAyIDAgMCAwIDAgNFoiLz48L3N2Zz4=';
     useEffect(() => {
-        if (containerRef.current === null) return
+        if (containerRef.current == null) return
         const resizeObserver = new ResizeObserver(entries => {
             for (let entry of entries) {
                 if (!entry.contentBoxSize) continue
@@ -54,29 +53,30 @@ const Playlist = () => {
         setProp('BgColor', id === 'songs' ? '#503A9B' : bgColor);
     }, [bgColor]);
     useEffect(() => {
-        if (access_token && (id || searchId)) {
-            (
-                async () => {
-                    try {
-                        let res = {};
-                        if (id !== 'songs' && isNaN(Number(id))) res = await getPlaylist(access_token, id);
-                        if (searchParams.get('category')) {
-                            const temp = await getCategoyPlaylist(access_token, searchId, random(['US', 'NG', 'GB', 'ZA', 'JM', 'CA', 'GH']));
-                            res = {
-                                ...currentPlaylist,
-                                tracks: temp
-                            }
+        if ((!id && !searchId) || !access_token || id === 'songs' || !isNaN(Number(id))) return;
+        (
+            async () => {
+
+                try {
+                    let res = {};
+                    if (id !== 'songs' && isNaN(Number(id))) res = await getPlaylist(access_token, id);
+                    if (searchParams.get('category')) {
+                        const temp = await getCategoyPlaylist(access_token, searchId, random(['US', 'NG', 'GB', 'ZA', 'JM', 'CA', 'GH']));
+                        res = {
+                            ...currentPlaylist,
+                            tracks: temp
                         }
-                        if (searchParams.get('album')) res = await getAlbum(access_token, searchId)
-
-                        setFetchedPlaylist(res);
-
-                    } catch (e: AxiosError | any) {
-                        setError(e);
                     }
+                    if (searchParams.get('album')) res = await getAlbum(access_token, searchId)
+
+                    setFetchedPlaylist(res);
+
+                } catch (e: AxiosError | any) {
+                    setError(e);
+                    console.log(e);
                 }
-            )();
-        }
+            }
+        )();
     }, [access_token, id, searchId]);
 
     const ownPlaylist = Object.fromEntries(Object.entries(Playlist).filter((value) => typeof Number(value[0]) === 'number')) as { [key: string]: OwnPlaylist };
@@ -92,17 +92,17 @@ const Playlist = () => {
         followers: 0,
         total: Object.values(Tracks).length,
         image: '',
-        items: {
-            added_at: (() => { const date = new Date; return (date.getMonth() + 1) + '/' + date.getDate() + '/' + date.getFullYear() })(),
-            track: Object.values(Tracks)
-        }//@ts-ignore
-    } : !isNaN(Number(id)) ? ownPlaylist[id] : fetchedPlaylist;
+        items: Object.values(Tracks)
+    } : !isNaN(Number(id)) ? id ? ownPlaylist[id] : {} : fetchedPlaylist;
 
 
     if (!access_token) return <div className='text-center my-auto text-2xl'><RiErrorWarningLine className='text-5xl block mx-auto mb-4' />cannot connect to the internet </div>;
 
-    if (!Object.keys(fetchedPlaylist).length && (searchId || (isNaN(Number(id)) && id !== 'songs'))) return <Loader status='PENDING' meta={'Playlist'} />
-    if (Object.keys(error).length || !id || !searchId || !Object.keys(Data).length) return <div className='text-center my-auto text-xl font-extrabold'><div className='text-2xl'><RiErrorWarningLine /></div>Couldn't find that playlist <br /> <span className='text-sm font-semibold'>search for something else?</span> </div>;
+    if (!Data || Object.keys(error).length || (!id && !searchId)) return <div className='text-center my-auto text-xl font-extrabold'><div className='text-2xl inline-block'><RiErrorWarningLine /></div>Couldn't find that playlist <br /> <span className='text-sm font-semibold'>search for something else?</span> </div>;
+
+    if (!Object.keys(Data).length) return <Loader status='PENDING' meta={'Playlist'} />
+
+
 
 
     return (() => {
@@ -117,17 +117,28 @@ const Playlist = () => {
                         </div> :
                             bgColor ? <Image src={data.image} className={'shadow-black shadow-md'} width={195} height={195} alt={data.name} /> : <BgColorDetector imageUrl={data.image} callBack={(hexCode) => setBgColor(hexCode)} />}
                         <div className='flex flex-col gap-y-4 '>
-                            <small className="text-sm">{data.album_type || 'playlist'}</small>
+                            {<small className="text-sm">{data.album_type || 'playlist'}</small>}
+
                             <h3 className={id === 'songs' ? ' text-5xl ' : "text-3xl "} >{data.name}</h3>
-                            <p className='text-sm'>{data.description}</p>
-                            <span><span><b>{data.owner || data.artists.join(', ')}</b> &bull; {data.followers} &bull; {data.total || data.tracks.length + ' songs'} </span> {'about ' + data.total || data.tracks.length * 3 / 60 + ' hr'} {(data.total || data.tracks.length * 3) % 60 + ' min'}</span>
+
+                            {data.description ? <p className='text-sm'>{data.description}</p> : null}
+
+                            <span>
+                                <span>
+                                    {data.owner || data.artists ? <b>{data.owner || data.artists?.join(', ')}</b> : null} &bull;
+
+                                    {data.popularity || data.followers || null} •
+
+                                    {data.items?.length || data.tracks?.length || 0} songs
+                                </span>
+                                about {(data.items?.length || data.tracks?.length || 0) * 2.5 / 60} hr {(data.items?.length || data.tracks?.length || 0) * 2.5 % 60} min</span>
                         </div>
                     </h2>
                     <div className=' ' >
                         <h3 className={' flex justify-start items-center gap-x-4 '}>
-                            {!data.items.track.length || data.tracks.length ? null : <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" className={`h-16 w-16 text-[#1ed760] rounded-full 
+                            {!data.items?.length || !data.tracks?.length ? null : <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" className={`h-16 w-16 text-[#1ed760] rounded-full 
                         bg-gradient-to-r from-black to-black bg-no-repeat bg-center `}
-                                onClick={() => { setProp('nowPlayling', data.items?.track[0] || data.tracks[0]); setProp('currentPlaylist', data); dispatch(setNowPlayingView(true)) }} style={{ backgroundSize: '40% 40%' }} viewBox="0 0 24 24">
+                                onClick={() => { dispatch(setNowPlayingView(true)); setProp('nowPlaying', data.items[0]?.track || data.tracks[0]); setProp('currentPlaylist', data); }} style={{ backgroundSize: '40% 40%' }} viewBox="0 0 24 24">
                                 <path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10s10-4.48 10-10S17.52 2 12 2zM9.5 16.5v-9l7 4.5l-7 4.5z" /></svg>}
                             {isNaN(Number(id)) && id !== 'songs' ? (!Playlist[id] ? < SlHeart className='hover:text-white ' onClick={() => { addMedia('Playlist', data.id, data) }} /> : <FaHeart className={'text-[#1ed760]'} onClick={() => { removeMedia('Playlist', id) }} />) : null}
                             {id !== 'songs' ? <SlOptions /> : null}
@@ -143,29 +154,37 @@ const Playlist = () => {
                                 </tr>
                             </thead>
                             <tbody className={''}>
-                                {data.items.track.length || data.tracks.length ? (data.items.track || data.tracks).map((track: Track, index: number) => (() => {
+                                {(data.items || data.tracks).map((item: Track | { added_at: string, track: Track }, index: number) => (() => {
                                     const [menu, setMenu] = useState(false);
                                     const [hover, setHover] = useState(false);
                                     const trRef = useRef<HTMLTableRowElement>(null);
                                     const [position, setPosition] = useState({ top: '', right: '' });
                                     useEffect(() => {
                                         if (!trRef.current) return
-                                        const { top, right, width } = trRef.current.getBoundingClientRect();
+                                        const { top, width } = trRef.current.getBoundingClientRect();
                                         const insetTop = window.innerHeight - top >= window.innerHeight / 2 ? '110%' : '-10%';
                                         const insetRight = Math.abs(window.innerWidth - width) + 15 + 'px';
                                         setPosition(() => ({ top: insetTop, right: insetRight }))
 
                                     }, [trRef, menu])
 
+
                                     return (
                                         <tr ref={trRef} className='relative hover:bg-[rgba(114,114,114,0.62)] rounded-sm' onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}
-                                            onClick={() => { setProp('nowPlaying', track); setProp('currentPlaylist', data); }}>
+                                            onClick={() => { setProp('nowPlaying', item); setProp('currentPlaylist', data); }}>
                                             <td>{hover ? <BiPlay /> : index}</td>
-                                            <td><Image height={45} width={45} alt={track.name} src={track.album.image} className={' inline-block pl-2'} /><span>{track.name}</span><br /><span>{track.artists.map(artist => artist.name).join(', ')}</span></td>
-                                            {data.type === 'album' ? null : <><td onClick={() => dispatch(pushRef('/playlist?album=' + track.album.id))}>{track.album.name}</td>
-                                                {miniTable ? null : <td>{data.items.added_at}</td>}</>}
-                                            <td> {Tracks[track.id] ? <FaHeart onClick={() => { removeMedia('Track', id) }} /> : hover ? <SlHeart onClick={() => { Tracks[track.id] = track }} /> : null}
-                                                {track.duration_ms / 60 + ':' + track.duration_ms % 60}
+                                            <td>
+                                                <Image height={45} width={45} alt={item.name || item.track.name} src={item.track?.album?.image || track.album?.image || defaultSrc} className={' inline-block pl-2'} />
+                                                {item.name || item.track.name ? <><span>{item.name || item.track.name}</span><br /></> : null}
+
+                                                <span>{(item.artists || item.track?.artists || []).map(artist => artist.name).join(', ')}</span></td>
+
+                                            {data.type !== 'album' || !item.added_at ? null :
+                                                <><td onClick={() => dispatch(pushRef('/playlist?album=' + (item.album?.id || item.track?.album?.id || '')))}>{item.album?.name || item.track?.album.name}</td>
+                                                    {miniTable ? null : <td>{track.added_at}</td>}
+                                                </>}
+                                            <td> {Tracks[item.track?.id || item.id] ? <FaHeart onClick={() => { removeMedia('Track', item.id || item.track?.id) }} /> : hover ? <SlHeart onClick={() => { addMedia('Tracks', item.id || item.track?.id, item) }} /> : null}
+                                                {(item.duration_ms || item.track.duration_ms || 0) / 60} : {item.duration_ms || item.track.duration_ms || 0 % 60}
                                                 {hover && <SlOptions onClick={setMenu((menu) => !menu)} />}</td>
                                             {menu && <ul className='absolute '>
                                                 <li><LuPlusCircle /> Add to playlist</li>
@@ -175,12 +194,12 @@ const Playlist = () => {
                                         </tr>
                                     )
                                 })()
-                                ) : null}
+                                )}
                             </tbody>
                         </table>
                         {
 
-                            !isNaN(Number(id)) && !ownPlaylist[id].items.track.length ? (
+                            id && !isNaN(Number(id)) && !ownPlaylist[id].items.length ? (
                                 <div className="flex items-center justify-between">
                                     <div>
                                         <h3>Let's find something for your playlist</h3>

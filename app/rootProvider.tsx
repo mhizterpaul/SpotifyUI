@@ -1,7 +1,7 @@
 'use client'
 import { BrowserRouter } from 'react-router-dom'
 import { createContext, useState } from 'react'
-import { Playlist, Episode, Track, Album, Show } from '../utils/types'
+import { Playlist, Episode, Track, Album, Show, CategoryPlaylist, EpisodeFull } from '../utils/types'
 
 export type OwnPlaylist = {
     name: string,
@@ -13,23 +13,26 @@ export type OwnPlaylist = {
     image: string | undefined,
     items: {
         added_at: string,
-        track: Track[]
-    }
+        track: Track
+    }[]
 }
 
 type T = string | number;
 
-type Media = Episode | Playlist | Track | OwnPlaylist;
-export interface V {
+type Media = Album | Episode | CategoryPlaylist | EpisodeFull | Track | OwnPlaylist | Playlist;
+
+interface U {
     Playlist: { [key: string]: Playlist } & { [key: string]: OwnPlaylist },
-    Tracks: { [key: string]: Track },
+    Tracks: { [key: string]: Track },//for liked songs
     nowPlaying: Episode | Track | null,
     currentPlaylist: Show | Album | { [key: string]: Episode } | OwnPlaylist | Playlist | null,
     Episodes: {
         [key: string]: Episode
     },
-    BgColor: string,
-    setProp: (type: T, value: string | Playlist | Track) => void,
+    BgColor: string
+}
+export interface V extends U {
+    setProp: (type: keyof U, value: string | { [key: string]: any }) => void,
     addMedia: (type: T, id: T, media: Media) => void,
     removeMedia: (type: T, id: T) => void
 }
@@ -70,7 +73,7 @@ function RootRouter({ children }: { children: React.ReactNode }) {
             }
         }))
     }
-    const setProp = (type: T, value: string | Episode | Album | Show | OwnPlaylist | Playlist | Track | { [key: string]: Episode }) => {
+    const setProp = (type: T, value: string | Episode | Album | Show | CategoryPlaylist | OwnPlaylist | Playlist | Track | { [key: string]: Episode }) => {
         setState(prev => ({
             ...prev,
             [type]: value

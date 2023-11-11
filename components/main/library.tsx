@@ -35,25 +35,23 @@ const Library = () => {
   const defaultSrc = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxZW0iIGhlaWdodD0iMWVtIiB2aWV3Qm94PSIwIDAgMjQgMjQiPjxwYXRoIGZpbGw9IiM3ZjdmN2YiIGQ9Ik0yMiAuODQ3VjE3YTQgNCAwIDEgMS0yLTMuNDY1VjMuMTUzTDggNC44NjdWMTlhNCA0IDAgMSAxLTItMy40NjVWMy4xMzNMMjIgLjg0N1pNNiAxOWEyIDIgMCAxIDAtNCAwYTIgMiAwIDAgMCA0IDBabTE0LTJhMiAyIDAgMSAwLTQgMGEyIDIgMCAwIDAgNCAwWiIvPjwvc3ZnPg==';
   const editIcon = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxZW0iIGhlaWdodD0iMWVtIiB2aWV3Qm94PSIwIDAgMjQgMjQiPjxwYXRoIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2U2ZTZlNiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBzdHJva2Utd2lkdGg9IjIiIGQ9Ik0xNyAzYTIuODUgMi44MyAwIDEgMSA0IDRMNy41IDIwLjVMMiAyMmwxLjUtNS41WiIvPjwvc3ZnPg=='
   const res = {
-    name: inputRef?.current?.value || '',
+    name: '',
     owner: '',
     followers: 0,
     total: 0,
     id: ownPlaylist.length,
+    release_date: '',
     image: defaultSrc,
     type: 'playlist',
-    description: descriptionRef.current?.value || '',
-    items: {
-      added_at: (() => { const date = new Date; return (date.getMonth() + 1) + '/' + date.getDate() + '/' + date.getFullYear() })(),
-      track: []
-    }
+    description: '',
+    items: []
   }
   const save = (e: React.ChangeEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!inputRef.current || !descriptionRef.current) return;
     res.name = inputRef.current.value;
     res.description = descriptionRef.current.value;
-    res.items.added_at = (() => { const date = new Date; return (date.getMonth() + 1) + '/' + date.getDate() + '/' + date.getFullYear() })();
+    res.release_date = (() => { const date = new Date; return (date.getMonth() + 1) + '/' + date.getDate() + '/' + date.getFullYear() })();
     addMedia('Playlist', String(Object.keys(ownPlaylist).length), res);
     setCloseForm(true)
 
@@ -161,9 +159,9 @@ const Library = () => {
 
   return <>
     {
-      (Object.values(Playlist).length && !id) && <section>
+      (Object.keys(Playlist).length && !id) && <section>
         <h2 className='flex justify-between items-center'>Playlists <span className={`mr-2 ${!seeAll || (Object.values(Playlist).length < 6) ? ' hidden ' : ' inline-block '}`} onClick={() => setSeeAll(false)}>See all</span><LiaTimesSolid className={`mr-2 ${seeAll ? 'inline-block' : 'hidden'}`} onClick={() => setSeeAll(true)} /></h2>
-        {Playlist.length && (seeAll ? Object.values(Playlist) : Object.values(Playlist).slice(0, 6)).map((playlist: Playlist) => <p className='flex gap-x-4 justify-start items-center h-14'>
+        {(seeAll ? Object.values(Playlist) : Object.values(Playlist).slice(0, 6)).map((playlist: Playlist) => <p className='flex gap-x-4 justify-start items-center h-14'>
           <Image src={playlist.image} className={'rounded-xl'} alt={playlist.name} height={100} width={100} />
           {playlist.description}
           <span className='font-bold text-sm text-gray-600'>

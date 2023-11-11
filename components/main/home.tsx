@@ -131,6 +131,14 @@ const loadMoreItems = (startIndex: number, stopIndex: number) => {
     }
 
   }
+  return new Promise<void>((resolve) => {
+    const timeOut = setInterval(() => {
+      if (loaded.slice(startIndex, stopIndex).every((item) => item)) {
+        clearInterval(timeOut);
+        resolve();
+      }
+    }, 1000)
+  });
 }
 
 const Row = ({ index, style }: { index: number, style: React.CSSProperties }) => {
@@ -143,6 +151,7 @@ const Row = ({ index, style }: { index: number, style: React.CSSProperties }) =>
     loadMoreItems(0, 19);
     const setLoadedInterval = setInterval(() => loaded[index] && (() => { setLoadedState(true); clearInterval(setLoadedInterval) })(), 1000)
   }, [access_token]);
+
 
   const FirstRow = useMemo(() => () => (
 
@@ -178,7 +187,7 @@ const Row = ({ index, style }: { index: number, style: React.CSSProperties }) =>
 
 
   const ImageRow = useMemo(() => () => (
-    <div className='flex justify-between gap-8 flex-wrap items-center overflow-hidden h-[14rem] ' style={style}>
+    <div className='flex justify-between gap-x-8 gap-y-10  flex-wrap items-center overflow-hidden h-[14rem] ' style={style}>
       {
         data[index].map((el) => {
           return el.type === 'episode' ||
@@ -187,9 +196,9 @@ const Row = ({ index, style }: { index: number, style: React.CSSProperties }) =>
             el.type === 'playlist' ?
             {
               ...el, onClick: () => {
-                if(el.type === 'episode' || el.type === 'playlist') dispatch(pushRef('/' + el.type + '/' + el.id));
-                if(el.type === 'album') dispatch(pushRef('/playlist?album='+ el.id ));
-                if(el.type === 'show') dispatch(pushRef('/episode?show=' + el.id));
+                if (el.type === 'episode' || el.type === 'playlist') dispatch(pushRef('/' + el.type + '/' + el.id));
+                if (el.type === 'album') dispatch(pushRef('/playlist?album=' + el.id));
+                if (el.type === 'show') dispatch(pushRef('/episode?show=' + el.id));
               }
             } : el
         }).map((el) => <Card {...el} key={el.id} />)

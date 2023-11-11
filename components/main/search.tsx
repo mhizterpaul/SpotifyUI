@@ -15,9 +15,8 @@ import { Context } from '@/app/rootProvider';
 
 const Search = () => {
 
-    const data: Category[][] = [], loaded: boolean[] = [];
-    let itemCount = 8;
     const dispatch = useAppDispatch()
+    const data: Category[][] = [], loaded: boolean[] = [];
     const { setProp } = useContext(Context);
     const loadMoreItems = (startIndex: number, stopIndex: number) => {
         const access_token = store.getState().main.access_token;
@@ -30,13 +29,19 @@ const Search = () => {
             }
             if ((loaded[index] === false) || loaded[index]) continue;
             loaded[index] = false;
-            if (access_token == null) return;
             getSeveralCategories(access_token, random(countries), String(index))
                 .then(
                     (res) => { data[index] = res; loaded[index] = true }
                 )
         }
-
+        return new Promise<void>((resolve) => {
+            const timeOut = setInterval(() => {
+                if (loaded.slice(startIndex, stopIndex).every((item) => item)) {
+                    clearInterval(timeOut);
+                    resolve();
+                }
+            }, 1000)
+        });
 
     },
         calcItemSize = (index: number) => !index ? 27.1875 * 16 / 1.5 : (index === 1 ? 7 : 17.4375) * 16 / 1.5,
@@ -44,10 +49,6 @@ const Search = () => {
 
     const Row = ({ style, index }: { style: React.CSSProperties, index: number }) => {
         const [loadedState, setLoadedState] = useState(loaded[index]);
-        if (loaded[itemCount]) {
-            itemCount = 16;
-            loadMoreItems(9, 16);
-        }
         const init = useMemo(() => {
             const setLoadedInterval = setInterval(() => loaded[index] && (() => { setLoadedState(true); clearInterval(setLoadedInterval) })(), 1000)
         }, []);
@@ -71,22 +72,21 @@ const Search = () => {
             right: '0'
         }
 
-        const ImageRow = () => (
-            <div className={' flex justify-between items-center flex-wrap w-full gap-y-12 overflow-hidden '} style={style}>
+        const ImageRow = useMemo(() => () => (
+            <div className={' flex justify-between gap-x-8 items-center flex-wrap w-full gap-y-12 overflow-hidden '} style={style}>
                 {data[index] && data[index].map((category: Category) => {
-                    return (() => useMemo(() => {
-                        const bgColors = random(['#27856A', '#8D67AB', '#1E3264', '#E8115B']);
-                        const myStyle = { ...ImgContainerstyle, backgroundColor: bgColors }
-                        const onClick = () => {
-                            setProp('currentPlaylist', category);
-                            dispatch(pushRef('/playlist?category=' + category.id));
-                        }
-                        return (<figure key={category.id} onClick={onClick} className={''} style={myStyle}><Image src={category.image} width={100} height={100} fill={false} alt={category.name} style={imgStyle} />
-                            <figcaption className='top-4 left-4 absolute text-lg font-black'>{category.name}</figcaption></figure>)
-                    }, []))()
+
+                    const bgColors = useMemo(() => random(['#27856A', '#8D67AB', '#1E3264', '#E8115B']), []);
+                    const myStyle = { ...ImgContainerstyle, backgroundColor: bgColors }
+                    const onClick = () => {
+                        setProp('currentPlaylist', category);
+                        dispatch(pushRef('/playlist?category=' + category.id));
+                    }
+                    return (<figure key={category.id} onClick={onClick} className={''} style={myStyle}><Image src={category.image} width={100} height={100} fill={false} alt={category.name} style={imgStyle} />
+                        <figcaption className='top-4 left-4 absolute text-lg font-black w-[calc((14.5rem/1.5)-1rem)] truncate'>{category.name}</figcaption></figure>)
                 })}
             </div>
-        )
+        ), []);
 
 
 
@@ -100,7 +100,7 @@ const Search = () => {
     }
 
 
-    return <SeeAll Row={Row} loadMoreItems={loadMoreItems} calcItemSize={calcItemSize} isItemLoaded={isItemLoaded} itemCount={itemCount} />
+    return <SeeAll Row={Row} loadMoreItems={loadMoreItems} calcItemSize={calcItemSize} isItemLoaded={isItemLoaded} itemCount={13} />
 }
 
 export default Search

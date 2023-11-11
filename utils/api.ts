@@ -1,5 +1,5 @@
 import axios from 'axios';
-import {CategoryPlaylist, Playlist, AudioBook, Country, AudioBookCountry} from './types'
+import {CategoryPlaylist, Playlist, AudioBook, Country, AudioBookCountry, Track} from './types'
 
 
 
@@ -33,7 +33,7 @@ export function getNewAlbumReleases (access_token: string, offset:string, countr
 export function getSeveralArtists (access_token: string, offset: string, country: Country){
     return search('artist',access_token, offset, country).then(({data}:{data: SpotifyApi.ArtistSearchResponse}) => data.artists.items.map(artist => ({
         id: artist.id,
-        image: !artist.images.length ? null : artist.images[0].url,
+        image: !artist.images?.length ? null : artist.images[0].url,
         name: artist.name,
         popularity: artist.popularity,
         type: artist.type
@@ -84,7 +84,7 @@ export function getEpisode(access_token: string, id: string){
                 show: {
                     description: data.show.description,
                     id: data.show.id,
-                    image: data.show.images[0].url,
+                    image: data.show.images[0]?.url,
                     name: data.show.name,
                     publisher: data.show.publisher,
                     type: data.show.type,
@@ -149,7 +149,6 @@ export function getPlaylist(access_token:string, id: string){
                 'Authorization': 'Bearer ' + access_token
             }
         }).then (({data}) : Playlist => {
-            
             return {
                 name: data.name,
                 image: data.images[0].url,
@@ -159,54 +158,35 @@ export function getPlaylist(access_token:string, id: string){
                 total: data.tracks.total,
                 type: data.type,
                 owner: data.owner.display_name,
-                items: data.tracks.items.map((item) => ({
-            added_at: item.added_at,
-            track: item.track.map((track) => {
-                return track.type === 'track'? {
-                    album:{
-                        album_type: track.album_type,
-                        total_tracks: track.album.total_tracks,
-                        id: track.album.id,
-                        image: track.album.images[0].url,
-                        name: track.album.name,
-                        type: track.album.type,
-                        release_date: track.album.release_date,
-                        artists: track.artists.map((artist: SpotifyApi.ArtistObjectSimplified) => artist.name)
-                    },
-                    artists: track.artists.map((artist: SpotifyApi.ArtistObjectFull)=> ({
-                        id: artist.id,
-                        image: artist.images[0].url,
-                        name: artist.name,
-                        type: artist.type,
-                        popularity: artist.popularity,
-
-                    })),
-                    duration_ms: track.duration_ms,
-                    id: track.id,
-                    name: track.name,
-                    popularity: track.popularity,
-                    preview_url: track.preview_url,
-                    track_number: track.track_number,
-                    type: track.type
-                }: {
-                    audio_preview_url: track.audio_preview_url,
-                    description: track.description,
-                    duration_ms: track.duration_ms,
-                    id: track.id,
-                    image: track.images[0].url,
-                    name: track.name,
-                    release_date: track.release_date,
-                    type: track.type,
-                    show: {
-                        description: track.show.description,
-                        id: track.show.id,
-                        image: track.show.images[0].url,
-                        name: track.show.name,
-                        publisher: track.show.publisher,
-                        type: track.show.type,
-                        total_episodes: track.show.total_episodes
-                    }
-                }})
+                items: data.tracks.items.filter((item)=> item.track.type === 'track' ).map(({added_at, track}) => ({
+            added_at: added_at,
+            track: {
+                album:{
+                    album_type: track.album.album_type,
+                    total_tracks: track.album.total_tracks,
+                    id: track.album.id,
+                    image: track.album.images[0].url,
+                    name: track.album.name,
+                    type: track.album.type,
+                    release_date: track.album.release_date,
+                    artists: track.album.artists.map((artist: SpotifyApi.ArtistObjectSimplified) => artist.name)
+                },
+                artists: track.artists.map((artist: SpotifyApi.ArtistObjectFull)=> ({
+                    id: artist.id,
+                    image: artist.images ? artist.images[0].url : undefined,
+                    name: artist.name,
+                    type: artist.type,
+                    popularity: artist.popularity,
+        
+                })),
+                duration_ms: track.duration_ms,
+                id: track.id,
+                name: track.name,
+                popularity: track.popularity,
+                preview_url: track.preview_url,
+                track_number: track.track_number,
+                type: track.type
+            }
         }))}
     })}
 
@@ -297,3 +277,5 @@ export function getCategoyPlaylist (access_token: string, id:string, country:Cou
             }))
         }))
  }
+
+ 

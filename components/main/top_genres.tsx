@@ -3,15 +3,15 @@ import { ApiStatus, pushRef } from "@/store/reducers/main_slice";
 import { connect } from "react-redux";
 import Loader from "../network_request";
 import { getSeveralCategories } from "@/utils/api";
-import { Component, useContext } from "react";
+import { Component } from "react";
 import React from 'react'
 import Image from "next/image";
 import { Category } from "@/utils/types";
 import { random } from '@/utils'
 import Carousel from 'nuka-carousel'
 import { PiCaretRightBold, PiCaretLeftBold } from 'react-icons/pi'
-import { useAppDispatch } from "@/store/hooks";
-import { Context } from "@/app/rootProvider";
+import { store } from '@/store';
+import { Context, V } from "@/app/rootProvider";
 
 type Props = {
     access_token: string | null,
@@ -64,7 +64,8 @@ class TopGenres extends Component<Props, { genres: any, updatedWithCarousel: boo
 
     timeStamp = 0;
     debounce: NodeJS.Timeout | null = null;
-
+    static contextType = Context;
+    context!: React.ContextType<typeof Context>;
     debouncedRecalcBoundingRect(e: UIEvent): any {
         if (this.timeStamp == 0) return this.timeStamp = e.timeStamp;
         if ((e.timeStamp - this.timeStamp) < 1000) {
@@ -80,7 +81,8 @@ class TopGenres extends Component<Props, { genres: any, updatedWithCarousel: boo
     componentDidMount(): void {
         //if (this.props.access_token == null) 
         window.addEventListener('resize', this.debouncedRecalcBoundingRect.bind(this));
-        getSeveralCategories(this.props.access_token || '', random(['US', 'NG', 'GB', 'ZA', 'JM', 'CA', 'GH']), '9').then(
+        if (!this.props.access_token || this.state.genres) return;
+        getSeveralCategories(this.props.access_token, random(['US', 'NG', 'GB', 'ZA', 'JM', 'CA', 'GH']), '0').then(
             data => this.setState(state => ({ ...state, genres: data }))
         )
 
@@ -116,17 +118,17 @@ class TopGenres extends Component<Props, { genres: any, updatedWithCarousel: boo
                                                 <div key={id} className={`w-full h-[calc(17.1875rem/1.5)] flex flex-nowrap ${((id + Number(innerImgCount)) >= (arr.length - 1)) ? 'justify-start gap-x-4' : Number(innerImgCount) < 3 ? 'justify-around' : 'justify-between'}`}>
                                                     {
                                                         innerImgs.map((genre: Category, index) => {
-                                                            return (() => {
-                                                                const bgColor = random(color);
-                                                                const myStyle = { ...style, background: bgColor }
-                                                                const dispatch = useAppDispatch();
-                                                                const { setProp } = useContext(Context);
-                                                                const onClick = () => {
-                                                                    setProp('currentPlaylist', genre);
-                                                                    dispatch(pushRef('/playlist?category=' + genre.id));
-                                                                }
-                                                                return (<figure key={genre.id} className={''} onClick={onClick} style={myStyle} ><Image src={genre.image} width={100} height={100} alt={genre.name} style={imgStyle} /><figcaption className='top-4 left-4 absolute text-xl font-black'>{genre.name}</figcaption></figure>);
-                                                            })()
+                                                            return (
+                                                                () => {
+                                                                    const bgColor = random(color);
+                                                                    const myStyle = { ...style, background: bgColor }
+                                                                    const dispatch = store.dispatch;
+                                                                    const onClick = () => {
+                                                                        this.context.setProp('currentPlaylist', genre);
+                                                                        dispatch(pushRef('/playlist?category=' + genre.id));
+                                                                    }
+                                                                    return (<figure key={genre.id} className={''} onClick={onClick} style={myStyle} ><Image src={genre.image} width={100} height={100} alt={genre.name} style={imgStyle} /><figcaption className='top-4 left-3 absolute text-xl font-black'>{genre.name}</figcaption></figure>);
+                                                                })()
                                                         })
                                                     }
                                                 </div>
@@ -161,5 +163,4 @@ const mapStateToProps = (state: RootState, ownProps: { listStyle: React.CSSPrope
         ...ownProps
     };
 };
-
 export default connect(mapStateToProps)(TopGenres);

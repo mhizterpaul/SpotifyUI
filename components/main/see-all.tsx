@@ -6,7 +6,7 @@ import style from './main.list.module.css'
 import { Data } from './home';
 import { random } from '@/utils';
 import { getSeveralEpisodes, getEpisode, getSeveralShows } from '@/utils/api';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { pushRef } from '@/store/reducers/main_slice';
 
@@ -30,7 +30,7 @@ export const SeeAll = ({ isItemLoaded, calcItemSize, loadMoreItems, Row, itemCou
         <List
           className={style.list}
           height={0.72 * window.innerHeight}
-          itemCount={15}
+          itemCount={itemCount}
           itemSize={calcItemSize}
           onItemsRendered={onItemsRendered}
           ref={ref}
@@ -46,11 +46,11 @@ export const SeeAll = ({ isItemLoaded, calcItemSize, loadMoreItems, Row, itemCou
 const params: { [key: string]: any } = {
   episodes: {
     title: 'Episodes',
-    callBack: (index: string) => getSeveralEpisodes(access_token || '', index, random(['US', 'NG', 'GB', 'ZA', 'JM', 'CA', 'GH']))
+    callBack: (index: string) => getSeveralEpisodes(access_token, index, random(['US', 'NG', 'GB', 'ZA', 'JM', 'CA', 'GH']))
   },
   shows: {
     title: 'Shows',
-    callBack: (index: string) => getSeveralShows(access_token || '', index, '6', random(['US', 'NG', 'GB', 'ZA', 'JM', 'CA', 'GH']))
+    callBack: (index: string) => getSeveralShows(access_token, index, '6', random(['US', 'NG', 'GB', 'ZA', 'JM', 'CA', 'GH']))
   }
 
 }
@@ -58,15 +58,22 @@ const params: { [key: string]: any } = {
 
 
 export default () => {
+
   access_token = useAppSelector(state => state.main.access_token);
   const { id } = useParams();
-  const { title, callBack } = params[id || Object.keys(params).length];
+  const dispatch = useAppDispatch();
 
-  const loaded: any = []
-  let itemCount = 8;
+  if (!id) {
+    dispatch(pushRef('/search'));
+    return null;
+  }
+
+  const { title, callBack } = params[id];
+  const loaded: boolean[] = []
   const calcItemSize = (index: number) => (index === 0 ? 40 : 21.5625 * 16 / 1.5)
 
   const loadMoreItems = (startIndex: number, stopIndex: number) => {
+    if (!access_token) return;
     for (let index = startIndex; index <= stopIndex; index++) {
       if (loaded[index] === false || loaded[index]) continue;
       loaded[index] = false;
@@ -74,15 +81,19 @@ export default () => {
         (res) => { data[index] = res; loaded[index] = true }
       )
     }
+    return new Promise<void>((resolve) => {
+      const timeOut = setInterval(() => {
+        if (loaded.slice(startIndex, stopIndex).every((item) => item)) {
+          clearInterval(timeOut);
+          resolve();
+        }
+      }, 1000)
+    });
   };
 
   const isItemLoaded = (index: number) => (loaded[index]);
   const Row = ({ style, index }: { style: React.CSSProperties, index: number }) => {
     const [loadedState, setLoadedState] = useState(loaded[index]);
-    if (loaded[itemCount]) {
-      itemCount = 16;
-      loadMoreItems(9, 16);
-    }
     const init = useMemo(() => {
       const setLoadedInterval = setInterval(() => loaded[index] && (() => { setLoadedState(true); clearInterval(setLoadedInterval) })(), 1000)
     }, []);
@@ -91,8 +102,8 @@ export default () => {
     const Title = () => (
       <h3>{title}</h3>
     );
-    const ImageRow = () => (
-      <div className='flex gap-x-4 gap-y-8 flex-wrap items-center overflow-hidden mb-4 h-52' style={style}>
+    const ImageRow = useMemo(() => () => (
+      <div className='flex gap-x-4 gap-y-8 justify-between flex-wrap items-center overflow-hidden mb-4 h-52' style={style}>
         {
           data[index].map((el) => {
             const dispatch = useAppDispatch();
@@ -107,15 +118,15 @@ export default () => {
                   if (el.type === 'show') dispatch(pushRef('/episode?show=' + el.id));
                 }
               } : el
-          }).map((el) => (() => useMemo(() => <Card {...el} key={el.id} />, []))())
+          }).map((el) => <Card {...el} key={el.id} />)
         }
       </div>
-    )
+    ), [data[index]])
 
     if (!data[index] && !!index) return <div className='italic text-center align-center h-[calc(18.5625rem/1.5)]'>loading...</div>
     if (index === 0) return <Title />
     return <ImageRow />
   }
 
-  return <SeeAll isItemLoaded={isItemLoaded} loadMoreItems={loadMoreItems} calcItemSize={calcItemSize} Row={Row} itemCount={itemCount} />
+  return <SeeAll isItemLoaded={isItemLoaded} loadMoreItems={loadMoreItems} calcItemSize={calcItemSize} Row={Row} itemCount={13} />
 }

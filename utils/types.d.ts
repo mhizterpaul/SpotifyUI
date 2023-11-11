@@ -103,9 +103,8 @@ export type Episode =  {
     owner: string,
     items: {
 added_at: string,
-track: Track[],
-type: string,
-    }
+track: Track,
+    }[]
  }
 
  export type EpisodeFull = {
@@ -141,9 +140,9 @@ export type Track = {
     },
     artists: {
         id: string,
-        image: string,
+        image?: string,
         name: string,
-        popularity: number,
+        popularity?: number,
         type: string,
 
     }[],

@@ -58,7 +58,7 @@ const Episodes = () => {
 
     if (!access_token) return <div className='text-center my-auto text-2xl'><RiErrorWarningLine className='text-5xl block mx-auto mb-4' />cannot connect to the internet </div>;
 
-    if (Data === 'failed' && pathname === '/episode') return <div className='text-center my-auto text-xl font-extrabold'><div className='text-2xl'><RiErrorWarningLine /></div>Couldn't find that {searchParams.get('show') ? 'show' : 'episode'} <br /> <span className='text-sm font-semibold'>search for something else?</span> </div>;
+    if (Data === 'failed' && pathname === '/episode') return <div className='text-center my-auto text-xl font-extrabold'><div className='text-2xl inline-block'><RiErrorWarningLine /></div>Couldn't find that {searchParams.get('show') ? 'show' : 'episode'} <br /> <span className='text-sm font-semibold'>search for something else?</span> </div>;
     if (Data === 'loading' && pathname === '/episode') return <Loader status={'PENDING'} meta={'Episode'} />
     if (pathname === '/episodes' && !Object.keys(Episodes).length) {
         dispatch(pushRef('/see-all/episodes'));
@@ -81,7 +81,7 @@ const Episodes = () => {
             <p >
                 <h4>
                     <BsPlayCircle className='text-2xl text-[#1ED760]'
-                        onClick={() => { setProp('nowPlayling', Object.values(Episodes)[0]); setProp('currentPlaylist', Episodes); dispatch(setNowPlayingView(true)) }} />
+                        onClick={() => { setProp('nowPlaying', Object.values(Episodes)[0]); setProp('currentPlaylist', Episodes); dispatch(setNowPlayingView(true)) }} />
                 </h4>
                 <hr />
                 <div className='px-4 py-2'>
@@ -148,7 +148,7 @@ const Episodes = () => {
                             {data.publisher} <br />
                             {data.episodes[0].description} <br />
                             <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32"
-                                onClick={() => { setProp('nowPlayling', data.episodes[0]); setProp('currentPlaylist', data); dispatch(setNowPlayingView(true)) }} className={`h-16 w-16 text-[#1ed760] rounded-full 
+                                onClick={() => { setProp('nowPlaying', data.episodes[0]); setProp('currentPlaylist', data); dispatch(setNowPlayingView(true)) }} className={`h-16 w-16 text-[#1ed760] rounded-full 
                         bg-gradient-to-r from-black to-black bg-no-repeat bg-center `} style={{ backgroundSize: '40% 40%' }} viewBox="0 0 24 24">
                                 <path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10s10-4.48 10-10S17.52 2 12 2zM9.5 16.5v-9l7 4.5l-7 4.5z" /></svg> {data.episodes[0].release_date} {data.episodes[0].duration_ms / 60 + 'hr ' +
                                     data.episodes[0].duration_ms % 60 + 'min'}
@@ -161,7 +161,7 @@ const Episodes = () => {
                                 data.episodes.map((episode) => {
                                     return (() => {
                                         return (
-                                            <section className={'flex justify-start items-center'} onClick={() => dispatch(pushRef('/episode/'+episode.id))}>
+                                            <section className={'flex justify-start items-center'} onClick={() => dispatch(pushRef('/episode/' + episode.id))}>
                                                 <Image src={episode.image} height={100} width={100} alt={episode.name} />
 
                                                 <div>
@@ -169,7 +169,7 @@ const Episodes = () => {
                                                     {data.publisher} <br />
                                                     {episode.description} <br />
                                                     <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32"
-                                                     onClick={()=>{setProp('currentPlaylist', data); setProp('nowPlaying', episode); dispatch(setNowPlayingView(true))}} className={`h-16 w-16 text-white rounded-full 
+                                                        onClick={() => { setProp('currentPlaylist', data); setProp('nowPlaying', episode); dispatch(setNowPlayingView(true)) }} className={`h-16 w-16 text-white rounded-full 
                         bg-gradient-to-r from-black to-black bg-no-repeat bg-center `} style={{ backgroundSize: '40% 40%' }} viewBox="0 0 24 24">
                                                         <path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10s10-4.48 10-10S17.52 2 12 2zM9.5 16.5v-9l7 4.5l-7 4.5z" /></svg> {episode.release_date} {episode.duration_ms / 60 + 'hr ' +
                                                             episode.duration_ms % 60 + 'min'}
@@ -196,7 +196,7 @@ const Episodes = () => {
                     <div className='flex flex-col justify-around items-center'>
                         <small>playlist Episode</small>
                         <h3 className='capitalize'>{data.name}</h3>
-                        <p>{data.show.publisher}</p>
+                        <p>{data.show?.publisher}</p>
                     </div>
                 </h2>
                 <section className='bg-gradient-to-b from-[491B4F] to-[121212]'>

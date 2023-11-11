@@ -31,7 +31,7 @@ const Card = (props: Data) => {
       {props.type === 'episode' || props.type === 'show' ?
         <Image className={' rounded-xl '} src={props.src || props.image || ''} alt={props.title || props.name || ''} height={100} width={100} loading={'lazy'} style={imgStyle} />
         : <PlayIcon>
-          <Image className={' pb-2 ' + (props.type === 'artist' ? ' rounded-full ' : ' rounded-xl ')} src={props.src || props.image || ''} alt={props.title || props.name || ''} height={100} width={100} loading={'lazy'} style={imgStyle} />
+          <Image className={(props.type === 'artist' ? ' rounded-full ' : ' rounded-xl ')} src={props.src || props.image || ''} alt={props.title || props.name || ''} height={100} width={100} loading={'lazy'} style={imgStyle} />
         </PlayIcon>
       }
       <h4 className=' font-sans text-sm font-bold text-white h-[20px] align-top w-[calc(11.9375rem/1.5)] truncate '>{props.type === 'episode' ? <RxDotFilled className='text-[#2E77D0] w-[20px] h-[20px] inline-block' /> : null}{props.title || props.name}</h4>
