@@ -89,28 +89,6 @@
 .sidebar>ul, .sidebar>h2 {
   width: 100%;
 }
-input[type=range] {
-  -webkit-appearance: none; /* Hides the slider so that custom slider can be made */
-  background: transparent; /* Otherwise white in Chrome */
-}
-
-input[type=range]::-webkit-slider-thumb {
-  -webkit-appearance: none;
-}
-
-input[type=range]:focus {
-  outline: none; /* Removes the blue border. You should probably do some kind of focus styling for accessibility reasons though. */
-}
-
-input[type=range]::-ms-track {
-  cursor: pointer;
-
-  /* Hides the slider so custom styles can be added */
-  background: transparent; 
-  border-color: transparent;
-  color: transparent;
-}
-
 
 
 .sidebar ul li:hover {
@@ -123,41 +101,7 @@ input[type=range]::-ms-track {
   padding-top: 0.25rem;
   padding-bottom: 0.25rem;
 }
-input[type=range]::-webkit-slider-thumb {
-  margin-top: 1px;
-}
 
-input[type=range]::-webkit-slider-thumb, input[type=range]::-moz-range-thumb, input[type=range]::-ms-thumb {
-  background: transparent;
-} 
-
-input[type=range]::-webkit-slider-thumb:hover, input[type=range]::-moz-range-thumb:hover, input[type=range]::-ms-thumb:hover {
-  background: whitesmoke;
-}
-
-input[type=range]::-webkit-slider-runnable-track {
-  height: 0.25rem;
-  background: white;
-  border-radius: 1rem;
-}
-
-input[type=range]::-webkit-slider-runnable-track:hover {
-  background: rgba(18, 218, 18, 0.521);
-}
-
-input[type=range]::-moz-range-track {
-  height: 0.25rem;
-  background: white;
-  border-radius: 1rem;
-}
-
-input[type=range]::-moz-range-track:hover {
-  background: rgba(18, 218, 18, 0.521);
-}
-
-input[type=range]::-ms-fill-upper, input[type=range]::-ms-fill-lower {
-  background: white;
-}
 .sidebar svg:not(.media-count) {
   width: 2rem;
   height: 2rem;
@@ -196,6 +140,51 @@ footer input, footer svg {
   grid-area: f;
 }
 
+/*style the slider thumb give it some width and height*/
+footer input[type=range] {
+  -webkit-appearance: none;
+  appearance: none; /* Hides the slider so that custom slider can be made */
+}
+
+footer input[type=range]::-webkit-slider-thumb, footer  input[type=range]::-moz-range-thumb, footer input[type=range]::-ms-thumb {
+  -webkit-appearance: none;
+  appearance: none; 
+  
+}
+footer input[type=range]::-webkit-slider-thumb, footer input[type=range]::-moz-range-thumb, footer input[type=range]::-ms-thumb {
+  background: whitesmoke;
+} 
+
+footer input[type=range]::-webkit-slider-thumb:hover, footer  input[type=range]::-moz-range-thumb:hover, footer input[type=range]::-ms-thumb:hover {
+  height: 15px;
+  width: 15px;
+  background-color: whitesmoke;
+  border-radius: 50%;
+  border: none;
+  margin-top: 1px;
+  transition: .2s ease-in-out
+}
+
+footer input[type=range]::-webkit-slider-runnable-track,footer input[type=range]::-moz-range-track, footer input[type=range]::-ms-track {
+  height: 0.25rem;
+  background: white;
+  border-radius: 1rem;
+}
+
+footer input[type=range]::-webkit-slider-runnable-track:hover, footer input[type=range]::-moz-range-track:hover, footer input[type=range]::-ms-track:hover {
+  background: rgba(18, 218, 18, 0.521);
+}
+
+
+footer input[type=range]:focus {
+  outline: none; /* Removes the blue border. You should probably do some kind of focus styling for accessibility reasons though. */
+}
+
+
+footer input[type=range]::-ms-fill-upper, footer input[type=range]::-ms-fill-lower {
+  background: white;
+}
+
 .player svg {
   width: 1.5rem;
   height: 1.5rem;
@@ -231,10 +220,6 @@ h1 {
 h3 {
   font-size: 1.2rem;
   font-weight: bold;
-}
-
-.range {
-  --track-fill: 70%;
 }
 
 

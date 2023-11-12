@@ -193,10 +193,10 @@ export function getPlaylist(access_token:string, id: string){
 
 export function getSeveralShows(access_token: string, offset: string, limit: string, country: Country){
 
-    return search('show', access_token, offset, country,limit).then(({data}: {data: SpotifyApi.ShowSearchResponse}) => {
+    return search('show', access_token, offset, country,String(Number(limit+6))).then(({data}: {data: SpotifyApi.ShowSearchResponse}) => {
 
-            return data.shows.items.map((el) => ({
-                src: el.images[0].url,
+            return data.shows.items.filter(el => el).map((el) => ({
+                src: el.images[0]?.url,
                 title: el.name,
                 author: el.publisher,
                 id: el.id,

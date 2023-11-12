@@ -106,8 +106,53 @@ const Playlist = () => {
 
 
     return (() => {
+
         const data = Data as OwnPlaylist | Album | Playlist | CategoryPlaylist;
         if (!data.image) data.image = defaultSrc;
+
+        const TableRow = ({ item, index }) => {
+            //on mouse in component rerenders infinitly
+            const [menu, setMenu] = useState(false);
+            const [hover, setHover] = useState(false);
+            const trRef = useRef<HTMLTableRowElement>(null);
+            const [position, setPosition] = useState({ top: '', right: '' });
+            useEffect(() => {
+                if (!trRef.current) return
+                const { top, width } = trRef.current.getBoundingClientRect();
+                const insetTop = window.innerHeight - top >= window.innerHeight / 2 ? '110%' : '-10%';
+                const insetRight = Math.abs(window.innerWidth - width) + 15 + 'px';
+                setPosition(() => ({ top: insetTop, right: insetRight }))
+
+            }, [trRef, menu])
+
+
+            return (
+                <tr ref={trRef} className='relative hover:bg-[rgba(114,114,114,0.62)] rounded-sm' onMouseEnter={() => !hover && setHover(true)} onMouseLeave={() => hover && setHover(false)}>
+                    <td onClick={() => { setProp('nowPlaying', item); setProp('currentPlaylist', data); }}>
+                        {hover ? <BiPlay /> : index + 1}</td>
+                    <td>
+                        <Image height={45} width={45} alt={item.name || item.track.name} src={item.track?.album?.image || track.album?.image || defaultSrc} className={' inline-block pl-2'} />
+                        <span className='inline-block align-middle text-start h-full ml-4 '>
+                            <span className='text-white capitalize '>{item.name || item.track.name}</span><br />
+
+                            <span className={''}>{(item.artists || item.track?.artists || []).map(artist => artist.name).join(', ')}</span></span></td>
+
+                    {data.type !== 'album' && <td onClick={() => dispatch(pushRef('/playlist?album=' + (item.album?.id || item.track?.album?.id || '')))}>{item.album?.name || item.track?.album.name}</td>}
+
+                    {miniTable ? null : <td>{item.added_at || item.track.added_at}</td>}
+
+                    <td className='flex justify-between items-center'><span>{Tracks[item.track?.id || item.id] ? <FaHeart onClick={() => { removeMedia('Track', item.id || item.track?.id) }} /> : hover ? <SlHeart onClick={() => { addMedia('Tracks', item.id || item.track?.id, item) }} /> : null} </span>
+                        <span>{Math.round((item.duration_ms || item.track.duration_ms || 0) / (60 * 1000))} : {Math.round((item.duration_ms || item.track.duration_ms || 0) % (60 * 1000))}</span>
+                        {hover && <SlOptions onClick={() => setMenu((menu) => !menu)} />}</td>
+                    {menu && <ul className='absolute ' style={{ ...position }}>
+                        <li><LuPlusCircle /> Add to playlist</li>
+                        <li><IoShareOutline /> Share</li>
+                        <li><SiSpotify />Open in app</li>
+                    </ul>}
+                </tr>
+            )
+        }
+
         return (
             <div className={" overflow-y-scroll h-[80vh] rounded-md -mt-14 w-full " + styles.list}>
                 <section ref={containerRef} className=' h-max p-8 -ml-[1.4rem] ' style={gradient}>
@@ -121,29 +166,31 @@ const Playlist = () => {
 
                             <h3 className={id === 'songs' ? ' text-5xl ' : "text-3xl "} >{data.name}</h3>
 
-                            {data.description ? <p className='text-sm'>{data.description}</p> : null}
+                            {data.description ? <p className='text-sm' dangerouslySetInnerHTML={{ __html: data.description }} /> : null}
 
                             <span>
-                                <span>
-                                    {data.owner || data.artists ? <b>{data.owner || data.artists?.join(', ')}</b> : null} &bull;
+                                <span >
+                                    {data.owner || data.artists ? <b>{data.owner || data.artists?.join(', ')}</b> : null} &bull;&ensp;
+                                    {data.popularity && data.popularity + ' likes '}
+                                    {data.followers && data.followers + ' followers '}&ensp;&bull;&ensp;
 
-                                    {data.popularity || data.followers || null} •
-
-                                    {data.items?.length || data.tracks?.length || 0} songs
+                                    {data.items?.length || data.tracks?.length || 0}&ensp;songs
                                 </span>
-                                about {(data.items?.length || data.tracks?.length || 0) * 2.5 / 60} hr {(data.items?.length || data.tracks?.length || 0) * 2.5 % 60} min</span>
+                                &ensp;about&ensp;{((data.items?.length || data.tracks?.length || 0) * 2.5 / 60).toFixed(1)} &ensp;hr&ensp;
+                                {((data.items?.length || data.tracks?.length || 0) * 2.5 % 60).toFixed(1)}&ensp;min</span>
                         </div>
                     </h2>
                     <div className=' ' >
                         <h3 className={' flex justify-start items-center gap-x-4 '}>
-                            {!data.items?.length || !data.tracks?.length ? null : <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" className={`h-16 w-16 text-[#1ed760] rounded-full 
+                            {!(data.items?.length) && !(data.tracks?.length) ? null : <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" className={`h-16 w-16 text-[#1ed760] rounded-full 
                         bg-gradient-to-r from-black to-black bg-no-repeat bg-center `}
                                 onClick={() => { dispatch(setNowPlayingView(true)); setProp('nowPlaying', data.items[0]?.track || data.tracks[0]); setProp('currentPlaylist', data); }} style={{ backgroundSize: '40% 40%' }} viewBox="0 0 24 24">
                                 <path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10s10-4.48 10-10S17.52 2 12 2zM9.5 16.5v-9l7 4.5l-7 4.5z" /></svg>}
+
                             {isNaN(Number(id)) && id !== 'songs' ? (!Playlist[id] ? < SlHeart className='hover:text-white ' onClick={() => { addMedia('Playlist', data.id, data) }} /> : <FaHeart className={'text-[#1ed760]'} onClick={() => { removeMedia('Playlist', id) }} />) : null}
                             {id !== 'songs' ? <SlOptions /> : null}
                         </h3>
-                        <table className="table-fixed w-full ">
+                        <table className="table-fixed w-full text-[#B3B3B3]">
                             <thead className={' border-b-[0.1px] border-b-[#b3b3b33a] border-solid '}>
                                 <tr className='text-[#b3b3b3] p-2 '>
                                     <th scope='col' className='w-8 p-2 '>#</th>
@@ -154,47 +201,7 @@ const Playlist = () => {
                                 </tr>
                             </thead>
                             <tbody className={''}>
-                                {(data.items || data.tracks).map((item: Track | { added_at: string, track: Track }, index: number) => (() => {
-                                    const [menu, setMenu] = useState(false);
-                                    const [hover, setHover] = useState(false);
-                                    const trRef = useRef<HTMLTableRowElement>(null);
-                                    const [position, setPosition] = useState({ top: '', right: '' });
-                                    useEffect(() => {
-                                        if (!trRef.current) return
-                                        const { top, width } = trRef.current.getBoundingClientRect();
-                                        const insetTop = window.innerHeight - top >= window.innerHeight / 2 ? '110%' : '-10%';
-                                        const insetRight = Math.abs(window.innerWidth - width) + 15 + 'px';
-                                        setPosition(() => ({ top: insetTop, right: insetRight }))
-
-                                    }, [trRef, menu])
-
-
-                                    return (
-                                        <tr ref={trRef} className='relative hover:bg-[rgba(114,114,114,0.62)] rounded-sm' onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}
-                                            onClick={() => { setProp('nowPlaying', item); setProp('currentPlaylist', data); }}>
-                                            <td>{hover ? <BiPlay /> : index}</td>
-                                            <td>
-                                                <Image height={45} width={45} alt={item.name || item.track.name} src={item.track?.album?.image || track.album?.image || defaultSrc} className={' inline-block pl-2'} />
-                                                {item.name || item.track.name ? <><span>{item.name || item.track.name}</span><br /></> : null}
-
-                                                <span>{(item.artists || item.track?.artists || []).map(artist => artist.name).join(', ')}</span></td>
-
-                                            {data.type !== 'album' || !item.added_at ? null :
-                                                <><td onClick={() => dispatch(pushRef('/playlist?album=' + (item.album?.id || item.track?.album?.id || '')))}>{item.album?.name || item.track?.album.name}</td>
-                                                    {miniTable ? null : <td>{track.added_at}</td>}
-                                                </>}
-                                            <td> {Tracks[item.track?.id || item.id] ? <FaHeart onClick={() => { removeMedia('Track', item.id || item.track?.id) }} /> : hover ? <SlHeart onClick={() => { addMedia('Tracks', item.id || item.track?.id, item) }} /> : null}
-                                                {(item.duration_ms || item.track.duration_ms || 0) / 60} : {item.duration_ms || item.track.duration_ms || 0 % 60}
-                                                {hover && <SlOptions onClick={setMenu((menu) => !menu)} />}</td>
-                                            {menu && <ul className='absolute '>
-                                                <li><LuPlusCircle /> Add to playlist</li>
-                                                <li><IoShareOutline /> Share</li>
-                                                <li><SiSpotify />Open in app</li>
-                                            </ul>}
-                                        </tr>
-                                    )
-                                })()
-                                )}
+                                {(data.items || data.tracks).map((item: Track | { added_at: string, track: Track }, index: number) => <TableRow item={item} index={index} key={item.id || item.track.id} />)}
                             </tbody>
                         </table>
                         {

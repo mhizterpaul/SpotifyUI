@@ -32,7 +32,7 @@ interface U {
     BgColor: string
 }
 export interface V extends U {
-    setProp: (type: keyof U, value: string | { [key: string]: any }) => void,
+    setProp: (type: keyof U, value: string | { [key: string]: any } | null) => void,
     addMedia: (type: T, id: T, media: Media) => void,
     removeMedia: (type: T, id: T) => void
 }
@@ -73,7 +73,7 @@ function RootRouter({ children }: { children: React.ReactNode }) {
             }
         }))
     }
-    const setProp = (type: T, value: string | Episode | Album | Show | CategoryPlaylist | OwnPlaylist | Playlist | Track | { [key: string]: Episode }) => {
+    const setProp = (type: T, value: string | Episode | Album | Show | CategoryPlaylist | OwnPlaylist | Playlist | Track | { [key: string]: Episode } | null) => {
         setState(prev => ({
             ...prev,
             [type]: value
