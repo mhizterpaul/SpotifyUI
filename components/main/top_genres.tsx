@@ -100,7 +100,7 @@ class TopGenres extends Component<Props, { genres: any, updatedWithCarousel: boo
 
     render() {
         return this.state.genres ? (
-            <section className='mt-8 sm:mt-4 w-full mb-8 ' style={this.props.listStyle}>
+            <section className='mt-8 md:mt-4 w-full mb-8 ' style={this.props.listStyle}>
                 <h3>Your top genres</h3>
                 <Carousel ref={this.boundingRectRef} cellSpacing={20} defaultControlsConfig={{
                     pagingDotsStyle: { display: 'none' },
@@ -125,7 +125,7 @@ class TopGenres extends Component<Props, { genres: any, updatedWithCarousel: boo
                                                                     const dispatch = store.dispatch;
                                                                     const onClick = () => {
                                                                         this.context.setProp('currentPlaylist', genre);
-                                                                        dispatch(pushRef('/playlist?category=' + genre.id));
+                                                                        dispatch(pushRef('/playlist?category=' + genre.name));
                                                                     }
                                                                     return (<figure key={genre.id} className={''} onClick={onClick} style={myStyle} ><Image src={genre.image} width={100} height={100} alt={genre.name} style={imgStyle} /><figcaption className='top-4 left-3 absolute text-xl font-black'>{genre.name}</figcaption></figure>);
                                                                 })()

@@ -87,14 +87,14 @@ const Library = () => {
   //create playlist click does nothing
   if ((searchParams.get('new') === 'true') || (search === '?new=true') && !closeForm) {
     return (
-      <section className='w-full relative -mt-[2rem] h-full flex items-center justify-center'>
+      <section className='w-full relative -mt-[2rem] h-full flex items-center justify-center '>
 
 
-        <form onSubmit={(e: React.ChangeEvent<HTMLFormElement>) => save(e)} className=' bg-[#333] flex rounded-md flex-col items-center p-4 gap-y-2 justify-center max-w-lg max-h-fit'>
+        <form onSubmit={(e: React.ChangeEvent<HTMLFormElement>) => save(e)} className=' bg-[#333] flex rounded-md flex-col items-center p-4 gap-y-2 justify-center min-w-[28rem] max-w-lg max-h-fit'>
           <h3 className='flex items-center w-full justify-between mb-2'><span className='inline-block text-2xl font-extrabold'>Edit details</span> <LiaTimesSolid className={'hover:bg-[#949292] w-8 h-8 hover:rounded-full p-1 '} onClick={() => { setCloseForm(true); dispatch(pushRef('/library')) }} /></h3>
           <div className='relative flex w-full justify-between items-center gap-x-2 h-[50%]'>
 
-            <input ref={fileRef} type='file' size={1028 * 1000 * 6} onChange={handleFile} accept={'image/*'} style={{
+            <input ref={fileRef} type='file' size={1028 * 1000 * 6} onInput={handleFile} accept={'image/*'} style={{
               position: 'absolute',
               height: '1px',
               width: '1px',
@@ -163,7 +163,7 @@ const Library = () => {
         <h2 className='flex justify-between items-center'>Playlists <span className={`mr-2 ${!seeAll || (Object.values(Playlist).length < 6) ? ' hidden ' : ' inline-block '}`} onClick={() => setSeeAll(false)}>See all</span><LiaTimesSolid className={`mr-2 ${seeAll ? 'inline-block' : 'hidden'}`} onClick={() => setSeeAll(true)} /></h2>
         {(seeAll ? Object.values(Playlist) : Object.values(Playlist).slice(0, 6)).map((playlist: Playlist) => <p className='flex gap-x-4 justify-start items-center h-14'>
           <Image src={playlist.image} className={'rounded-xl'} alt={playlist.name} height={100} width={100} />
-          {playlist.description}
+          <p dangerouslySetInnerHTML={{ __html: playlist.description }} />
           <span className='font-bold text-sm text-gray-600'>
             {playlist.total} items on this playlist &bull; {playlist.followers} followers
           </span>

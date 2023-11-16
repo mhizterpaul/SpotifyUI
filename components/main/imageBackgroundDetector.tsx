@@ -2,7 +2,7 @@ import { useRef, useEffect } from "react";
 
 
 
-const ImageBackgroundDetector = ({ imageUrl, callBack }: { imageUrl: string, callBack: (hexCode: string) => any }) => {
+const ImageBackgroundDetector = ({ imageUrl, callBack, dim }: { imageUrl: string, dim: number, callBack: (hexCode: string) => any }) => {
   const canvasRef = useRef(null);
 
   useEffect(() => {
@@ -34,7 +34,7 @@ const ImageBackgroundDetector = ({ imageUrl, callBack }: { imageUrl: string, cal
   const rgbToHex = (r: number, g: number, b: number): string =>
     `#${((r << 16) | (g << 8) | b).toString(16).padStart(6, '0')}`;
 
-  return <canvas ref={canvasRef} className={' w-48 h-48 '} />;
+  return <canvas ref={canvasRef} style={{ width: dim + 'px', height: dim + 'px' }} />;
 };
 
 export default ImageBackgroundDetector;

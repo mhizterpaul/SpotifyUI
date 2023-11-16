@@ -11,7 +11,7 @@ export function greet (){
 }
 
 export function shuffle <T>(arr: T[]) : T[]{
-    const newArr = [];
+  const newArr = [];
     while(arr.length > 0){
         const randomIndex = Math.floor(Math.random()*arr.length)
         newArr.push(arr[randomIndex])

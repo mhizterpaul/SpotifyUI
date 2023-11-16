@@ -22,8 +22,8 @@ const Sidebar = (props: { isOpen?: boolean }) => {
 
 
 
-    return (<aside className={/*my-auto */[`bg-black sidebar hidden sm:flex flex-col h-[90vh] min-h-[560px] items-center max-h-[914px] justify-around
-         text-lg mr-[0.75rem] px-2 pb-14 first-letter:font-medium w-[15rem]`, props.isOpen == null ? '' : props.isOpen === true ? 'translateOut' : 'translateIn'].join(' ')}>
+    return (<aside className={/*my-auto */[`bg-black sidebar hidden md:flex flex-col h-[90vh] min-h-[560px] items-center max-h-[914px] justify-around
+         text-lg px-2 pb-14 first-letter:font-medium w-[15rem]`, props.isOpen == null ? '' : props.isOpen === true ? 'translateOut' : 'translateIn'].join(' ')}>
         <h2 className='text-3xl mt-2 '>
             <ul className='list-none'>
                 <li onClick={() => dispatch(pushRef('/'))}>

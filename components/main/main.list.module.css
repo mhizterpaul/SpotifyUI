@@ -1,7 +1,7 @@
 .list {
     scrollbar-width: thin;
     scroll-behavior: smooth;
-
+    overflow-x: visible;
 }
 
 .list::-webkit-scrollbar-thumb, .list::-webkit-scrollbar-track{

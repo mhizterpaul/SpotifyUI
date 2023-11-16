@@ -1,11 +1,10 @@
-import './globals.css'
-import 'react-tooltip/dist/react-tooltip.css'
 import { Inter } from 'next/font/google'
+import './globals.css'
 import RootRouterProvider from './rootProvider';
 import Nav from '@/containers/navbarContainer';
 import Footer from '@/components/footer/footer';
 import { Metadata } from 'next';
-//import Favicon from './favicon.ico'
+import Favicon from './favicon.ico'
 
 
 export const metadata: Metadata = {
@@ -14,10 +13,9 @@ export const metadata: Metadata = {
 
 }
 
-//icons: [{ rel: 'icon', url: Favicon.src }]
+icons: [{ rel: 'icon', url: Favicon.src }]
 
 const inter = Inter({ subsets: ['latin'] });
-
 
 
 export default function RootLayout({
@@ -35,7 +33,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <section className='main-container sm:p-x-4 relative max-h-[914px] h-screen'>
+        <section className='main-container md:p-x-4 relative max-h-[914px] h-screen'>
           <RootRouterProvider>
             < Nav />
             {children}

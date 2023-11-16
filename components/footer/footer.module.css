@@ -1,0 +1,37 @@
+.twinkle:active {
+    animation-duration: 1s;
+    animation-name: twinkle;
+    animation-iteration-count: 1;
+    animation-fill-mode: backwards;
+  }
+
+  .button:active {
+    animation-duration: 1s;
+    animation-name: button;
+    animation-iteration-count: 1;
+    animation-fill-mode: backwards;
+  }
+  
+  @keyframes twinkle {
+    from {
+      color:white;
+    }
+  
+    to {
+        color: #B3B3B3;
+
+  }
+}
+
+@keyframes button {
+  from {
+    transform: scale(1.0)
+
+  }
+  to{
+    transform: scale(0.8)
+  }
+}
+
+
+

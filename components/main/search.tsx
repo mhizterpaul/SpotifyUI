@@ -80,7 +80,7 @@ const Search = () => {
                     const myStyle = { ...ImgContainerstyle, backgroundColor: bgColors }
                     const onClick = () => {
                         setProp('currentPlaylist', category);
-                        dispatch(pushRef('/playlist?category=' + category.id));
+                        dispatch(pushRef('/playlist?category=' + category.name));
                     }
                     return (<figure key={category.id} onClick={onClick} className={''} style={myStyle}><Image src={category.image} width={100} height={100} fill={false} alt={category.name} style={imgStyle} />
                         <figcaption className='top-4 left-4 absolute text-lg font-black w-[calc((14.5rem/1.5)-1rem)] truncate'>{category.name}</figcaption></figure>)

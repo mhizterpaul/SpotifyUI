@@ -8,7 +8,8 @@
 
 
 :root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: "Helvetica Neue", Helvetica, Arial, "Hiragino Kaku Gothic Pro", 'Meiryo', "MS Gothic",
+  'Inter', system-ui, 'Avenir' , sans-serif;
   line-height: 1.5;
   font-weight: 400;
 
@@ -58,8 +59,6 @@
   grid-template-rows: 2fr 1fr;
   grid-template-columns: 1fr;
 }
-
-
 
 
 
@@ -140,50 +139,71 @@ footer input, footer svg {
   grid-area: f;
 }
 
-/*style the slider thumb give it some width and height*/
-footer input[type=range] {
+input[type="range"] {
   -webkit-appearance: none;
-  appearance: none; /* Hides the slider so that custom slider can be made */
+  appearance: none;
+  background-color: white;
+  cursor: pointer;
+  border-radius: 0.6rem;
+  height: 0.3rem;
 }
 
-footer input[type=range]::-webkit-slider-thumb, footer  input[type=range]::-moz-range-thumb, footer input[type=range]::-ms-thumb {
-  -webkit-appearance: none;
-  appearance: none; 
+input[type="range"]:focus {
+  outline: none;
+}
+
+input[type="range"]::-webkit-slider-runnable-track {
+  height: 0.3rem;
+  border-radius: 0.2rem;
+  background-color: transparent;
+}
+
+input[type="range"]::-moz-range-track {
+  height: 0.3rem;
+  border-radius: 0.2rem;
+  background-color: transparent;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none; 
+  appearance: none;
+  background-color: white;
+  margin-top: -0.3rem;
+  height: 0.8rem;
+  width: 0.8rem;
+  border-radius: 0.4rem; 
+  display: none;
+}
+
+input[type="range"]::-moz-range-thumb {
+  border: none; 
+  background-color: white;
+  height: 0.8rem;
+  width: 0.8rem;
+  border-radius: 0.4rem; 
+  display: none;
+}
+
+
+input[type="range"]:hover::-webkit-slider-thumb {
+  display: block
+  }
   
-}
-footer input[type=range]::-webkit-slider-thumb, footer input[type=range]::-moz-range-thumb, footer input[type=range]::-ms-thumb {
-  background: whitesmoke;
-} 
+  
+  input[type="range"]:hover::-moz-range-thumb {
+    display: block;
+     
+  }
 
-footer input[type=range]::-webkit-slider-thumb:hover, footer  input[type=range]::-moz-range-thumb:hover, footer input[type=range]::-ms-thumb:hover {
-  height: 15px;
-  width: 15px;
-  background-color: whitesmoke;
-  border-radius: 50%;
-  border: none;
-  margin-top: 1px;
-  transition: .2s ease-in-out
-}
+  /*input[type="range"]:hover::-webkit-slider-thumb {
+    box-shadow: 0 0 0 10px rgba(255,85,0, .1)
+  }
 
-footer input[type=range]::-webkit-slider-runnable-track,footer input[type=range]::-moz-range-track, footer input[type=range]::-ms-track {
-  height: 0.25rem;
-  background: white;
-  border-radius: 1rem;
-}
-
-footer input[type=range]::-webkit-slider-runnable-track:hover, footer input[type=range]::-moz-range-track:hover, footer input[type=range]::-ms-track:hover {
-  background: rgba(18, 218, 18, 0.521);
-}
+  input[type="range"]:hover::-moz-range-thumb {
+    box-shadow: 0 0 0 10px rgba(255,85,0, .1)
+  }*/
 
 
-footer input[type=range]:focus {
-  outline: none; /* Removes the blue border. You should probably do some kind of focus styling for accessibility reasons though. */
-}
-
-
-footer input[type=range]::-ms-fill-upper, footer input[type=range]::-ms-fill-lower {
-  background: white;
-}
 
 .player svg {
   width: 1.5rem;

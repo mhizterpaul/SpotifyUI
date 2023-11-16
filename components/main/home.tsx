@@ -8,7 +8,7 @@ import Card from "./card";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import Image from "next/image";
 import { getAudioBooks, getFeaturedPlaylists, getNewAlbumReleases, getSeveralArtists, getSeveralEpisodes, getSeveralShows } from "@/utils/api";
-import { Countries, AudioBookCountries } from "@/utils/types";
+import { Countries, AudioBookCountries, Country } from "@/utils/types";
 import { store } from '../../store/index'
 import PlayIcon from '../common/play'
 import style from './main.list.module.css'
@@ -40,7 +40,6 @@ interface BasicDataWithSrc extends BasicData {
 }
 
 export type Data = BasicDataWithImage | BasicDataWithSrc;
-
 
 
 const styles: React.CSSProperties = {
@@ -99,7 +98,8 @@ const loadMoreItems = (startIndex: number, stopIndex: number) => {
         }
         case 3 * 2 - 1:
         case 3 * 2: {
-          getSeveralEpisodes(access_token, String(index), random(countries))
+          const episodeCountry = random(countries);
+          getSeveralEpisodes(access_token, String(index), episodeCountry)
             .then(res => { data[index] = res; loaded[index] = true; })
           break;
         }
@@ -162,7 +162,7 @@ const Row = ({ index, style }: { index: number, style: React.CSSProperties }) =>
         (
           (<div key={el.id} style={styles} className=' group ' onClick={() => dispatch(pushRef('/playlist/' + el.id))} >
             <Image src={el.image || ''} alt={el.name || ''} height={100} width={100} style={imgStyle} />
-            <span className='inline-block absolute top-[40%] left-[85px] text-white w-[calc((22.56269rem-6.25rem)/1.5)] truncate '>{el.name}</span>
+            <span className='inline-block absolute top-[40%] left-[4.7rem] text-white w-[calc((22.56269rem-6.25rem)/1.5)] truncate '>{el.name}</span>
             <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" className={`hidden h-1/3 w-auto text-[#1ed760] z-10 absolute bottom-[2%] right-[5%] group-hover:block shadow rounded-full 
              bg-gradient-to-r from-white to-white bg-no-repeat bg-center `} style={{ backgroundSize: '40% 40%' }} viewBox="0 0 24 24">
               <path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10s10-4.48 10-10S17.52 2 12 2zM9.5 16.5v-9l7 4.5l-7 4.5z" /></svg>

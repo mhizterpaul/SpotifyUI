@@ -67,8 +67,8 @@ export function getSeveralEpisodes (access_token: string, offset: string, countr
         name: episode.name
     })))
 }
-export function getEpisode(access_token: string, id: string){
-    return axios.get(`https://api.spotify.com/v1/episodes/${id}`, {
+export function getEpisode(access_token: string, id: string, country: string){
+    return axios.get(`https://api.spotify.com/v1/episodes/${id}?market=${country}`, {
         headers: {
             'Authorization': 'Bearer ' + access_token
         }}).then(
@@ -193,7 +193,7 @@ export function getPlaylist(access_token:string, id: string){
 
 export function getSeveralShows(access_token: string, offset: string, limit: string, country: Country){
 
-    return search('show', access_token, offset, country,String(Number(limit+6))).then(({data}: {data: SpotifyApi.ShowSearchResponse}) => {
+    return search('show', access_token, offset, country,String(Number(limit)+6)).then(({data}: {data: SpotifyApi.ShowSearchResponse}) => {
 
             return data.shows.items.filter(el => el).map((el) => ({
                 src: el.images[0]?.url,
@@ -223,7 +223,7 @@ export function getSeveralCategories(access_token:string,country: Country ,offse
 }
 
 export function getCategoyPlaylist (access_token: string, id:string, country:Country){
-    return  axios.get(`https://api.spotify.com/v1/search?q=${id}&type=track&market=${country}&limit=25`, {
+    return  axios.get(`https://api.spotify.com/v1/search?q=q=a%20e%20genre:${id}&type=track&market=${country}&limit=25`, {
         headers: {
             'Authorization': 'Bearer ' + access_token
         }}).then(({data}:{data: SpotifyApi.TrackSearchResponse}) => data.tracks.items.map(track => ({
@@ -238,8 +238,7 @@ export function getCategoyPlaylist (access_token: string, id:string, country:Cou
          },
          artists: track.artists.map(artist => ({
             id: artist.id,
-            followers: artist.followers.total,
-            image: artist.images[0].url,
+            image: artist.images?.[0].url,
             name: artist.name,
             popularity: artist.popularity,
             type: artist.type,

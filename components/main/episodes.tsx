@@ -16,7 +16,7 @@ import { Context, V } from "@/app/rootProvider";
 import { getShow, getEpisode } from "@/utils/api";
 import styles from './main.list.module.css'
 import Loader from "../network_request";
-import { hexToHSL } from "@/utils";
+import { hexToHSL, random } from "@/utils";
 import { RxDotFilled } from "react-icons/rx";
 
 
@@ -28,16 +28,17 @@ const Episodes = () => {
     const dispatch = useAppDispatch();
     const pathname = useLocation().pathname;
     const [bgColor, setBgColor] = useState('')
+    const [playlistData, setPlaylistData] = useState<Show | 'loading' | 'failed'>('loading');
     const [Data, setData] = useState<EpisodeFull | Show | 'loading' | 'failed'>('loading');
     const access_token = useAppSelector((state) => state.main.access_token) || '';
     const { Episodes, setProp, removeMedia, addMedia } = useContext(Context);
 
     useEffect(() => {
-        if (pathname === '/episode)' && access_token) {
+        if (pathname.includes('/episode') && (id || searchId) && access_token) {
             (async () => {
                 try {
                     let data: EpisodeFull | Show | 'loading' = 'loading';
-                    if (id) data = await getEpisode(access_token, id);
+                    if (id) data = await getEpisode(access_token, id, random(['US', 'NG', 'GB', 'ZA', 'JM', 'CA', 'GH']));
                     if (searchId) data = await getShow(access_token, searchId);
                     setData(data);
                 } catch (e) {
@@ -46,6 +47,21 @@ const Episodes = () => {
             })()
         }
     }, [id, searchId, access_token]);
+    useEffect(() => {
+        if (pathname.includes('/episode/') && id && typeof Data === 'object' && access_token) {
+            (async () => {
+                try {
+                    let data: Show | 'loading' = 'loading';
+
+                    data = await getShow(access_token, Data.show.id);
+
+                    setPlaylistData(data);
+                } catch (e) {
+                    setPlaylistData('failed');
+                }
+            })()
+        }
+    }, [id, access_token, Data]);
     const navigate = useNavigate();
     const [episodeSubMenu, setEpisodeSubMenu] = useState(false);
     const gradient = {
@@ -56,10 +72,9 @@ const Episodes = () => {
 
 
 
-    if (!access_token) return <div className='text-center my-auto text-2xl'><RiErrorWarningLine className='text-5xl block mx-auto mb-4' />cannot connect to the internet </div>;
 
-    if (Data === 'failed' && pathname === '/episode') return <div className='text-center my-auto text-xl font-extrabold'><div className='text-2xl inline-block'><RiErrorWarningLine /></div>Couldn't find that {searchParams.get('show') ? 'show' : 'episode'} <br /> <span className='text-sm font-semibold'>search for something else?</span> </div>;
-    if (Data === 'loading' && pathname === '/episode') return <Loader status={'PENDING'} meta={'Episode'} />
+    if (Data === 'failed' && (id || searchId) && pathname.includes('/episode')) return <div className='text-center my-auto text-2xl'><RiErrorWarningLine className='text-5xl block mx-auto mb-4' />Couldn't find that playlist <br /> <span className='text-sm font-semibold'>search for something else?</span></div>;
+    if (Data === 'loading' && (id || searchId) && pathname.includes('/episode')) return <Loader status={'PENDING'} meta={'Episode'} />
     if (pathname === '/episodes' && !Object.keys(Episodes).length) {
         dispatch(pushRef('/see-all/episodes'));
         return null;
@@ -95,9 +110,7 @@ const Episodes = () => {
                                 <h5>{episode.name}</h5>
                                 <small>{episode.publisher}</small>
                             </div>
-                            <p>
-                                {episode.description}
-                            </p>
+                            <p dangerouslySetInnerHTML={{ __html: episode.description }} />
                             <div className='relative'>
                                 <BsPlayCircle onClick={() => { setProp('nowPlaying', episode); setProp('currentPlaylist', Episodes) }} /> {episode.release_date} &bull; {episode.duration_ms / 60 + ' min'} {episode.duration_ms % 60 + ' sec'} <div className={'relative '}><IoShareOutline className={tooltip + (hover ? 'inline-block' : 'hidden') + ' hover:before:content-["Share"] '} /></div> <div className={'relative '}><BiSolidCheckCircle className={tooltip + " hover:before:content-['Remove from Your Library'] "} onClick={() => removeMedia('Episodes', episode.id)} /></div> <div className={'relative '}><SlOptions className={tooltip + (hover ? 'inline-block' : 'hidden') + optionsContent} onClick={() => setEpisodeSubMenu(true)} /></div>
                                 <ul className={'[&_li]:hover:bg-gray-700 [&_li_svg]:text-stone-600 bg-[#282828]' + episodeSubMenu ? 'block' : 'hidden'}>
@@ -122,11 +135,11 @@ const Episodes = () => {
             <div className={" overflow-y-scroll h-[80vh] rounded-md -mt-14 w-full " + styles.list}>
                 <section className=' h-max p-8 -ml-[1.4rem] ' style={gradient}>
                     <h2 className={'h-fit w-full pt-[6rem] pb-4 flex mb-6 '} >
-                        {bgColor ? <Image src={data.image} className={'shadow-black shadow-md'} width={195} height={195} alt={data.name} /> : <BgColorDetector imageUrl={data.image} callBack={(hexCode) => setBgColor(hexCode)} />}
+                        {bgColor ? <Image src={data.image} className={'shadow-black shadow-md'} width={195} height={195} alt={data.name} /> : <BgColorDetector imageUrl={data.image} dim={195} callBack={(hexCode) => setBgColor(hexCode)} />}
                         <div className='flex flex-col gap-y-4 '>
                             <small className="text-sm">podcast</small>
                             <h3 className={' text-5xl '} >{data.name}</h3>
-                            <p className='text-sm'>{data.description}</p>
+                            <p className='text-sm' dangerouslySetInnerHTML={{ __html: data.description }} />
                             <span>{data.publisher}</span>
                         </div>
                     </h2>
@@ -139,14 +152,14 @@ const Episodes = () => {
                             <h4>
                                 About
                             </h4>
-                            {data.description}
+                            <div dangerouslySetInnerHTML={{ __html: data.description }} />
                         </p>
                         <button className={'bg-[#2A2A2A] opacity-40 '}>{data.media_type}</button>
                         <section>
                             <h6>Up next</h6>
                             <RxDotFilled className='text-[#2E77D0] w-[20px] h-[20px] inline-block' /> {data.name}|{data.episodes[0].name}|{data.publisher} Podcast <br />
                             {data.publisher} <br />
-                            {data.episodes[0].description} <br />
+                            <div dangerouslySetInnerHTML={{ __html: data.episodes[0].description }} />
                             <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32"
                                 onClick={() => { setProp('nowPlaying', data.episodes[0]); setProp('currentPlaylist', data); dispatch(setNowPlayingView(true)) }} className={`h-16 w-16 text-[#1ed760] rounded-full 
                         bg-gradient-to-r from-black to-black bg-no-repeat bg-center `} style={{ backgroundSize: '40% 40%' }} viewBox="0 0 24 24">
@@ -167,7 +180,7 @@ const Episodes = () => {
                                                 <div>
                                                     <RxDotFilled className='text-[#2E77D0] w-[20px] h-[20px] inline-block' /> {data.name}|{episode.name}|{data.publisher} Podcast <br />
                                                     {data.publisher} <br />
-                                                    {episode.description} <br />
+                                                    <div dangerouslySetInnerHTML={{ __html: episode.description }} />
                                                     <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32"
                                                         onClick={() => { setProp('currentPlaylist', data); setProp('nowPlaying', episode); dispatch(setNowPlayingView(true)) }} className={`h-16 w-16 text-white rounded-full 
                         bg-gradient-to-r from-black to-black bg-no-repeat bg-center `} style={{ backgroundSize: '40% 40%' }} viewBox="0 0 24 24">
@@ -190,9 +203,9 @@ const Episodes = () => {
     if (id) return (() => {
         const data = Data as EpisodeFull
         return (
-            <section>
+            <section className={'h-[72vh] overflow-y-scroll ' + styles.list}>
                 <h2 className=' flex items-center bg-[7A2D85] justify-around'>
-                    {bgColor ? <Image src={data.image} width={100} height={100} alt={data.name} /> : <BgColorDetector imageUrl={data.image} callBack={(hexCode) => setBgColor(hexCode)} />}
+                    {bgColor ? <Image src={data.image} width={100} height={100} alt={data.name} /> : <BgColorDetector imageUrl={data.image} dim={100} callBack={(hexCode) => setBgColor(hexCode)} />}
                     <div className='flex flex-col justify-around items-center'>
                         <small>playlist Episode</small>
                         <h3 className='capitalize'>{data.name}</h3>
@@ -202,13 +215,11 @@ const Episodes = () => {
                 <section className='bg-gradient-to-b from-[491B4F] to-[121212]'>
                     <h2 className='flex flex-col h-16'>
                         <small>{data.release_date} &bull; {data.duration_ms / 60 + ' min ' + data.duration_ms % 60 + ' sec'}</small>
-                        <div className='flex gap-x-4 text-[1ED760] justify-start items-center relative'><BsPlayCircle className=' hover:scale-110' /><LuPlusCircle className={'hover:scale-110 '} /><BiSolidCheckCircle aria-hidden className={`hidden`} /><SlOptions className={'text-[A7A7A7] '} /></div>
+                        <div className='flex gap-x-4 text-[1ED760] justify-start items-center relative'><BsPlayCircle onClick={() => { setProp('nowPlaying', data); setProp('currentPlaylist', playlistData) }} className=' hover:scale-110' /><LuPlusCircle className={'hover:scale-110 '} /><BiSolidCheckCircle aria-hidden className={`hidden`} /><SlOptions className={'text-[A7A7A7] '} /></div>
                     </h2>
                     <p>
                         <h3>Episode Description</h3>
-                        <div className='text-[B3B3B3] '>
-                            {data.description}
-                        </div>
+                        <div className='text-[B3B3B3] ' dangerouslySetInnerHTML={{ __html: data.description }} />
                         <button type='submit' aria-disabled onClick={() => { dispatch(pushRef('/episode?show=' + data.show.id)) }} className='rounded-2xl h-6 p-2 text-base font-bold capitalize border-2 border-[smokewhite] hover:scale-110'>
                             see all episodes
                         </button>
