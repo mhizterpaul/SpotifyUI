@@ -56,7 +56,7 @@ function NavbarContainer({ href, end, curr, dispatch }: Props) {
 
   useMemo(() => {
     if (currUrl.startsWith('?')) {
-      if (!routes.some((el) => currUrl.split('?')[1].includes(el))) return window.location.href = 'http://localhost:3000/404';
+      if (!routes.some((el) => currUrl.split('?')[1].includes(el))) return window.location.href = `${process.env.NEXT_PUBLIC_BASE_URL}/404`;
       dispatch(setHref(`/${currUrl.slice(1)}`));
     }
   }, [])

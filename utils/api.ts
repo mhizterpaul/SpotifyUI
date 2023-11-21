@@ -4,7 +4,7 @@ import {CategoryPlaylist, Playlist, AudioBook, Country, AudioBookCountry, Track}
 
 
 export function getAccessToken(){
-    return axios.get('http://localhost:3000/api/auth').then(
+    return axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/api/auth`).then(
         res => res.data
     );
 }
