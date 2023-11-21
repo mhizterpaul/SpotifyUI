@@ -82,7 +82,7 @@ class TopGenres extends Component<Props, { genres: any, updatedWithCarousel: boo
         //if (this.props.access_token == null) 
         window.addEventListener('resize', this.debouncedRecalcBoundingRect.bind(this));
         if (!this.props.access_token || this.state.genres) return;
-        getSeveralCategories(this.props.access_token, random(['US', 'NG', 'GB', 'ZA', 'JM', 'CA', 'GH']), '0').then(
+        getSeveralCategories(this.props.access_token, random(['US', 'NG', 'GB', 'ZA', 'JM', 'CA', 'GH']), '1').then(
             data => this.setState(state => ({ ...state, genres: data }))
         )
 
@@ -148,7 +148,7 @@ class TopGenres extends Component<Props, { genres: any, updatedWithCarousel: boo
                 </Carousel>
             </section>
 
-        ) : <Loader status={this.props.status} meta={'TopGenres'} />
+        ) : <Loader status={'PENDING'} meta={'TopGenres'} />
 
     }
 

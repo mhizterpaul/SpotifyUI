@@ -2,12 +2,11 @@
 import Nav from "@/components/nav/navbar";
 import { RootState } from "@/store";
 import { connect } from "react-redux";
-import { useEffect, useState } from "react";
-import withProvider from "@/store/with_provider";
+import { useEffect, useMemo, useState } from "react";
 import { Dispatch } from "@reduxjs/toolkit";
 import { goBack, goForward, pushRef, setHref } from "@/store/reducers/main_slice";
 import { useNavigate, useLocation } from 'react-router-dom'
-import { V } from "@/app/rootProvider";
+
 
 type Props = {
   href: string,
@@ -55,16 +54,17 @@ function NavbarContainer({ href, end, curr, dispatch }: Props) {
       }
     };
 
-
-  useEffect((): any => {
-
-    route();
-
-
+  useMemo(() => {
     if (currUrl.startsWith('?')) {
       if (!routes.some((el) => currUrl.split('?')[1].includes(el))) return window.location.href = 'http://localhost:3000/404';
       dispatch(setHref(`/${currUrl.slice(1)}`));
     }
+  }, [])
+
+
+  useEffect((): any => {
+
+    route();
 
     if (href !== pathname) {
       navigate(href);
@@ -111,5 +111,5 @@ const mapStateToProps = (state: RootState) => ({
   end: state.main.end,
 });
 
-export default withProvider(connect(mapStateToProps)(NavbarContainer))
+export default connect(mapStateToProps)(NavbarContainer)
 

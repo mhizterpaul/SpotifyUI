@@ -5,7 +5,6 @@ import { useContext, useState } from 'react'
 import { IoIosArrowDropupCircle, IoIosArrowDropdownCircle } from 'react-icons/io'
 import { useAppDispatch, useAppSelector } from "@/store/hooks"
 import { pushRef, setNowPlayingView } from "@/store/reducers/main_slice"
-import withStoreProvider from "@/store/with_provider"
 import { Context } from "@/app/rootProvider"
 import { FaHeart } from "react-icons/fa6"
 import { SlHeart } from "react-icons/sl"
@@ -15,7 +14,7 @@ const Footer = () => {
     const [favorite, setFavorite] = useState(false);
     const dispatch = useAppDispatch();
     const nowPlayingView = useAppSelector(state => state.main.nowPlayingView);
-    const { nowPlaying, Tracks, addMedia, removeMedia } = useContext(Context);
+    const { nowPlaying, currentPlaylist, Episodes, Tracks, addMedia, removeMedia } = useContext(Context);
 
     return (<footer className={`${nowPlaying?.album?.image || nowPlaying?.track?.album.image || nowPlaying?.image || nowPlaying?.show?.image ? '' : ' inactive '}` + ' footer bg-[#181818] w-screen relative flex items-center justify-between z-10 whitespace-nowrap pb-6 -mt-14 md:min-w-[540px] min-h-[120px] h-[14vh] gap-x-2 overflow-visible'}>
 
@@ -27,16 +26,16 @@ const Footer = () => {
             </div>
             <span className='inline-block h-full text-sm mx-2 text-start align-middle truncate mr-2 leading-4 whitespace-normal max-w-[40%]'>
                 <span className='hover:underline font-semibold inline-block w-full truncate '>{nowPlaying?.name || nowPlaying?.track?.name}</span> <br />
-                {nowPlaying?.artists || nowPlaying?.track?.artists && <span>
-                    {(nowPlaying?.artists || nowPlaying?.track?.artists || []).map(artist => artist.name).join(', ')}
-                </span>}
-                {nowPlaying?.show?.publisher &&
+                {nowPlaying?.artists || nowPlaying?.track?.artists ? <span>
+                    {(nowPlaying.artists || nowPlaying.track?.artists).map(artist => artist.name).join(', ')}
+                </span> : null}
+                {nowPlaying?.show?.publisher || currentPlaylist?.publisher ?
                     <span>
-                        {nowPlaying.show.publisher}
-                    </span>
+                        {nowPlaying?.show?.publisher || currentPlaylist?.publisher}
+                    </span> : null
                 }
             </span>
-            {Tracks[nowPlaying?.track?.id || nowPlaying?.id] ? <FaHeart className={' text-[#1ED760]'} onClick={() => { nowPlaying?.type === 'episode' ? nowPlaying && removeMedia('Episodes', nowPlaying?.id) : removeMedia('Track', nowPlaying?.id || nowPlaying?.track?.id) }} /> : <SlHeart onClick={() => { nowPlaying?.type === 'episode' ? addMedia('Episodes', nowPlaying?.id, nowPlaying) : nowPlaying && addMedia('Tracks', nowPlaying?.id || nowPlaying?.track?.id, nowPlaying) }} />}
+            {(nowPlaying?.type === 'episode' ? Episodes : Tracks)[nowPlaying?.track?.id || nowPlaying?.id] ? <FaHeart className={' text-[#1ED760]'} onClick={() => { nowPlaying?.type === 'episode' ? nowPlaying && removeMedia('Episodes', nowPlaying?.id) : removeMedia('Tracks', nowPlaying?.id || nowPlaying?.track?.id) }} /> : <SlHeart onClick={() => { nowPlaying?.type === 'episode' ? addMedia('Episodes', nowPlaying?.id, nowPlaying) : nowPlaying && addMedia('Tracks', nowPlaying?.id || nowPlaying?.track?.id, nowPlaying) }} />}
         </div>
         <Player />
     </footer >)
@@ -44,4 +43,4 @@ const Footer = () => {
 
 
 
-export default withStoreProvider(Footer)
+export default Footer

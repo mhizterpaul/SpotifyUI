@@ -12,6 +12,8 @@ import { Countries, AudioBookCountries, Country } from "@/utils/types";
 import { store } from '../../store/index'
 import PlayIcon from '../common/play'
 import style from './main.list.module.css'
+import Loader from "../network_request";
+
 
 interface BasicData {
   id: string;
@@ -141,6 +143,8 @@ const loadMoreItems = (startIndex: number, stopIndex: number) => {
   });
 }
 
+
+
 const Row = ({ index, style }: { index: number, style: React.CSSProperties }) => {
 
   const dispatch = useAppDispatch();
@@ -157,8 +161,9 @@ const Row = ({ index, style }: { index: number, style: React.CSSProperties }) =>
 
     <section className={`flex flex-col content-start gap-y-4 h-1/2 max-h-[210px] overflow-hidden mt-4 `} style={style}>
       <h3 className=" text-3xl ">{greet()}</h3>
+
       <div className='flex flex-row w-full items-center justify-start content-start gap-x-8 gap-y-6 flex-wrap'>
-        {data[index].map((el, id: number) =>
+        {data[index] && data[index].map((el, id: number) =>
         (
           (<div key={el.id} style={styles} className=' group ' onClick={() => dispatch(pushRef('/playlist/' + el.id))} >
             <Image src={el.image || ''} alt={el.name || ''} height={100} width={100} style={imgStyle} />
@@ -175,20 +180,17 @@ const Row = ({ index, style }: { index: number, style: React.CSSProperties }) =>
 
   const TitleRow = ({ title }: { title: string }) => {
     return (
-      <>
-        <h3 className='flex flex-row justify-between mt-12 items-start mb-auto' style={style}>
-          {title}
-          <span className='inline-block text-gray-600 font-semibold text-xs hover:underline' >Show all</span>
-        </h3>
-      </>
-
+      <h3 className='flex flex-row justify-between mt-12 items-start mb-auto' style={style}>
+        {title}
+        <span className='inline-block text-gray-600 font-semibold text-xs hover:underline' >Show all</span>
+      </h3>
     )
   };
 
 
   const ImageRow = useMemo(() => () => (
-    <div className='flex justify-between gap-x-8 gap-y-10  flex-wrap items-center overflow-hidden h-[14rem] ' style={style}>
-      {
+    <div className='flex justify-around w-full gap-x-8 gap-y-10 mx-auto  flex-wrap items-center overflow-hidden h-[14rem] ' style={style}>
+      {data[index] &&
         data[index].map((el) => {
           return el.type === 'episode' ||
             el.type === 'show' ||
@@ -206,10 +208,10 @@ const Row = ({ index, style }: { index: number, style: React.CSSProperties }) =>
     </div>
   ), [loaded[index]])
 
-  if (!loadedState) return (
-    <div className='italic text-center align-center h-[calc(18.5625rem/1.5)] my-auto'>...loading</div>
-  )
 
+
+  if (!loadedState && !index) return <Loader status={'PENDING'} meta={'Home'} style={{ position: 'absolute', top: '45%' }} />
+  if (!loadedState && index) return null;
 
   if (index === 0) {
     return <FirstRow />;

@@ -2,6 +2,9 @@
 import { BrowserRouter } from 'react-router-dom'
 import { createContext, useState } from 'react'
 import { Playlist, Episode, Track, Album, Show, CategoryPlaylist, EpisodeFull } from '../utils/types'
+import { Provider } from 'react-redux'
+import { store } from '@/store'
+
 
 export type OwnPlaylist = {
     name: string,
@@ -60,7 +63,7 @@ function RootRouter({ children }: { children: React.ReactNode }) {
     const removeMedia = (type: T, id: T) => {
         setState(prev => ({
             ...prev,
-            [type]: Object.fromEntries(Object.entries(prev[type]).filter(media => media[0] === id))
+            [type]: Object.fromEntries(Object.entries(prev[type]).filter(media => media[0] !== id))
         }))
     }
 
@@ -83,9 +86,11 @@ function RootRouter({ children }: { children: React.ReactNode }) {
 
     return (
         <BrowserRouter>
-            <Context.Provider value={{ ...state, setProp, addMedia, removeMedia }}>
-                {children}
-            </Context.Provider>
+            <Provider store={store}>
+                <Context.Provider value={{ ...state, setProp, addMedia, removeMedia }}>
+                    {children}
+                </Context.Provider>
+            </Provider>
         </BrowserRouter>
     )
 }

@@ -20,7 +20,7 @@ export function shuffle <T>(arr: T[]) : T[]{
     return newArr;
 }
 
-export function hexToHSL(H, L:number) {
+export function hexToHSL(H, L:number, a=1) {
     // Convert hex to RGB first
     let r = 0, g = 0, b = 0;
     if (H.length == 4) {
@@ -62,6 +62,6 @@ export function hexToHSL(H, L:number) {
     s = +(s * 100).toFixed(1);
     l = +(l * 100).toFixed(1);
   
-    return "hsl(" + h + "," + s + "%," + L + "%)";
+    return "hsla(" + h + "," + s + "%," + L + "%," + a + ")";
   }
 

@@ -74,7 +74,7 @@ export function getEpisode(access_token: string, id: string, country: string){
         }}).then(
             ({data}:{data: SpotifyApi.EpisodeObject}) => ({
                 audio_preview_url: data.audio_preview_url,
-                description: data.description,
+                description: data.html_description,
                 duration_ms: data.duration_ms,
                 id: data.id,
                 type: data.type,
@@ -222,8 +222,8 @@ export function getSeveralCategories(access_token:string,country: Country ,offse
         })
 }
 
-export function getCategoyPlaylist (access_token: string, id:string, country:Country){
-    return  axios.get(`https://api.spotify.com/v1/search?q=q=a%20e%20genre:${id}&type=track&market=${country}&limit=25`, {
+export function getCategoryPlaylist (access_token: string, id:string, country:Country){
+    return  axios.get(`https://api.spotify.com/v1/search?q=a%20e%20genre:${id}&type=track&market=${country}&limit=25`, {
         headers: {
             'Authorization': 'Bearer ' + access_token
         }}).then(({data}:{data: SpotifyApi.TrackSearchResponse}) => data.tracks.items.map(track => ({
@@ -257,7 +257,7 @@ export function getCategoyPlaylist (access_token: string, id:string, country:Cou
         headers: {
             'Authorization': 'Bearer ' + access_token
         }}).then(({data}:{data: SpotifyApi.ShowObjectFull})=> ({
-            description: data.description,
+            description: data.html_description,
             id: data.id,
             image: data.images[0].url,
             name: data.name,
@@ -266,7 +266,7 @@ export function getCategoyPlaylist (access_token: string, id:string, country:Cou
             publisher: data.publisher,
             episodes: data.episodes.items.map(episode => ({
                 audio_preview_url: episode.audio_preview_url,
-                description: episode.description,
+                description: episode.html_description,
                 duration_ms: episode.duration_ms,
                 id: episode.id,
                 type: episode.type,

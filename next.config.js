@@ -23,6 +23,18 @@ module.exports = {
         port: '',
         pathname: '/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'thisis-images.spotifycdn.com',
+        port: '',
+        pathname: '/**'
+      },
+      {
+        protocol: 'https', 
+        hostname: "image-cdn-ak.spotifycdn.com",
+        port: '',
+        pathname: '/**'
+      }
     ],
   }
 }

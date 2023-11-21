@@ -1,14 +1,15 @@
-import React, { use, useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { VariableSizeList as List } from 'react-window'
 import InfiniteLoader from 'react-window-infinite-loader';
 import Card from './card';
 import style from './main.list.module.css'
 import { Data } from './home';
 import { random } from '@/utils';
-import { getSeveralEpisodes, getEpisode, getSeveralShows } from '@/utils/api';
-import { useNavigate, useParams } from 'react-router-dom';
+import { getSeveralEpisodes, getSeveralShows } from '@/utils/api';
+import { useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { pushRef } from '@/store/reducers/main_slice';
+import Loader from '../network_request';
 
 type CallBack = (param: string) => Promise<any>;
 let data: Data[][] = [];
@@ -29,7 +30,7 @@ export const SeeAll = ({ isItemLoaded, calcItemSize, loadMoreItems, Row, itemCou
 
         <List
           className={style.list}
-          height={0.72 * window.innerHeight}
+          height={0.75 * window.innerHeight}
           itemCount={itemCount}
           itemSize={calcItemSize}
           onItemsRendered={onItemsRendered}
@@ -95,6 +96,8 @@ export default () => {
   const Row = ({ style, index }: { style: React.CSSProperties, index: number }) => {
     const [loadedState, setLoadedState] = useState(loaded[index]);
     const init = useMemo(() => {
+      if (!access_token) return;
+      loadMoreItems(0, 13);
       const setLoadedInterval = setInterval(() => loaded[index] && (() => { setLoadedState(true); clearInterval(setLoadedInterval) })(), 1000)
     }, []);
 
@@ -123,7 +126,9 @@ export default () => {
       </div>
     ), [data[index]])
 
-    if (!data[index] && !!index) return <div className='italic text-center align-center h-[calc(18.5625rem/1.5)]'>loading...</div>
+    if (!loadedState && index === 1) return <Loader status={'PENDING'} meta={'Home'} style={{ position: 'absolute', top: '45%' }} />
+
+    if (!loadedState && !!index) return null
     if (index === 0) return <Title />
     return <ImageRow />
   }

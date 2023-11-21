@@ -2,6 +2,7 @@
     scrollbar-width: thin;
     scroll-behavior: smooth;
     overflow-x: visible;
+    padding: 1.5rem;
 }
 
 .list::-webkit-scrollbar-thumb, .list::-webkit-scrollbar-track{

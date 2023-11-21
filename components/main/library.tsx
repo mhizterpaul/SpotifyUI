@@ -2,7 +2,7 @@ import { useContext, useEffect, useRef, useState } from 'react';
 import { Context, OwnPlaylist } from '../../app/rootProvider';
 import { pushRef } from '@/store/reducers/main_slice';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
-import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
+import { useLocation, useParams, useSearchParams } from 'react-router-dom';
 import Image from 'next/image';
 import { SlOptions } from 'react-icons/sl'
 import { BiLike, BiSave } from 'react-icons/bi';
@@ -11,7 +11,6 @@ import { LiaTimesSolid } from 'react-icons/lia';
 import { TbDots } from 'react-icons/tb';
 import { AiOutlineDelete } from 'react-icons/ai';
 import { Playlist } from '@/utils/types';
-import { useParams } from 'next/navigation';
 
 
 const Library = () => {
@@ -19,7 +18,6 @@ const Library = () => {
   const dispatch = useAppDispatch();
   const [hover, setHover] = useState(false);
   const [searchParams] = useSearchParams();
-  const access_token = useAppSelector(state => state.main.access_token);
   const { Playlist, Tracks, Episodes, addMedia } = useContext(Context)
   const ownPlaylist: OwnPlaylist[] = Object.values(Playlist).filter(value => typeof (value.id) === 'number')
   const inputRef = useRef<HTMLInputElement>(null);
@@ -85,14 +83,14 @@ const Library = () => {
 
   //fix button and button link
   //create playlist click does nothing
-  if ((searchParams.get('new') === 'true') || (search === '?new=true') && !closeForm) {
+  if (searchParams.get('new') === 'true' || search === '?new=true' && !closeForm) {
     return (
       <section className='w-full relative -mt-[2rem] h-full flex items-center justify-center '>
 
 
-        <form onSubmit={(e: React.ChangeEvent<HTMLFormElement>) => save(e)} className=' bg-[#333] flex rounded-md flex-col items-center p-4 gap-y-2 justify-center min-w-[28rem] max-w-lg max-h-fit'>
+        <form onSubmit={(e: React.ChangeEvent<HTMLFormElement>) => save(e)} className=' bg-[#333] mt-9 flex rounded-md flex-col items-center p-4 gap-y-2 justify-center min-w-[280px] max-w-md max-h-fit overflow-hidden '>
           <h3 className='flex items-center w-full justify-between mb-2'><span className='inline-block text-2xl font-extrabold'>Edit details</span> <LiaTimesSolid className={'hover:bg-[#949292] w-8 h-8 hover:rounded-full p-1 '} onClick={() => { setCloseForm(true); dispatch(pushRef('/library')) }} /></h3>
-          <div className='relative flex w-full justify-between items-center gap-x-2 h-[50%]'>
+          <div className='relative flex w-full justify-between items-center gap-x-2 h-[50%] '>
 
             <input ref={fileRef} type='file' size={1028 * 1000 * 6} onInput={handleFile} accept={'image/*'} style={{
               position: 'absolute',
@@ -102,19 +100,19 @@ const Library = () => {
               clip: 'rect(1px, 1px, 1px, 1px)'
             }} />
             <div className={(activeInput ?
-              ' hover:after:absolute hover:after:pointer-events-none hover:after:text-lg hover:after:content-["Choose_photo"] hover:after:font-bold hover:after:bottom-12 hover:after:left-8 hover:after:z-10 '
-              : '') + ' relative w-[180] mx-auto my-auto h-full '} onMouseEnter={() => setHover(true)}>
+              ' hover:after:absolute hover:after:pointer-events-none hover:after:text-base hover:after:content-["Choose_photo"] hover:after:font-bold hover:after:bottom-12 hover:after:left-8 hover:after:z-10 '
+              : '') + ' relative mx-auto ml-2 h-full '} onMouseEnter={() => setHover(true)}>
 
-              <input ref={imageRef} id='image' type='image' className={'bg-[rgb(40,40,40)] bg-contain bg-no-repeat bg-center p-16 relative shadow-lg'} width={175} height={175} alt={'Playlist Image'} src={activeInput ? editIcon : defaultSrc} onMouseEnter={() => setActiveInput(true)} onMouseLeave={() => setActiveInput(false)} onClick={(e) => { e.preventDefault(); fileRef?.current?.click() }} />
+              <input ref={imageRef} id='image' type='image' className={'bg-[rgb(40,40,40)] bg-contain bg-no-repeat bg-center p-16 relative shadow-lg '} width={165} height={165} alt={'Playlist Image'} src={activeInput ? editIcon : defaultSrc} onMouseEnter={() => setActiveInput(true)} onMouseLeave={() => setActiveInput(false)} onClick={(e) => { e.preventDefault(); fileRef?.current?.click() }} />
               <TbDots className={'absolute  text-3xl right-2 top-2 text-[whitesmoke] bg-zinc-900 rounded-full p-1 hover:text-white ' + (hover ? ' block ' : ' hidden ')} onClick={() => setInputSubMenu(state => !state)} />
               <ul className={'absolute -right-24 top-12 rounded-md bg-[#282828] list-none p-2 text-xs shadow-lg z-10 ' + (inputSubMenu ? ' ' : ' hidden ')}>
                 <li className='hover:bg-stone-600 p-2 ' onClick={() => { setInputSubMenu(false); res.image = defaultSrc; if (imageRef.current) imageRef.current.style.backgroundImage = '' }}><AiOutlineDelete className={'mr-1 text-[#A7A7A7] font-bold text-xl inline-block align-middle '} />Remove photo</li>
               </ul>
             </div>
 
-            <div className='flex relative flex-col gap-y-4 justify-between items-center h-full w-1/2 '>
+            <div className='flex relative flex-col gap-y-4 justify-between items-center h-full w-[60%] min-w-[130px] '>
               <label htmlFor='name' className='relative max-w-fit mb-2'>
-                <input ref={inputRef} id='name' name='name' className='rounded-md peer bg-[#3E3E3E] focus:bg-[#333333] p-2 focus-visible:outline-none focus:ring-2 focus:ring-gray-500 w-[222px] ' defaultValue={'My Playlist #' + (ownPlaylist.length)} type='text' />
+                <input ref={inputRef} id='name' name='name' className='rounded-md peer bg-[#3E3E3E] focus:bg-[#333333] p-2 focus-visible:outline-none focus:ring-2 focus:ring-gray-500 w-full ' defaultValue={'My Playlist #' + (ownPlaylist.length)} type='text' />
                 <span className='hidden absolute peer-hover:inline-block peer-focus:inline-block z-10 text-sm -top-[0.75rem] left-2 '>Name</span>
               </label>
 
@@ -137,7 +135,7 @@ const Library = () => {
 
 
   if (!(Object.keys(Playlist).length + Object.keys(Tracks).length + Object.keys(Episodes).length)) return (
-    <section className='flex items-center -mt-[3.6rem] flex-col w-full h-full justify-center '>
+    <section className='flex items-center -mt-[3.6rem] flex-col p-6 w-full h-full justify-center '>
       <div className='min-w-fit flex flex-col items-start justify-center'>
         <div className='text-sm mb-12 flex flex-col items-start justify-center gap-y-4'>
           <h3 className='font-extrabold '>Create your first playlist</h3>
@@ -159,32 +157,34 @@ const Library = () => {
 
   return <>
     {
-      (Object.keys(Playlist).length && !id) && <section>
-        <h2 className='flex justify-between items-center'>Playlists <span className={`mr-2 ${!seeAll || (Object.values(Playlist).length < 6) ? ' hidden ' : ' inline-block '}`} onClick={() => setSeeAll(false)}>See all</span><LiaTimesSolid className={`mr-2 ${seeAll ? 'inline-block' : 'hidden'}`} onClick={() => setSeeAll(true)} /></h2>
-        {(seeAll ? Object.values(Playlist) : Object.values(Playlist).slice(0, 6)).map((playlist: Playlist) => <p className='flex gap-x-4 justify-start items-center h-14'>
-          <Image src={playlist.image} className={'rounded-xl'} alt={playlist.name} height={100} width={100} />
-          <p dangerouslySetInnerHTML={{ __html: playlist.description }} />
-          <span className='font-bold text-sm text-gray-600'>
-            {playlist.total} items on this playlist &bull; {playlist.followers} followers
+      (Object.keys(Playlist).length && !id) ? <section className={'mb-8 flex justify-center flex-wrap items-center gap-x-6 '}>
+        <h2 className='flex justify-between items-center mb-3 w-full mx-auto '>Playlists <span className={`mr-2 ${!seeAll || (Object.values(Playlist).length < 6) ? ' hidden ' : ' inline-block '}`} onClick={() => setSeeAll(false)}>See all</span><LiaTimesSolid className={`mr-2 ${seeAll ? 'inline-block' : 'hidden'}`} onClick={() => setSeeAll(true)} /></h2>
+        {(seeAll ? Object.values(Playlist) : Object.values(Playlist).slice(0, 6)).map((playlist: Playlist) => <p className='flex gap-x-4 justify-start h-16 hover:bg-[#12121284] py-2 items-stretch max-w-[33%] overflow-hidden ' onClick={() => dispatch(pushRef('/playlist/' + playlist.id))}>
+          <Image src={playlist.image} className={'rounded-xl'} alt={playlist.name} height={75} width={75} />
+          {playlist.description ? <p className={' w-16 h-14 pt-2 truncate whitespace-normal'} dangerouslySetInnerHTML={{ __html: playlist.description }} /> : null}
+          <span className='font-bold text-sm max-w-[33%] inline-block pt-1 text-gray-600'>
+            {playlist.total || playlist.items?.length || playlist.tracks?.length || 0} items on this playlist &bull; {playlist.followers || playlist.popularity ?
+              playlist.followers ? playlist.followers + ' followers' : playlist.popularity + 'likes'
+              : null}
           </span>
         </p>)
         }
-      </section>
+      </section> : null
     }
 
-    {(Object.keys(Tracks).length && !id) ? <div onClick={() => dispatch(pushRef('/playlist/songs'))} className='text-2xl mr-4'>
+    {(Object.keys(Tracks).length && !id) ? <div onClick={() => dispatch(pushRef('/playlist/songs'))} className='text-2xl max-w-[40%] mr-4 mb-8'>
 
-      <span className='text-2xl hover:scale-[130] font-bold bg-blue-900'><BiLike /><RxDividerVertical className={'mx-2'} />{Object.keys(Tracks).length} liked Songs</span> <span className={'text-zinc-600'} >See all <SlOptions /></span>
+      <span className='text-xl inline-block hover:scale-105 font-bold '><BiLike /><RxDividerVertical className={'mx-2'} />{Object.keys(Tracks).length} liked Songs</span> <span className={'text-[#b3b3b3] hover:underline text-sm '} >See all</span>
     </div> : null}
 
     {
-      (Object.keys(Episodes).length && !id) ? <section>
-        <h2 className='flex justify-between items-center'>Episodes <span className={`mr-2w`} onClick={() => dispatch(pushRef('/episodes'))}>See all</span></h2>
-        {Object.keys(Episodes).length && Object.values(Episodes).slice(0, 6).map((episode) => <p className='flex gap-x-4 justify-start items-center h-14'>
-          <Image src={episode.image} className={'rounded-xl'} alt={episode.name} height={100} width={100} />
-          {episode.description}
-          <span className='font-bold text-sm text-gray-600'>
-            {episode.publisher} &bull; {episode.total}
+      (Object.keys(Episodes).length && !id) ? <section className={'flex justify-center mx-auto items-center gap-x-6 '}>
+        <h2 className='flex justify-between mb-3 items-center'>Episodes <span className={`mr-2w`} onClick={() => dispatch(pushRef('/episodes'))}>See all</span></h2>
+        {Object.keys(Episodes).length && Object.values(Episodes).slice(0, 6).map((episode) => <p className='flex gap-x-4 justify-start hover:bg-[#1212127b] items-stretch h-16  py-2   max-w-[33% overflow-hidden]' onClick={() => dispatch(pushRef('/episode/' + episode.id))}>
+          <Image src={episode.image} className={'rounded-xl'} alt={episode.name} height={75} width={75} />
+          <p className={' w-16 h-14 pt-2 truncate whitespace-normal '} dangerouslySetInnerHTML={{ __html: episode.description }} />
+          <span className='font-bold inline-block pt-1 max-w-[56px] max-h-[48px] text-sm text-gray-600 overflow-hidden '>
+            {episode.publisher || episode.show?.publisher} &bull; {episode.total || episode.show?.total_episodes}
           </span>
         </p>)
         }

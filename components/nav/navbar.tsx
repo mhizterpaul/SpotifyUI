@@ -2,11 +2,12 @@
 import Sidebar from './sidebar';
 import Profile from './profile';
 import Search from './search';
-import { useContext, useState } from 'react';
-import { useAppDispatch } from '@/store/hooks';
+import { useContext, useMemo, useState } from 'react';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { setOpen } from '@/store/reducers/main_slice';
 import { useLocation } from 'react-router-dom';
 import { Context } from '@/app/rootProvider';
+import { hexToHSL } from '@/utils';
 
 
 type Props = {
@@ -24,19 +25,21 @@ const Nav = ({ search, isMobile, route, next, prev }: Props) => {
 
     const [isOpen, setIsOpen] = useState(false);
     const dispatch = useAppDispatch();
+    const nowPlayingView = useAppSelector((store) => store.main.nowPlayingView)
     const pathname = useLocation().pathname;
     const { BgColor } = useContext(Context)
 
+
     return (
         <>
-            <nav className={` nav flex relative md:col-start-2 ${isOpen ? 'col-start-2' : 'col-start-1'} ${isOpen && isMobile ? ' w-[calc(100vw-15rem)] ' : ' w-[98vw] '} col-end-4  row-start-1 md:w-[98%] row-end-2 pl-4 md:pl-0 flex-row items-center justify-between z-10 py-2 bg-transparent `} >
-                <div className='whitespace-nowrap'>
+            <nav className={` nav flex relative md:col-start-2 ${isOpen ? 'col-start-2' : 'col-start-1'} ${isOpen && isMobile ? ' w-[calc(100vw-15rem)] ' : nowPlayingView ? ' w-7/12 ' : ' w-[98vw] '} col-end-3 row-start-1 ${nowPlayingView ? ' md:w-7/12 ' : ' md:w-[98%] '} row-end-2 pl-4 gap-x-4 md:pl-0 flex-row items-center bg-transparent justify-between z-10 py-2 `} >
+                <div className={`whitespace-nowrap ${window.innerWidth < 380 && isOpen ? ' hidden ' : ''}`}>
                     <button className={`${btn} mr-4 md:ml-8`} onClick={() => route('previous')} disabled={prev}>
                     </button>
                     <button className={`${btn} rotate-180`} onClick={() => route('next')} disabled={next}>
                     </button>
                 </div>
-                {search && <Search style={{}} className={`${isOpen && isMobile ? 'hidden ' : ' '}`} />}
+                {search && window.innerWidth > 300 && <Search style={{}} className={`${isOpen && isMobile ? 'hidden ' : ' '}`} />}
                 <Profile className={`${isOpen && isMobile ? 'hidden ' : ' '}`} />
 
                 {!isOpen && <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" className='md:hidden absolute right-0 text-gray-600' onClick={() => { setIsOpen(true); dispatch(setOpen(true)) }} viewBox="0 0 72 72"><path fill="none" stroke="#ccc" strokeLinecap="round" strokeLinejoin="round" strokeMiterlimit="10" strokeWidth="2" d="M16 26h40M16 36h40M16 46h40" /></svg>}

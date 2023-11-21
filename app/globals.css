@@ -39,7 +39,7 @@
                        's m m'
                        'f f f';
   grid-template-rows: 1fr 4fr 4fr 1fr;
-  grid-template-columns: minmax(14.5rem, max-content) minmax(auto, 1fr);
+  grid-template-columns: minmax(14.5rem, max-content) repeat(2, minmax(auto, 1fr));
   scrollbar-width: none;
   overflow: clip;
 }
@@ -55,9 +55,9 @@
 
 .main-child {
   display: grid;
-  grid-template-areas: 'm m p';
-  grid-template-rows: 2fr 1fr;
-  grid-template-columns: 1fr;
+  grid-template-areas: 'm m m p p';
+  grid-template-columns: 3fr 2fr;
+  grid-template-rows: 1fr;
 }
 
 
@@ -126,8 +126,8 @@
 
 
 .footer svg {
-  width: 1.4rem;
-  height: 1.4rem;
+  width: 1.3rem;
+  height: 1.3rem;
 }
 
 footer input, footer svg {

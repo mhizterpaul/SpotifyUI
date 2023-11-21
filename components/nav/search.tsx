@@ -12,7 +12,7 @@ const Search = ({ className, style }: Props) => {
       <span className="absolute inset-y-2 left-0 flex items-center pl-2">
         <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" className="h-5 w-5 text-black" viewBox="0 0 256 256"><path fill="currentColor" d="m229.66 218.34l-50.07-50.06a88.11 88.11 0 1 0-11.31 11.31l50.06 50.07a8 8 0 0 0 11.32-11.32ZM40 112a72 72 0 1 1 72 72a72.08 72.08 0 0 1-72-72Z" /></svg>
       </span>
-      <input className="placeholder:italic placeholder:text-slate-400 text-black bg-white w-[80%] md:w-4/6 lg:w-5/6 border border-slate-300 rounded-2xl md:rounded-xl py-1 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 md:text-sm" style={style} placeholder='Artists, songs or podcasts' type="text" name="search" />
+      <input className="placeholder:italic placeholder:text-slate-400 text-black bg-white w-4/6  md:w-5/6 border border-slate-300 rounded-2xl md:rounded-xl py-1 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 md:text-sm" style={style} placeholder='Artists, songs or podcasts' type="text" name="search" />
     </label>
   )
 }

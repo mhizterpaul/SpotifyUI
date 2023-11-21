@@ -5,10 +5,11 @@ import Image from 'next/image'
 import { store } from '../../store/index'
 import { random } from '@/utils';
 import TopGenres from './top_genres';
-import { useState, useMemo, memo, useContext } from 'react';
+import { useState, useMemo, useContext } from 'react';
 import { pushRef } from '@/store/reducers/main_slice';
-import { useAppDispatch } from '@/store/hooks';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { Context } from '@/app/rootProvider';
+import Loader from '../network_request';
 
 
 
@@ -49,7 +50,10 @@ const Search = () => {
 
     const Row = ({ style, index }: { style: React.CSSProperties, index: number }) => {
         const [loadedState, setLoadedState] = useState(loaded[index]);
+        const access_token = useAppSelector(store => store.main.access_token)
         const init = useMemo(() => {
+            if (!access_token) return;
+            loadMoreItems(0, 13);
             const setLoadedInterval = setInterval(() => loaded[index] && (() => { setLoadedState(true); clearInterval(setLoadedInterval) })(), 1000)
         }, []);
         const ImgContainerstyle: React.CSSProperties = {
@@ -73,7 +77,7 @@ const Search = () => {
         }
 
         const ImageRow = useMemo(() => () => (
-            <div className={' flex justify-between gap-x-8 items-center flex-wrap w-full gap-y-12 overflow-hidden '} style={style}>
+            <div className={' flex justify-around gap-x-8 items-center flex-wrap w-full gap-y-12 overflow-hidden '} style={style}>
                 {data[index] && data[index].map((category: Category) => {
 
                     const bgColors = useMemo(() => random(['#27856A', '#8D67AB', '#1E3264', '#E8115B']), []);
@@ -90,7 +94,9 @@ const Search = () => {
 
 
 
-        if (!loadedState && !!index) return <div style={style} className={`h-[14.44rem] text-center my-auto italic`}>...loading</div>
+        if (!loadedState && index === 1) return <Loader status={'PENDING'} meta={'Home'} style={{ position: 'absolute', top: '45%' }} />
+
+        if (!loadedState && !!index) return null
 
         if (!index) return (() => useMemo(() => <TopGenres listStyle={style} />, []))()
 

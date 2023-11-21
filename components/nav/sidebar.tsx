@@ -17,7 +17,7 @@ const Sidebar = (props: { isOpen?: boolean }) => {
     const MediaCount = ({ type }: { type: string }) => {
         let plural: boolean | 's' | '' = type === 'playlist' ? !!(Object.keys(Playlist).length - 1) : type === 'song' ? !!(Object.keys(Tracks).length - 1) : !!(Object.keys(Episodes).length - 1);
         plural = plural ? 's' : '';
-        return <span className='text-[#A7A7A7] normal-case text-xs'><BsPinAngleFill className='text-[#1ED760] text-sm w-4 h-4 media-count inline-block ' /> {type === 'playlist' ? Object.keys(Playlist).length : type === 'song' ? Object.keys(Tracks).length : Object.keys(Episodes).length} {type + plural}</span>
+        return <span className='text-[#A7A7A7] normal-case text-xs self-start ml-2 '><BsPinAngleFill className='text-[#1ED760] text-sm w-4 h-4 media-count inline-block ' /> {type === 'playlist' ? Object.keys(Playlist).length : type === 'song' ? Object.keys(Tracks).length : Object.keys(Episodes).length} {type + plural}</span>
     }
 
 
