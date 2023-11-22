@@ -30,6 +30,7 @@ export default function RootLayout({
   //const headersList = headers();
   //const pathname = headersList.get("x-invoke-path") || "";
 
+  if (typeof window !== 'undefined') {
   return (
     <html lang="en">
       <body className={inter.className}>
@@ -43,5 +44,6 @@ export default function RootLayout({
       </body>
     </html>
   )
+  }
 }
 

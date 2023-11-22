@@ -1,15 +1,15 @@
-import { SeeAll } from './see-all'
+import { SeeAll } from './seeAll'
 import { getSeveralCategories } from '@/utils/api';
 import { Category, Countries } from '@/utils/types';
 import Image from 'next/image'
 import { store } from '../../store/index'
 import { random } from '@/utils';
-import TopGenres from './top_genres';
+import TopGenres from './topGenres';
 import { useState, useMemo, useContext } from 'react';
 import { pushRef } from '@/store/reducers/main_slice';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { Context } from '@/app/rootProvider';
-import Loader from '../network_request';
+import Loader from '../networkRequest';
 
 
 

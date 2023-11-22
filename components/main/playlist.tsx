@@ -18,7 +18,7 @@ import { RiErrorWarningLine } from "react-icons/ri";
 import { Context, OwnPlaylist } from "@/app/rootProvider";
 import { Album, CategoryPlaylist, Playlist as Play, Playlist, Track } from '../../utils/types'
 import { getAlbum, getCategoryPlaylist, getPlaylist } from "@/utils/api";
-import Loader from "../network_request";
+import Loader from "../networkRequest";
 import { likedStyles } from "../nav/sidebar";
 import { hexToHSL, random } from "@/utils";
 import styles from './main.list.module.css'

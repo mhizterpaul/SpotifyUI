@@ -2,12 +2,12 @@
 'use client'
 import { lazy, useEffect, useState } from 'react';
 import { Route, Routes, useLocation } from 'react-router-dom';
-import Loader from '@/components/network_request';
+import Loader from '@/components/networkRequest';
 import { useAppSelector, useAppDispatch } from '@/store/hooks';
 import { fetchAccessToken } from '@/store/reducers/main_slice';
 import Playlist from '@/components/main/playlist';
 import HomePage from '../components/main/home'
-import SeeAll from '@/components/main/see-all';
+import SeeAll from '@/components/main/seeAll';
 
 const Library = lazy(() => import('../components/main/library'));
 const Search = lazy(() => import('../components/main/search'));

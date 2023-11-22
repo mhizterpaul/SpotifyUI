@@ -12,7 +12,7 @@ import { Countries, AudioBookCountries, Country } from "@/utils/types";
 import { store } from '../../store/index'
 import PlayIcon from '../common/play'
 import style from './main.list.module.css'
-import Loader from "../network_request";
+import Loader from "../networkRequest";
 
 
 interface BasicData {

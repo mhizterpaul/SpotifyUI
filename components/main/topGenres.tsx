@@ -1,7 +1,7 @@
 import { RootState } from "@/store";
 import { ApiStatus, pushRef } from "@/store/reducers/main_slice";
 import { connect } from "react-redux";
-import Loader from "../network_request";
+import Loader from "../networkRequest";
 import { getSeveralCategories } from "@/utils/api";
 import { Component } from "react";
 import React from 'react'

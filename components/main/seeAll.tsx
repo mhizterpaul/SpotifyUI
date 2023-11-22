@@ -9,7 +9,7 @@ import { getSeveralEpisodes, getSeveralShows } from '@/utils/api';
 import { useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { pushRef } from '@/store/reducers/main_slice';
-import Loader from '../network_request';
+import Loader from '../networkRequest';
 
 type CallBack = (param: string) => Promise<any>;
 let data: Data[][] = [];

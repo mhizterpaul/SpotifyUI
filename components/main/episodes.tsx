@@ -15,7 +15,7 @@ import { Episode, EpisodeFull, Show } from "@/utils/types";
 import { Context, V } from "@/app/rootProvider";
 import { getShow, getEpisode } from "@/utils/api";
 import styles from './main.list.module.css'
-import Loader from "../network_request";
+import Loader from "../networkRequest";
 import { hexToHSL, random } from "@/utils";
 import { RxDotFilled } from "react-icons/rx";
 
