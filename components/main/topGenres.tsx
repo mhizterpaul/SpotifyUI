@@ -11,7 +11,7 @@ import { random } from '@/utils'
 import Carousel from 'nuka-carousel'
 import { PiCaretRightBold, PiCaretLeftBold } from 'react-icons/pi'
 import { store } from '@/store';
-import { Context, V } from "@/app/rootProvider";
+import { Context, V } from "@/containers/rootProvider";
 
 type Props = {
     access_token: string | null,

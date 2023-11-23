@@ -1,10 +1,10 @@
 import { Inter } from 'next/font/google'
 import './globals.css'
-import RootRouterProvider from './rootProvider';
+import RootRouterProvider from '../containers/rootProvider';
 import Nav from '@/containers/navbarContainer';
 import Footer from '@/components/footer/footer';
 import { Metadata } from 'next';
-import Favicon from './favicon.ico'
+//import Favicon from './favicon.ico'
 
 
 export const metadata: Metadata = {
@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 
 }
 
-icons: [{ rel: 'icon', url: Favicon.src }]
+//icons: [{ rel: 'icon', url: Favicon.src }]
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -30,7 +30,7 @@ export default function RootLayout({
   //const headersList = headers();
   //const pathname = headersList.get("x-invoke-path") || "";
 
-  if (typeof window !== 'undefined') {
+
   return (
     <html lang="en">
       <body className={inter.className}>
@@ -44,6 +44,8 @@ export default function RootLayout({
       </body>
     </html>
   )
-  }
+
+
+
 }
 

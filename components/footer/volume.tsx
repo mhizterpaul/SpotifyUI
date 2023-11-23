@@ -6,7 +6,7 @@ import { BsPip } from 'react-icons/bs'
 import { useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { pushRef, setNowPlayingView } from '@/store/reducers/main_slice'
 import { useAppDispatch, useAppSelector } from '@/store/hooks'
-import { Context } from '@/app/rootProvider'
+import { Context } from '@/containers/rootProvider'
 import { SlVolume1, SlVolume2, SlVolumeOff } from 'react-icons/sl'
 import { useLocation } from 'react-router-dom'
 export const ActiveDot = ({ children, render }: { children: React.ReactNode, render?: boolean }) => {

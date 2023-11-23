@@ -1,6 +1,6 @@
 
 'use client'
-import { lazy, useEffect, useState } from 'react';
+import { ReactElement, lazy, useEffect, useState } from 'react';
 import { Route, Routes, useLocation } from 'react-router-dom';
 import Loader from '@/components/networkRequest';
 import { useAppSelector, useAppDispatch } from '@/store/hooks';
@@ -8,11 +8,13 @@ import { fetchAccessToken } from '@/store/reducers/main_slice';
 import Playlist from '@/components/main/playlist';
 import HomePage from '../components/main/home'
 import SeeAll from '@/components/main/seeAll';
+import Layout from '@/components/rootLayout'
+
 
 const Library = lazy(() => import('../components/main/library'));
 const Search = lazy(() => import('../components/main/search'));
 const NowPlaying = lazy(() => import('../components/footer/nowPlaying'))
-const PageNotFound = lazy(() => import('./404/page'))
+const PageNotFound = lazy(() => import('./404'))
 const Episodes = lazy(() => import('../components/main/episodes'))
 const Lyrics = lazy(() => import('../components/main/lyrics'))
 
@@ -65,6 +67,13 @@ function Home() {
 }
 
 
+Home.getLayout = function getLayout(page: ReactElement) {
+  return (
+    <Layout>
+      {page}
+    </Layout>
+  )
+}
 
 
 export default Home;

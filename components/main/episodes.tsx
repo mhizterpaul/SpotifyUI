@@ -12,7 +12,7 @@ import { SiSpotify } from 'react-icons/si'
 import BgColorDetector from '../main/imageBackgroundDetector'
 import { pushRef, setNowPlayingView } from "@/store/reducers/main_slice";
 import { Episode, EpisodeFull, Show } from "@/utils/types";
-import { Context, V } from "@/app/rootProvider";
+import { Context, V } from "@/containers/rootProvider";
 import { getShow, getEpisode } from "@/utils/api";
 import styles from './main.list.module.css'
 import Loader from "../networkRequest";
@@ -135,7 +135,7 @@ const Episodes = () => {
         const data = Data as Show;
         return (
 
-            <div className={" overflow-y-scroll h-[80vh] rounded-md -mt-14 w-full " + styles.list}>
+            <div className={" overflow-y-scroll h-[80vh] rounded-md -mt-20 w-full " + styles.list}>
                 <section className=' h-max p-8 pt-20 -ml-[1.2rem] ' style={gradient}>
                     <h2 className={'h-fit w-full flex gap-x-4 items-stretch justify-start '} >
                         {bgColor ? <Image src={data.image} className={'shadow-black shadow-md rounded-md '} width={195} height={195} alt={data.name} /> : <BgColorDetector imageUrl={data.image} dim={195} callBack={(hexCode) => setBgColor(hexCode)} />}
@@ -226,7 +226,7 @@ const Episodes = () => {
     if (id) return (() => {
         const data = Data as EpisodeFull
         return (
-            <div className={" overflow-y-scroll h-[80vh] rounded-md -mt-14 w-full " + styles.list}>
+            <div className={" overflow-y-scroll h-[80vh] rounded-md -mt-20 w-full " + styles.list}>
                 <section className=' h-max p-8 pt-20 -ml-[1.2rem] ' style={gradient}>
                     <h2 className=' flex items-stretch text-white justify-start gap-x-4 '>
                         {bgColor ? <Image src={data.image} className={' rounded-md '} width={195} height={195} alt={data.name} /> : <BgColorDetector imageUrl={data.image} dim={100} callBack={(hexCode) => setBgColor(hexCode)} />}

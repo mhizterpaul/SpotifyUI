@@ -15,7 +15,7 @@ import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { SiSpotify } from "react-icons/si";
 import { LiaTimesSolid } from "react-icons/lia";
 import { RiErrorWarningLine } from "react-icons/ri";
-import { Context, OwnPlaylist } from "@/app/rootProvider";
+import { Context, OwnPlaylist } from "@/containers/rootProvider";
 import { Album, CategoryPlaylist, Playlist as Play, Playlist, Track } from '../../utils/types'
 import { getAlbum, getCategoryPlaylist, getPlaylist } from "@/utils/api";
 import Loader from "../networkRequest";
@@ -166,7 +166,7 @@ const Playlist = () => {
         }
 
         return (
-            <div className={" overflow-y-scroll h-[85vh] -mt-[4.5rem] sm:-mt-14 w-full " + styles.list}>
+            <div className={" overflow-y-scroll h-[85vh] -mt-[4.5rem] sm:-mt-20 w-full " + styles.list}>
                 <section ref={containerRef} className=' h-full p-8 mb-10 rounded-md min-w-[280px] ' style={gradient}>
                     <h2 className={' h-max w-full pt-[5rem] flex gap-x-4 mb-9 '} >
                         {id === 'songs' ? <div className='w-48 h-48 shadow-sm shadow-black flex items-center justify-center' style={likedStyles}>

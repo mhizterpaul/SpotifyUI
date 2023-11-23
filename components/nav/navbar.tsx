@@ -6,7 +6,7 @@ import { useContext, useMemo, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { setOpen } from '@/store/reducers/main_slice';
 import { useLocation } from 'react-router-dom';
-import { Context } from '@/app/rootProvider';
+import { Context } from '@/containers/rootProvider';
 import { hexToHSL } from '@/utils';
 
 

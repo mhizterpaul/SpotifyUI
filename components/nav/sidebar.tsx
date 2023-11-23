@@ -1,7 +1,7 @@
 import { pushRef } from '@/store/reducers/main_slice';
 import { useAppDispatch } from '@/store/hooks';
 import { BiHomeAlt } from 'react-icons/bi'
-import { Context } from '../../app/rootProvider';
+import { Context } from '../../containers/rootProvider';
 import { useContext } from 'react';
 import { BsPinAngleFill } from 'react-icons/bs';
 

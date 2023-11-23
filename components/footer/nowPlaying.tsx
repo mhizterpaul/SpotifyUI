@@ -6,7 +6,7 @@ import { SlHeart, SlOptions } from 'react-icons/sl';
 
 import { useAppDispatch } from '@/store/hooks';
 import { setNowPlayingView } from '../../store/reducers/main_slice'
-import { Context } from '@/app/rootProvider';
+import { Context } from '@/containers/rootProvider';
 import Image from 'next/image'
 import { useContext } from 'react';
 import { BiPlay } from 'react-icons/bi';
@@ -27,7 +27,7 @@ const NowPlaying = () => {
     const nextInQueue = queue[indexArr.indexOf(nowPlaying.name) + 1];
 
     return (
-        <section className={' p-[0.65rem] -mt-14 mb-12 overflow-y-scroll rounded-md bg-[#121212] flex flex-col gap-y-4 [&>section:not(section:first-of-type)]:rounded-md [&>section:not(section:first-of-type)]:bg-[#242424] '}>
+        <section className={' p-[0.65rem] -mt-20 mb-12 overflow-y-scroll rounded-md bg-[#121212] flex flex-col gap-y-4 [&>section:not(section:first-of-type)]:rounded-md [&>section:not(section:first-of-type)]:bg-[#242424] '}>
             <h3 className={'flex justify-between items-center flex-nowrap pt-4'}>
                 <span className={'inline-block max-w-[60%] truncate font-bold hover:underline text-white '}>
                     {nowPlaying.publisher || nowPlaying.name || nowPlaying.track?.name || nowPlaying.track?.album.name || nowPlaying.album?.name || currentPlaylist.name}

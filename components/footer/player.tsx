@@ -3,7 +3,7 @@ import { BsPlayCircle, BsPauseCircle } from 'react-icons/bs'
 import { RxShuffle } from 'react-icons/rx'
 import { BiRepeat } from 'react-icons/bi'
 import Volume from './volume'
-import { Context, V } from "@/app/rootProvider";
+import { Context, V } from "@/containers/rootProvider";
 import { shuffle } from "@/utils";
 import { ActiveDot } from './volume'
 import style from './footer.module.css'

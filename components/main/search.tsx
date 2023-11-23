@@ -8,7 +8,7 @@ import TopGenres from './topGenres';
 import { useState, useMemo, useContext } from 'react';
 import { pushRef } from '@/store/reducers/main_slice';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
-import { Context } from '@/app/rootProvider';
+import { Context } from '@/containers/rootProvider';
 import Loader from '../networkRequest';
 
 

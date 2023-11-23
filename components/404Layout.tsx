@@ -1,4 +1,4 @@
-import '../globals.css'
+import './globals.css'
 import { Inter } from 'next/font/google'
 import { Metadata } from 'next';
 
@@ -12,7 +12,7 @@ const inter = Inter({ subsets: ['latin'] });
 
 
 
-export default function RootLayout({
+export default function Layout({
   children,
 
 }: {
@@ -26,7 +26,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className} >
         <section className='main-container md:p-x-4 relative my-auto max-h-[914px] h-screen overflow-hidden'>
-                {children}
+          {children}
         </section>
       </body>
     </html>

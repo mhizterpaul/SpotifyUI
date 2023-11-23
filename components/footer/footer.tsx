@@ -5,7 +5,7 @@ import { useContext, useState } from 'react'
 import { IoIosArrowDropupCircle, IoIosArrowDropdownCircle } from 'react-icons/io'
 import { useAppDispatch, useAppSelector } from "@/store/hooks"
 import { pushRef, setNowPlayingView } from "@/store/reducers/main_slice"
-import { Context } from "@/app/rootProvider"
+import { Context } from "@/containers/rootProvider"
 import { FaHeart } from "react-icons/fa6"
 import { SlHeart } from "react-icons/sl"
 
@@ -16,7 +16,7 @@ const Footer = () => {
     const nowPlayingView = useAppSelector(state => state.main.nowPlayingView);
     const { nowPlaying, currentPlaylist, Episodes, Tracks, addMedia, removeMedia } = useContext(Context);
 
-    return (<footer className={`${nowPlaying?.album?.image || nowPlaying?.track?.album.image || nowPlaying?.image || nowPlaying?.show?.image ? '' : ' inactive '}` + ' footer bg-[#181818] w-screen relative flex items-center justify-between z-10 whitespace-nowrap pb-6 -mt-14 md:min-w-[540px] min-h-[120px] h-[14vh] gap-x-2 overflow-visible'}>
+    return (<footer className={`${nowPlaying?.album?.image || nowPlaying?.track?.album.image || nowPlaying?.image || nowPlaying?.show?.image ? '' : ' inactive '}` + ' footer bg-[#181818] w-screen relative flex items-center justify-between z-10 whitespace-nowrap pb-6 -mt-20 md:min-w-[540px] min-h-[120px] h-[14vh] gap-x-2 overflow-visible'}>
 
         <div className={`${nowPlaying?.image || nowPlaying?.album?.image || nowPlaying?.track?.album.image || nowPlaying?.show?.image ? 'flex' : 'invisible'}` + ' flex-row items-center max-w-[30vw]'}>
             <div className={' group mx-2 relative min-w-fit w-max-[40%] '}>

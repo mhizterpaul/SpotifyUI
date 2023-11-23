@@ -1,5 +1,5 @@
 import { useContext, useEffect, useRef, useState } from 'react';
-import { Context, OwnPlaylist } from '../../app/rootProvider';
+import { Context, OwnPlaylist } from '../../containers/rootProvider';
 import { pushRef } from '@/store/reducers/main_slice';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { useLocation, useParams, useSearchParams } from 'react-router-dom';
