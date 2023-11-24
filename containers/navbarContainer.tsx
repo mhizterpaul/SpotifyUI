@@ -21,7 +21,7 @@ function NavbarContainer({ href, end, curr, dispatch }: Props) {
   const routes = ['playlist', 'lyrics', 'library', 'search', 'episode', 'see-all']
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 666),
     [nav, setNav] = useState({ prev: true, next: false }),
-    currUrl = window.location.href.split(process.env.NEXT_PUBLIC_BASE_URL || '')[1],
+    currUrl = window.location.href.split(process.env.NEXT_PUBLIC_BASE_URL + '/')[1],
     location = useLocation(),
     pathname = location.pathname,
     navigate = useNavigate(),
@@ -55,6 +55,7 @@ function NavbarContainer({ href, end, curr, dispatch }: Props) {
     };
 
   useMemo(() => {
+
     if (currUrl.startsWith('?')) {
       if (!routes.some((el) => currUrl.split('?')[1].includes(el))) return window.location.href = `${process.env.NEXT_PUBLIC_BASE_URL}/404`;
       dispatch(setHref(`/${currUrl.slice(1)}`));
