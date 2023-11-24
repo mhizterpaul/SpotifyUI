@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import Image from 'next/image'
+import avatarImg from '../../public/images/avatar.jpg'
 
 const Profile = ({ className }: { className: string }) => {
 
@@ -11,7 +12,7 @@ const Profile = ({ className }: { className: string }) => {
     return (
         <button className={className + ' max-w-[8rem] w-1/4 h-10 relative flex flex-row items-center justify-between bg-[#282828b4] hover:scale-105 hover:bg-[#282828] active:bg-[#282828]  rounded-2xl md:mr-2 mr-16'}
             onClick={handleClick}>
-            <Image src='/avatar.jpg' width={50} height={50} alt="profile picture" style={
+            <Image src={avatarImg} width={50} height={50} alt="profile picture" style={
                 {
                     objectFit: "contain",
                     aspectRatio: '1.5',

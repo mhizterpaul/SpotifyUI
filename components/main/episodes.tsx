@@ -135,8 +135,8 @@ const Episodes = () => {
         const data = Data as Show;
         return (
 
-            <div className={" overflow-y-scroll h-[80vh] rounded-md -mt-20 w-full " + styles.list}>
-                <section className=' h-max p-8 pt-20 -ml-[1.2rem] ' style={gradient}>
+            <div className={" overflow-y-scroll h-[86vh] -mt-[3.2rem] p-0 rounded-md w-full " + styles.list}>
+                <section className=' h-max p-8 pt-20 rounded-t-md -ml-[1.2rem] ' style={gradient}>
                     <h2 className={'h-fit w-full flex gap-x-4 items-stretch justify-start '} >
                         {bgColor ? <Image src={data.image} className={'shadow-black shadow-md rounded-md '} width={195} height={195} alt={data.name} /> : <BgColorDetector imageUrl={data.image} dim={195} callBack={(hexCode) => setBgColor(hexCode)} />}
                         <div className='flex flex-col items-start justify-center gap-y-4 pt-12 '>
@@ -226,8 +226,8 @@ const Episodes = () => {
     if (id) return (() => {
         const data = Data as EpisodeFull
         return (
-            <div className={" overflow-y-scroll h-[80vh] rounded-md -mt-20 w-full " + styles.list}>
-                <section className=' h-max p-8 pt-20 -ml-[1.2rem] ' style={gradient}>
+            <div className={" overflow-y-scroll h-[86vh] rounded-md -mt-20 w-full " + styles.list}>
+                <section className=' h-max rounded-t-md p-8 pt-20  ' style={gradient}>
                     <h2 className=' flex items-stretch text-white justify-start gap-x-4 '>
                         {bgColor ? <Image src={data.image} className={' rounded-md '} width={195} height={195} alt={data.name} /> : <BgColorDetector imageUrl={data.image} dim={100} callBack={(hexCode) => setBgColor(hexCode)} />}
                         <div className='flex flex-col pt-12 gap-y-6 justify-center items-start '>
