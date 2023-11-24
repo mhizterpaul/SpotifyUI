@@ -21,7 +21,7 @@ function NavbarContainer({ href, end, curr, dispatch }: Props) {
   const routes = ['playlist', 'lyrics', 'library', 'search', 'episode', 'see-all']
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 666),
     [nav, setNav] = useState({ prev: true, next: false }),
-    currUrl = window.location.href.split('3000/')[1],
+    currUrl = window.location.href.split(process.env.NEXT_PUBLIC_BASE_URL || '')[1],
     location = useLocation(),
     pathname = location.pathname,
     navigate = useNavigate(),
