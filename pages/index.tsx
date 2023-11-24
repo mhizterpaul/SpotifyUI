@@ -40,7 +40,7 @@ function Home() {
 
   return (
 
-    <main className={`main ${nowPlayingView ? ' main-child ' : ''} xl:pr-2 md:col-start-2 ${open ? 'col-start-2 [&>*:first-child]:ml-2 md:[&>*:first-child]:ml-0 ' : ' col-start-1 '} min-w-[280px] w-full [&>*:first-child]:min-w-[280px] [&>*:first-child]:max-w-[calc(100vw-0.25rem)] md:w-[calc(100vw-15.6rem)] overflow-visible md:ml-[1.1rem] ml-1 row-start-2 row-end-4 col-end-3  min-h-[31rem] md:pl-0 max-h-[914px] `}>
+    <main className={`main ${nowPlayingView ? ' main-child ' : ''} xl:pr-2 md:col-start-2 ${open ? 'col-start-2 [&>*:first-child]:ml-2 md:[&>*:first-child]:ml-0 ' : ' col-start-1 '} min-w-[280px] w-screen [&>*:first-child]:min-w-[280px] [&>*:first-child]:max-w-[calc(100vw-0.25rem)] md:w-[calc(100vw-15.6rem)] overflow-visible md:ml-[1.1rem] ml-1 row-start-2 row-end-4 col-end-3  min-h-[31rem] md:pl-0 max-h-[914px] `}>
       {/*accessToken.access_token == null ? <Loader status={status} meta='Access Token' /> :*/}
 
       <Routes>
