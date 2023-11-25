@@ -43,4 +43,12 @@ module.exports = {
     // your project has type errors.
     ignoreBuildErrors: true,
   },
+  async rewrites() {
+  return [
+    {
+      source: "/:path((?!404/).*)",
+      destination: "/?:path*"
+    }
+  ]
+}
 }
