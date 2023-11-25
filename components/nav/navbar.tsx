@@ -32,7 +32,7 @@ const Nav = ({ search, isMobile, route, next, prev }: Props) => {
 
     return (
         <>
-            <nav className={` nav flex relative md:col-start-2 ${isOpen ? 'col-start-2' : 'col-start-1'} ${isOpen && isMobile ? ' w-[calc(100vw-15rem)] ' : nowPlayingView ? ' w-7/12 ' : ' w-[98vw] '} col-end-3 row-start-1 ${nowPlayingView ? ' md:w-7/12 ' : ' md:w-[98%] '} row-end-2 pl-4 gap-x-4 md:pl-0 flex-row items-center bg-transparent justify-between z-10 py-2 `} >
+            <nav className={` nav flex relative md:col-start-2 ${isOpen ? 'col-start-2' : 'col-start-1'} ${isOpen && isMobile ? ' w-[calc(100vw-15rem)] ' : nowPlayingView ? ' w-7/12 ' : ' w-[98vw] '} col-end-4 row-start-1 ${nowPlayingView ? ' md:w-7/12 ' : ' md:w-[98%] '} row-end-2 pl-4 gap-x-4 md:pl-0 flex-row items-center bg-transparent justify-between z-10 py-2 `} >
                 <div className={`whitespace-nowrap ${window.innerWidth < 380 && isOpen ? ' hidden ' : ''}`}>
                     <button className={`${btn} mr-4 md:ml-8`} onClick={() => route('previous')} disabled={prev}>
                     </button>

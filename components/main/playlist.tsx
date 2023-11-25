@@ -166,7 +166,7 @@ const Playlist = () => {
         }
 
         return (
-            <div className={" overflow-y-scroll h-[85vh] -mt-[4.5rem] sm:-mt-20 w-full " + styles.list}>
+            <div className={" overflow-y-scroll h-[85vh] -mt-[3.5rem] w-full " + styles.list}>
                 <section ref={containerRef} className=' h-fit p-8 mb-10 rounded-md min-w-[280px] ' style={gradient}>
                     <h2 className={' h-max w-full pt-[5rem] flex gap-x-4 mb-9 '} >
                         {id === 'songs' ? <div className='w-48 h-48 shadow-sm shadow-black flex items-center justify-center' style={likedStyles}>

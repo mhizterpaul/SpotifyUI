@@ -10,17 +10,16 @@ import HomePage from '../components/main/home'
 import SeeAll from '@/components/main/seeAll';
 import Layout from '@/components/rootLayout'
 import { store } from '../store'
-
-const Library = lazy(() => import('../components/main/library'));
-const Search = lazy(() => import('../components/main/search'));
-const NowPlaying = lazy(() => import('../components/footer/nowPlaying'))
-const PageNotFound = lazy(() => import('./404'))
-const Episodes = lazy(() => import('../components/main/episodes'))
-const Lyrics = lazy(() => import('../components/main/lyrics'))
+import Library from '../components/main/library';
+import Search from '../components/main/search';
+import NowPlaying from '../components/footer/nowPlaying';
+import Episodes from '../components/main/episodes'
+import Lyrics from '../components/main/lyrics'
+import PageNotFound from './404';
 
 function Home() {
 
-  const { href, open, nowPlayingView } = useAppSelector(state => state.main);
+  const { access_token, href, open, nowPlayingView } = useAppSelector(state => state.main);
   const dispatch = useAppDispatch();
   const [error, setError] = useState(false)
   const pathname = useLocation().pathname;
@@ -29,7 +28,7 @@ function Home() {
     let retries = 0;
     const interval = setInterval(() => {
       const main = store.getState().main;
-      if (!store.getState().main.access_token && retries > 5) {
+      if (store.getState().main.fetchAccessTokenStatus === 'ERROR' && retries > 5) {
         clearInterval(interval);
         setError(true);
       }
@@ -46,15 +45,21 @@ function Home() {
   }, [])
 
 
-  if (error) return (<div className={` ${open ? ' col-start-2 ' : ' col-start-1 '} col-end-3 flex items-center justify-center  text-center h-full py-auto`}>
+  if (error) return (<div className={` ${open ? ' col-start-2 ' : ''} col-start-1 md:col-start-2 row-start-2 row-end-4 col-end-4 flex items-center justify-center  text-center h-full py-auto`}>
     something went wrong
   </div>)
 
-  if ((pathname !== href) && (pathname !== href.split('?')[0])) return <Loader status='PENDING' meta='NAVIGATION' />
+  if (!access_token || ((pathname !== href) && (pathname !== href.split('?')[0]))) return (<div className={` ${open ? ' col-start-2 ' : ''} col-start-1 md:col-start-2 row-start-2 row-end-4 col-end-4 flex items-center justify-center  text-center h-full py-auto`}>
+    <Loader meta={'Home'} status={'PENDING'} />
+  </div>)
+
+
+
+
 
   return (
 
-    <main className={`main ${nowPlayingView ? ' main-child ' : ''} xl:pr-2 md:col-start-2 ${open ? 'col-start-2 [&>*:first-child]:ml-2 md:[&>*:first-child]:ml-0 ' : ' col-start-1 '} min-w-[280px] w-screen [&>*:first-child]:min-w-[280px] [&>*:first-child]:max-w-[calc(100vw-0.25rem)] md:w-[calc(100vw-15.6rem)] overflow-visible md:ml-[1.1rem] ml-1 row-start-2 row-end-4 col-end-3  min-h-[31rem] md:pl-0 max-h-[914px] `}>
+    <main className={`main ${nowPlayingView ? ' main-child ' : ''} xl:pr-2 md:col-start-2 ${open ? 'col-start-2 [&>*:first-child]:ml-2 md:[&>*:first-child]:ml-0 ' : ' col-start-1 '} min-w-[280px] w-screen [&>*:first-child]:min-w-[280px] [&>*:first-child]:max-w-[calc(100vw-0.25rem)] md:w-[calc(100vw-15.6rem)] overflow-visible md:ml-[1.1rem] ml-1 row-start-2 row-end-4 col-end-4  min-h-[31rem] md:pl-0 max-h-[914px] `}>
       {/*accessToken.access_token == null ? <Loader status={status} meta='Access Token' /> :*/}
 
       <Routes>

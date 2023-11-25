@@ -58,7 +58,8 @@ function NavbarContainer({ href, end, curr, dispatch }: Props) {
 
     if (currUrl.startsWith('?')) {
       if (!routes.some((el) => currUrl.split('?')[1].includes(el))) return window.location.href = `${process.env.NEXT_PUBLIC_BASE_URL}/404`;
-      dispatch(setHref(`/${currUrl.slice(1)}`));
+      dispatch(setHref(`/${currUrl.slice(1).replace('%2F', '/').replace('%20', ' ').replace('%3F', '?')}`));
+
     }
   }, [])
 
