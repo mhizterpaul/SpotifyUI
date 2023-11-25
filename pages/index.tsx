@@ -4,7 +4,7 @@ import { ReactElement, lazy, useEffect, useMemo, useState } from 'react';
 import { Route, Routes, useLocation } from 'react-router-dom';
 import Loader from '@/components/networkRequest';
 import { useAppSelector, useAppDispatch } from '@/store/hooks';
-import { fetchAccessToken } from '@/store/reducers/main_slice';
+import { fetchAccessToken, setAccessToken } from '@/store/reducers/main_slice';
 import Playlist from '@/components/main/playlist';
 import HomePage from '../components/main/home'
 import SeeAll from '@/components/main/seeAll';
@@ -16,6 +16,35 @@ import NowPlaying from '../components/footer/nowPlaying';
 import Episodes from '../components/main/episodes'
 import Lyrics from '../components/main/lyrics'
 import PageNotFound from './404';
+import qs from "query-string";
+
+
+export const getServerSideProps = (async (context) => {
+  try {
+    const res = await fetch('https://accounts.spotify.com/api/token', {
+      method: "POST",
+      mode: "cors",
+      cache: "no-cache",
+      credentials: "same-origin",
+      headers: {
+        'Authorization': 'Basic ' + (Buffer.from(process.env.SPOTIFY_CLIENT_ID + ':' + process.env.SPOTIFY_CLIENT_SECRET).toString('base64')),
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      redirect: "follow",
+      referrerPolicy: "no-referrer",
+      body: qs.stringify({
+        grant_type: 'client_credentials'
+      })
+    });
+    const data = await res.json()
+    store.dispatch(setAccessToken(data));
+    return { props: { access_token: data } }
+  } catch (e) {
+    const data = JSON.stringify(e);
+    store.dispatch(setAccessToken(null));
+    return { props: { error: data } }
+  }
+})
 
 function Home() {
 

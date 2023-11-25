@@ -78,6 +78,13 @@ export const MainSlice = createSlice({
 
             return state;
         }, 
+        setAccessToken: (state, action: PayloadAction<string|null>) => {
+            return {
+                ...state,
+                access_token: action.payload,
+                fetchAccessTokenStatus: action.payload ? 'SUCCESS' : 'ERROR'
+            }
+        },
         setOpen: (state, action: PayloadAction<boolean>) => {
             return {
                 ...state,
@@ -162,7 +169,7 @@ export const MainSlice = createSlice({
 
 })
 
-export const {goBack, goForward, pushRef, setHref, setOpen, setNowPlayingView} = MainSlice.actions;
+export const {goBack, goForward, pushRef, setHref, setOpen, setAccessToken,setNowPlayingView} = MainSlice.actions;
 
 export default MainSlice.reducer
 

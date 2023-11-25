@@ -95,8 +95,9 @@ const Playlist = () => {
     } : !isNaN(Number(id)) ? id ? ownPlaylist[id] : {} : fetchedPlaylist;
 
 
+    if (Object.keys(error).length || (!id && !searchId) || (id && !ownPlaylist[id] && !isNaN(Number(id)))) return <div className=' h-full flex flex-col items-center justify-center text-center my-auto text-2xl'><RiErrorWarningLine className='text-5xl block mx-auto mb-4' />Couldn't find that playlist <br /> <span className='text-sm font-semibold'>search for something else?</span></div>;
     if (Data && !Object.keys(Data).length) return <Loader status='PENDING' meta={'Playlist'} />
-    if (Object.keys(error).length || (!id && !searchId) || (id && !ownPlaylist[id] && !isNaN(Number(id)))) return <div className='text-center my-auto text-2xl'><RiErrorWarningLine className='text-5xl block mx-auto mb-4' />Couldn't find that playlist <br /> <span className='text-sm font-semibold'>search for something else?</span></div>;
+
 
 
 
