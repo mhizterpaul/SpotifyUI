@@ -21,9 +21,8 @@ function NavbarContainer({ href, end, curr, dispatch }: Props) {
   const routes = ['playlist', 'lyrics', 'library', 'search', 'episode', 'see-all']
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 666),
     [nav, setNav] = useState({ prev: true, next: false }),
-    currUrl = window.location.href.split(process.env.NEXT_PUBLIC_BASE_URL + '/')[1],
-    location = useLocation(),
-    pathname = location.pathname,
+    currUrl = window.location.href.split(process.env.NEXT_PUBLIC_BASE_URL + '')[1],
+    pathname = useLocation().pathname,
     navigate = useNavigate(),
 
     route = (option?: 'previous' | 'next') => {
@@ -56,9 +55,9 @@ function NavbarContainer({ href, end, curr, dispatch }: Props) {
 
   useMemo(() => {
 
-    if (currUrl.startsWith('?')) {
-      if (!routes.some((el) => currUrl.split('?')[1].includes(el))) return window.location.href = `${process.env.NEXT_PUBLIC_BASE_URL}/404`;
-      dispatch(setHref(`/${currUrl.slice(1).replace('%2F', '/').replace('%20', ' ').replace('%3F', '?')}`));
+    if (currUrl !== href) {
+      if (!routes.some((el) => currUrl.split('/')[1].includes(el))) return window.location.href = `${process.env.NEXT_PUBLIC_BASE_URL}/404`;
+      dispatch(setHref(`${currUrl.replace('%2F', '/').replace('%20', ' ').replace('%3F', '?')}`));
 
     }
   }, [])
@@ -69,10 +68,11 @@ function NavbarContainer({ href, end, curr, dispatch }: Props) {
     route();
 
     if (href !== pathname) {
+      //debugger;
       navigate(href);
     }
 
-  }, [href])
+  }, [href, pathname])
 
   useEffect(() => {
 

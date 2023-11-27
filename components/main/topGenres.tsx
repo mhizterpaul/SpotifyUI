@@ -1,5 +1,5 @@
 import { RootState } from "@/store";
-import { ApiStatus, pushRef } from "@/store/reducers/main_slice";
+import { pushRef } from "@/store/reducers/main_slice";
 import { connect } from "react-redux";
 import Loader from "../networkRequest";
 import { getSeveralCategories } from "@/utils/api";
@@ -15,7 +15,6 @@ import { Context, V } from "@/containers/rootProvider";
 
 type Props = {
     access_token: string | null,
-    status: ApiStatus,
     listStyle?: React.CSSProperties
 }
 
@@ -159,7 +158,6 @@ class TopGenres extends Component<Props, { genres: any, updatedWithCarousel: boo
 const mapStateToProps = (state: RootState, ownProps: { listStyle: React.CSSProperties }) => {
     return {
         access_token: state.main.access_token,
-        status: state.main.fetchAccessTokenStatus,
         ...ownProps
     };
 };

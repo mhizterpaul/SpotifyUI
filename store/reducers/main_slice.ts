@@ -1,5 +1,5 @@
-import {createAsyncThunk, createSlice, PayloadAction} from '@reduxjs/toolkit'
-import { getAccessToken } from '../../utils/api';
+import {createSlice, PayloadAction} from '@reduxjs/toolkit'
+
 
 export type ApiStatus = 'IDLE'|'PENDING'|'SUCCESS'|'ERROR';
 
@@ -11,7 +11,6 @@ export type State = {
     open: boolean,
     end: boolean | undefined,
     access_token: string| null,
-    fetchAccessTokenStatus: ApiStatus
 }
 
 const initialState: State = { 
@@ -22,10 +21,8 @@ const initialState: State = {
     history: [],
     end: undefined,
     access_token: null,
-    fetchAccessTokenStatus: 'IDLE',
 }
 
-export const fetchAccessToken = createAsyncThunk('access_token/fetchAccessToken', getAccessToken);
 
 export const MainSlice = createSlice({
     name: 'main',
@@ -82,7 +79,6 @@ export const MainSlice = createSlice({
             return {
                 ...state,
                 access_token: action.payload,
-                fetchAccessTokenStatus: action.payload ? 'SUCCESS' : 'ERROR'
             }
         },
         setOpen: (state, action: PayloadAction<boolean>) => {
@@ -150,21 +146,6 @@ export const MainSlice = createSlice({
             return state;
 
         }
-    }, 
-    extraReducers: (builder) => {
-
-        builder.addCase(fetchAccessToken.pending, (state, action) => {
-            state.fetchAccessTokenStatus = 'PENDING';
-        })
-        builder.addCase(fetchAccessToken.fulfilled, (state, action) => {
-            state.fetchAccessTokenStatus = 'SUCCESS'
-            state.access_token = action.payload.access_token;
-            ;
-        })
-        builder.addCase(fetchAccessToken.rejected, (state, action) => {
-            state.fetchAccessTokenStatus = 'ERROR'
-        })
-
     }
 
 })

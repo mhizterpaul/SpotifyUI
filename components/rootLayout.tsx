@@ -1,5 +1,4 @@
 import { Inter } from 'next/font/google'
-import './globals.css'
 import RootRouterProvider from '../containers/rootProvider';
 import Nav from '@/containers/navbarContainer';
 import Footer from '@/components/footer/footer';

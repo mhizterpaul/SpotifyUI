@@ -1,15 +1,14 @@
 
 'use client'
-import { ReactElement, lazy, useEffect, useMemo, useState } from 'react';
+import { ReactElement, useMemo } from 'react';
 import { Route, Routes, useLocation } from 'react-router-dom';
 import Loader from '@/components/networkRequest';
 import { useAppSelector, useAppDispatch } from '@/store/hooks';
-import { fetchAccessToken, setAccessToken } from '@/store/reducers/main_slice';
+import { setAccessToken } from '@/store/reducers/main_slice';
 import Playlist from '@/components/main/playlist';
 import HomePage from '../components/main/home'
 import SeeAll from '@/components/main/seeAll';
 import Layout from '@/components/rootLayout'
-import { store } from '../store'
 import Library from '../components/main/library';
 import Search from '../components/main/search';
 import NowPlaying from '../components/footer/nowPlaying';
@@ -17,9 +16,10 @@ import Episodes from '../components/main/episodes'
 import Lyrics from '../components/main/lyrics'
 import PageNotFound from './404';
 import qs from "query-string";
+import { ErrorProps } from 'next/error';
 
 
-export const getServerSideProps = (async (context) => {
+export const getServerSideProps = async () => {
   try {
     const res = await fetch('https://accounts.spotify.com/api/token', {
       method: "POST",
@@ -37,40 +37,24 @@ export const getServerSideProps = (async (context) => {
       })
     });
     const data = await res.json()
-    store.dispatch(setAccessToken(data));
-    return { props: { access_token: data } }
+
+    return { props: { access_token: data.access_token } }
   } catch (e) {
     const data = JSON.stringify(e);
-    store.dispatch(setAccessToken(null));
     return { props: { error: data } }
   }
-})
+}
 
-function Home() {
+function Home({ access_token, error }: { access_token: string, error: ErrorProps }) {
 
-  const { access_token, href, open, nowPlayingView } = useAppSelector(state => state.main);
+  const { href, open, nowPlayingView } = useAppSelector(state => state.main);
   const dispatch = useAppDispatch();
-  const [error, setError] = useState(false)
   const pathname = useLocation().pathname;
 
   const init = useMemo(() => {
-    let retries = 0;
-    const interval = setInterval(() => {
-      const main = store.getState().main;
-      if (store.getState().main.fetchAccessTokenStatus === 'ERROR' && retries > 5) {
-        clearInterval(interval);
-        setError(true);
-      }
 
-      if (main.access_token) clearInterval(interval);
+    if (access_token) dispatch(setAccessToken(access_token));
 
-      if (main.fetchAccessTokenStatus === 'IDLE' || main.fetchAccessTokenStatus === 'ERROR' && main.access_token == null) {
-        dispatch(fetchAccessToken());
-        retries++
-      }
-
-
-    }, 1000)
   }, [])
 
 
@@ -78,7 +62,7 @@ function Home() {
     something went wrong
   </div>)
 
-  if (!access_token || ((pathname !== href) && (pathname !== href.split('?')[0]))) return (<div className={` ${open ? ' col-start-2 ' : ''} col-start-1 md:col-start-2 row-start-2 row-end-4 col-end-4 flex items-center justify-center  text-center h-full py-auto`}>
+  if (!access_token || pathname !== href) return (<div className={` ${open ? ' col-start-2 ' : ''} col-start-1 md:col-start-2 row-start-2 row-end-4 col-end-4 flex items-center justify-center  text-center h-full py-auto`}>
     <Loader meta={'Home'} status={'PENDING'} />
   </div>)
 

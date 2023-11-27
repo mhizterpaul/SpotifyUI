@@ -1,5 +1,6 @@
 import { NextPage } from 'next';
 import { AppProps } from 'next/app';
+import '../components/globals.css'
 import { ReactElement, useEffect, useState } from 'react';
 
 

@@ -1,13 +1,7 @@
 import axios from 'axios';
-import {CategoryPlaylist, Playlist, AudioBook, Country, AudioBookCountry, Track} from './types'
+import { Playlist, AudioBook, Country, AudioBookCountry, Track} from './types'
 
 
-
-export function getAccessToken(){
-    return axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/api/auth`).then(
-        res => res.data
-    );
-}
 
 function search (type: string, access_token: string, offset: string, country:Country|AudioBookCountry, limit?: string){
     return axios.get(`https://api.spotify.com/v1/search?q=a%20e%20&type=${type}&market=${country}&offset=${offset}&limit=${limit||'6'}`, {

@@ -1,7 +1,5 @@
 'use client'
-import { useState, useEffect } from "react";
-import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { getAccessToken } from "@/utils/api";
+import { useState } from "react";
 import { ApiStatus } from "@/store/reducers/main_slice";
 import useSWR from 'swr/immutable'
 
@@ -14,9 +12,7 @@ const res : {data: any, status: ApiStatus} = {
 function useData(params: { callBack : () => Promise<any> }) {
 
   const [data, setData] = useState(res);
-  
-  const selector = useAppSelector(state => state.main);
-  const dispatch = useAppDispatch();
+
 
   useSWR('useData', () => {
 
@@ -32,11 +28,6 @@ function useData(params: { callBack : () => Promise<any> }) {
         setData((prev) => ({...prev, data, status: 'SUCCESS'}));
         return data;
       }catch(e: any){
-
-        if(e.data.error.message.includes('expired')){
-          await dispatch(getAccessToken);
-          if(selector.fetchAccessTokenStatus === 'SUCCESS') fetchData();
-        }
 
         setData((prev) => ({...prev, error: e, status: 'ERROR'}));
       }
