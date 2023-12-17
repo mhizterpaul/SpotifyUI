@@ -19,3 +19,4 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 
 This application may behave unexpectedly as it was not thoroughly tested
 
+head on to https://spotify-ui-one.vercel.app/ to see the live version of this app
